@@ -1,0 +1,15 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+
+
+
+
+RewriteRule ^bin - [L,NC]
+RewriteRule ^css/ - [L,NC]
+RewriteRule ^js/ - [L,NC]
+RewriteRule ^vendor/ - [L,NC]
+RewriteRule ^(.*)$ index.php [NC,L]
+
+
+

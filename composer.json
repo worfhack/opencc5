@@ -1,0 +1,9 @@
+{
+    "require": {
+	"twig/twig":"~2.0",
+      "ovh/php-ovh-sms": "dev-master",
+      "phpmailer/phpmailer": "~6.0",
+      "tecnickcom/tcpdf": "dev-master"
+    }
+
+}
