@@ -23,12 +23,21 @@ class Render
     }
     public function initVariable($params)
     {
-        $this->params = $params;
+        if ($params) {
+            $this->params = array_merge($this->params, $params);
+        }
     }
     public function __construct()
     {
 
-
+        $context = Context::getContext();
+        $this->params['baseUrl'] = $context->getBaseurl();
+        $this->params['baseUrlLang'] = $context->getBaseurlLang();
+        $this->params['currentPage'] = $context->getCurrentUrl();
+        $this->params['siteName'] = $context->getConfig('_SITE_NAME_');
+        $this->params['siteBaseLine'] = $context->getConfig('_SITE_BASE_LINE_');
+        $this->params['siteTitle'] = $context->getConfig('_SITE_TITLE_');
+        $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
 
         $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
         $this->twig_filters[] = new Twig_Filter('trans', function ($string, ...$var) {

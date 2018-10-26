@@ -23,7 +23,7 @@ abstract class ObjectModel
     public $fields_lang = []; //Tableau des index qui sont soumis à des traductions
     public $fields_required = []; //Tableau des index qui sont obligatoires
     public $fields_validate = []; //Tableau des indes qui doivent être véfifiés
-
+    public $fields_join = [];
     public $admin_tab = [];
     public $where = false;
     public $order_by = false;
@@ -77,10 +77,31 @@ abstract class ObjectModel
         /* Charge les informations depuis la base de données */
         if ($id) {
 
-            $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? ('LEFT JOIN `' . pSQL(_DB_PREFIX_ . $this->table) . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '') . ' WHERE a.`' . $this->identifier . '` = ' . intval($id);
+            $sql = 'SELECT a.* ' .   ($id_lang && $this->fields_lang ? ',b.*' : '');
+            foreach ($this->fields_join as $j)
+            {
+                $key_name = $j['key'];
+                foreach ($j['fields'] as $jfield) {
+                    $sql .= ',' . $key_name .'.'. $jfield . ' as ' . $key_name.'_' . $jfield ;
 
+                }
+            }
+
+            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . pSQL(_DB_PREFIX_ . $this->table) . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '') ;
+
+
+
+            if ($this->fields_join )
+            {
+                foreach ($this->fields_join as $j)
+                {
+                    $key_name = $j['key'];
+                    $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
+                        ' ON '  .  'a' .'.'.$j['onleft'] .' = ' . $key_name .'.'.$j['onright'];
+                }
+            }
+            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . intval($id);
             $result = Db::getInstance()->getRow($sql);
-
             if (!$result) {
                 return false;
             }
@@ -137,7 +158,17 @@ abstract class ObjectModel
         $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'';
         return Db::getInstance()->getValue($sql, $memcached);
     }
+    static public function toObject($array)
+    {
+        $name = get_called_class();
+        $objet = new $name();
+        foreach ($array as $key=>$value)
+        {
+            $objet->$key = $value;
+        }
 
+       return $objet;
+    }
     /*
     $table = varchar qui définit la table dans laquelle insérer l'objet
     $fields = array avec en key le nom des champs de la table + value
@@ -552,12 +583,10 @@ AND `id_lang` = ' . intval($id_lang);
     {
 //Si la lang n'est pas renseigné on affiche la lang par défaut chargé dans le init ( Configuration::loadConfig )
         if (!$id_lang) {
-            global $cookie, $gl_config;
-            if (is_object($cookie) && $cookie->id_lang) {
-                $id_lang = $cookie->id_lang;
-            } else {
-                $id_lang = $gl_config->get('_ID_LANG_DEFAULT_');
-            }
+          $context = Context::getContext();
+
+                $id_lang = $context->getCurrentLanguage()->id_lang;
+
         }
         $fields_lang = false;
         if (array_key_exists('fields_lang', $this)) {
@@ -572,19 +601,35 @@ AND `id_lang` = ' . intval($id_lang);
             $sql .= ', ' . _DB_PREFIX_ . $this->table . '_lang.' . implode(', ' . _DB_PREFIX_ . $this->table . '_lang.',
                     $this->fields_lang);
         }
+        foreach ($this->fields_join as $j)
+        {
+            $key_name = $j['key'];
+            foreach ($j['fields'] as $jfield) {
+                $sql .= ',' . $key_name .'.'. $jfield . ' as ' . $key_name.'_' . $jfield ;
 
+            }
+        }
         $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` ';
 
 //Si le tableau field_lang de la class n'est pas vide on ajoute les left join
         if ($fields_lang) {
             $sql .= '  JOIN `' . _DB_PREFIX_ . $this->table . '_lang`
-ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX_ . $this->table . '_lang.' . $this->identifier . '
-WHERE ' . _DB_PREFIX_ . $this->table . '_lang.id_lang = ' . $id_lang;
+ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX_ . $this->table . '_lang.' . $this->identifier . ' AND  
+ ' . _DB_PREFIX_ . $this->table . '_lang.id_lang = ' . $id_lang;
         }
 
-        if (!$fields_lang) {
-            $sql .= ' WHERE 1 = 1 ';
+
+        if ($this->fields_join )
+        {
+            foreach ($this->fields_join as $j)
+            {
+                $key_name = $j['key'];
+                $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
+                    ' ON ' . _DB_PREFIX_ .  $this->table .'.'.$j['onleft'] .' = ' . $key_name .'.'.$j['onright'];
+            }
         }
+        $sql .= ' WHERE 1 = 1 ';
+
 
 //Si l'objet à la propriété deleted, récupère uniquement ceux qui sont a deleted 0
         if (array_key_exists('deleted', $this)) {
@@ -609,9 +654,7 @@ WHERE ' . _DB_PREFIX_ . $this->table . '_lang.id_lang = ' . $id_lang;
         if ($limits) {
             $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_max_result);
         }
-// echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
-
-
+ //echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         $results = Db::getInstance()->ExecuteS($sql, $array = true, $memcached);
         if (!$results) {
             return [];

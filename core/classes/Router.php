@@ -53,7 +53,7 @@ class Router
     /**
      * Matches the current request against mapped routes
      */
-    public function matchCurrentRequest()
+    public function matchCurrentRequest($requestUrl)
     {
         $requestMethod = (
             isset($_POST['_method'])
@@ -61,8 +61,7 @@ class Router
             && in_array($_method, array(RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE), true)
         ) ? $_method : $_SERVER['REQUEST_METHOD'];
 
-        $requestUrl = $_SERVER['REQUEST_URI'];
-        $requestUrl = str_replace('//', '/', $requestUrl);
+
 
         // strip GET variables from URL
         if (($pos = strpos($requestUrl, '?')) !== false) {

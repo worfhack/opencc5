@@ -9,8 +9,8 @@
 class Configuration extends ObjectModel
 {
 
-    public $identifier = 'id_configuration';
-    public $table = 'configuration';
+    public $identifier = 'id_config';
+    public $table = 'config';
 
 
     public $id_configuration;
@@ -22,11 +22,16 @@ class Configuration extends ObjectModel
 
     static public function getAllConfig()
     {
-        $sql = 'SELECT c.*, cl.* from ' . _DB_PREFIX_ . 'configuration c JOIN ' . _DB_PREFIX_ . 'configuration_lang cl
-    ON c.id_configuration = cl.id_configuration and cl.id_lang = ' . _ID_LANG_ . '
+        $config = [];
+        $sql = 'SELECT c.key,c.value,  cl.value_lang from ' . _DB_PREFIX_ . 'config c JOIN ' . _DB_PREFIX_ . 'config_lang cl
+    ON c.id_config = cl.id_config and cl.id_lang = ' . _ID_LANG_ . '
     ';
-        return Db::getInstance()->ExecuteS($sql, $array = true, $memcached = false);
-
+        $result =  Db::getInstance()->ExecuteS($sql, $array = true, $memcached = true);
+        foreach ($result as $r)
+        {
+            $config[$r['key']] = ($r['value_lang']!= ''?$r['value_lang']:$r['value']);
+        }
+        return $config;
     }
 
     function getValue()

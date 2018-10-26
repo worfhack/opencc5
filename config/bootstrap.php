@@ -32,9 +32,9 @@ spl_autoload_register('__autoload');
 
 require_once('config.inc.php');
 
-function set_language($id_lang, &$language)
+function set_language($id_lang, $language=false)
 {
-    $language = new Language($id_lang);
+   // $language = new Language($id_lang);
     define('_ID_LANG_', $id_lang);
     $_SESSION['id_lang'] = $id_lang;
 }
@@ -44,66 +44,64 @@ define('_BASE_URL_', _MODE_HTTP_ . $gl_config['webhost']);
 
 
 define('_DB_PREFIX_', $gl_config['database_master']['prefix']);
+$context = Context::getContext();
 
 
-//if (isset($selected_language) && $selected_language) {
-//
-//    set_language($selected_language, $language);
-//    $base_path = '/' . $language->iso_code . '/';
-//
-//} else {
-//
-//    if (!isset($_SESSION['id_lang']) or empty($_SESSION['id_lang'])) {
-//
-//        set_language($gl_config['id_lang'], $language);
-//    } else {
-//
-//        set_language($_SESSION['id_lang'], $language);
-//    }
-//
-//    $base_path = '/';
-//}
-//
-//define('_DATE_FORMAT_', $language->date_format);
-//define('_ISO_LANG_', $language->iso_code);
-//define('_HOUR_FORMAT_', $language->hour_format);
-$base_path = '/';
-//include_once(TRAD_DIR . '/' . _ISO_LANG_ . '.php');
 
 $collection = new RouteCollection();
 $host = $_SERVER['HTTP_HOST'];
 $env_host = $gl_config['webhost'];
-
-
-
-
 $collection->attachRoute(new Route('/', [
 
-    'params' => ['tour_ref'],
-    '_controller' => 'FrontController::home',
+    'params' => [''],
+    '_controller' => 'HomeController::index',
     'methods' => 'GET'
 ]));
+$collection->attachRoute(new Route('/contact', [
+
+    'params' => [''],
+    '_controller' => 'ContactController::sendMessage',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/contact', [
+
+    'params' => [''],
+    '_controller' => 'ContactController::index',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_, [
+
+    'params' => [],
+    '_controller' => 'AdminDashBoardController::index',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
+
+    'params' => [],
+    '_controller' => 'AdminLoginController::index',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
+
+    'params' => [],
+    '_controller' => 'AdminLoginController::singin',
+    'methods' => 'POST'
+]));
+
 $collection->attachRoute(new Route('/[0-9a-z]+-([0-9])+', [
 
     'params' => ['id_article'],
     '_controller' => 'ArticleController::index',
     'methods' => 'GET'
 ]));
-if ($base_path) {
-    define('_BASE_URL_LANG_', _BASE_URL_ . $base_path);
-} else {
-    define('_BASE_URL_LANG_', _BASE_URL_);
-}
 
 
-$current_page = str_replace($base_path, '/', $_SERVER['REQUEST_URI']);
-$current_page = str_replace('//', '/', $current_page);
-
-define('_CURRENT_URL_', $current_page);
 $router = new Router($collection);
-$router->setBasePath($base_path);
+$router->setBasePath('/');
 try {
-    $route = $router->matchCurrentRequest();
+    $route = $router->matchCurrentRequest($context->getCurrentUrl());
 
 }catch (NotFoundException $nf)
 {

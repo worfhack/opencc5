@@ -18,22 +18,72 @@ class Article extends ObjectModel
     public $content;
     public $name;
     public $id_author;
+    public $resume;
+
+
+    public $author_lastname;
+    public $author_firstname;
+
+    public $fields_join = [
+        [
+            'table'=>'author',
+            'key'=>'author',
+            'onleft'=>'id_author',
+            'onright'=>'id_author',
+            'fields'=>['firstname', 'lastname']]
+    ];
+
+    public $author_name;
 
     /**
      * @return mixed
      */
-    public function getAuthor()
+    public function getIdAuthor()
     {
-        return $this->author;
+        return $this->id_author;
     }
 
-
-    public function __construct($id)
+    /**
+     * @param mixed $id_author
+     */
+    public function setIdAuthor($id_author)
     {
-        parent::__construct($id);
-        $this->author = new Author($this->id_author);
+        $this->id_author = $id_author;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getResume()
+    {
+        return $this->resume;
+    }
+
+    /**
+     * @param mixed $resume
+     */
+    public function setResume($resume)
+    {
+        $this->resume = $resume;
+    }
+
+    public $fields_lang = ['title', 'name', 'content', 'resume'];
+    /**
+     * @return mixed
+     */
+    public function getAuthorLastName()
+    {
+        return $this->author_lastname;
+    }
+    public function getAuthorFirstName()
+    {
+        return $this->author_firstname;
+    }
+
+    public function getPostLink()
+    {
+        return Link::getPageLink($this->getName() . '-' .$this->id_article);
+    }
     /**
      * @return mixed
      */
