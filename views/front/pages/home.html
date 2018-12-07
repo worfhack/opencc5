@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block headerbanner %}
+{% block headerbanner1 %}
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('img/home-bg.jpg')">
   <div class="overlay"></div>
@@ -21,38 +21,44 @@
 {% block content %}
 
 
-<!-- Post Content -->
-<div class="container">
-  <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
       {% for pub in listLastPub %}
 
-      <div class="post-preview">
-        <a href=" {{pub.getPostLink()}}">
-          <h2 class="post-title">
-            {{pub.getTitle()}}
-          </h2>
-          <h3 class="post-subtitle">
-            {{pub.getResume()}}
-          </h3>
-        </a>
-        <p class="post-meta">Posted by
-          <a href="#">{{pub.getAuthorFirstName}} {{pub.getAuthorLastName}}</a>
-          on {{pub.getDateAdd()}}</p>
+<!-- Single Blog Area  -->
+<div class="single-blog-area blog-style-2 mb-50 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1000ms">
+  <div class="row align-items-center">
+    <div class="col-12 col-md-6">
+      <div class="single-blog-thumbnail">
+        <img src="{{baseUrl}}img/blog-img/3.jpg" alt="">
+        <div class="post-date">
+          <a href="#">{{pub.getDateAdd()}}</a>
+        </div>
       </div>
-      <hr>
-
-      {% endfor %}
-
-
-
-      <!-- Pager -->
-      <div class="clearfix">
-        <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+    </div>
+    <div class="col-12 col-md-6">
+      <!-- Blog Content -->
+      <div class="single-blog-content">
+        <div class="line"></div>
+        <a href="#" class="post-tag">Lifestyle</a>
+        <h4><a href="{{pub.getPostLink()}}" class="post-headline"> {{pub.getTitle()}}</a></h4>
+        <p>  {{pub.getResume()}}</p>
+        <div class="post-meta">
+          <p>By <a href="#">{{pub.getAuthorFirstName}}  {{pub.getAuthorLastName}}</a></p>
+          <p>3 comments</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 
+      {% endfor %}
+
+<div class="clearfix">
+  {% if prev != false %}
+  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{prev}}">Prev Posts &rarr;</a>
+  {% endif %}
+  {% if next != false %}
+  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{next}}">Older Posts &rarr;</a>
+  {% endif %}
+</div>
 {% endblock %}

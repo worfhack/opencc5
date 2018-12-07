@@ -1,91 +1,66 @@
-<!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Starter</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="{{baseUrl}}bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{baseUrl}}bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="{{baseUrl}}bower_components/Ionicons/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{baseUrl}}/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-          page. However, you can choose any other skin. Make sure you
-          apply the skin class to the body tag so the changes take effect. -->
-    <link rel="stylesheet" href="{{baseUrl}}/css/skins/skin-blue.min.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-</head>
-
-
-<body class="hold-transition login-page">
-<div class="login-box">
-    <div class="login-logo">
-        <a href=""><b>Admin</b></a>
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-
-        <form action="" method="post">
-            <div class="form-group has-feedback">
-                <input name="email" type="email" class="form-control" placeholder="Email">
-                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+{% extends "layout.html" %}
+{% block head %}
+<link href="/public/js/assets/pages/css/login.min.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block content %}
+    <!-- BEGIN LOGIN FORM -->
+        <form class="login-form form form-vertical" method="post">
+            <h3 class="form-title font-green">Sign In</h3>
+            <div class="alert alert-danger display-hide">
+                <button class="close" data-close="alert"></button>
+                <span> Enter any email and password. </span>
             </div>
-            <div class="form-group has-feedback">
-                <input name="password" type="password" class="form-control" placeholder="Password">
-                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-            </div>
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="checkbox icheck">
-                        <label>
-                            <input type="checkbox"> Remember Me
-                        </label>
-                    </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-xs-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-                </div>
-                <!-- /.col -->
+            <div class="form-group">
+                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                <label class="control-label visible-ie8 visible-ie9">Email</label>
+                <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Enter email" name="email" /> </div>
+            <div class="form-group">
+                <label class="control-label visible-ie8 visible-ie9">Password</label>
+                <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Enter your password" name="password" /> </div>
+            <div class="form-actions">
+                <button type="submit" class="btn green uppercase">{{ 'Login'|trans }}</button>
+                <label class="rememberme check mt-checkbox mt-checkbox-outline">
+                    <input type="checkbox" name="remember" value="1" />Remember
+                    <span></span>
+                </label>
+                <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
             </div>
         </form>
+        <!-- END LOGIN FORM -->
+        <!-- BEGIN FORGOT PASSWORD FORM -->
+        <form class="forget-form" action="index.html" method="post">
+            <h3 class="font-green">Forget Password ?</h3>
+            <p> Enter your e-mail address below to reset your password. </p>
+            <div class="form-group">
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email" /> </div>
+            <div class="form-actions">
+                <button type="button" id="back-btn" class="btn green btn-outline">Back</button>
+                <button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
+            </div>
+        </form>
+        <!-- END FORGOT PASSWORD FORM -->
 
-        <!-- /.social-auth-links -->
 
-        <a href="#">I forgot my password</a><br>
-        <a href="register.html" class="text-center">Register a new membership</a>
 
-    </div>
-    <!-- /.login-box-body -->
-</div>
 
-<script src="{{baseUrl}}bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{{baseUrl}}bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- AdminLTE App -->
-<script src="{{baseUrl}}js/adminlte.min.js"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. -->
-</body>
-</html>
+        {#</div>
+    <!--/panel content-->
+</div>#}
+
+
+
+
+
+
+</form>
+
+{% endblock %}
+
+{% block footer %}
+<!-- <script src="/public/js/assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/js/assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+<script src="/public/js/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="/public/js/assets/pages/scripts/login.min.js" type="text/javascript"></script> -->
+{% endblock %}
+

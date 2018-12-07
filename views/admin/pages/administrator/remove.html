@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block navbar %}
+    {% include('pages/blocks/navbar.html') %}
+{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        <h2>Do you really want to delete the employee's account <strong>{{ employee.firstname ~ " " ~ employee.lastname }}</strong> ?</h2><br>
+        <form method="post" action="{{base_url_lang()}}employee/remove/{{ employee.id }}">
+            <input type="submit" class="btn btn-danger btn-lg" value="Delete">
+        </form>
+    </div>
+{% endblock %}

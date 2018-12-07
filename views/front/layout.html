@@ -1,17 +1,25 @@
+{% import 'macros.twig' as m %}
 <!DOCTYPE html>
 <html>
 <head>
+
     {% block head %}
 
-    <link href="{{baseUrl}}vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <!-- Custom fonts for this template -->
-    <link href="{{baseUrl}}vendor/fontawesome-free/css/all.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <!-- Title -->
+    <title>Original - Lifestyle Blog Template</title>
 
-    <!-- Custom styles for this template -->
-    <link href="{{baseUrl}}css/clean-blog.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="{{baseUrl}}style.css">
+
 
 
     <title>{% block title %}{% endblock %}</title>
@@ -19,81 +27,161 @@
     {% endblock %}
 </head>
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand" href="{{baseUrlLang}}">{{siteTitle}}</a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{baseUrl}}{{cvPath}}">My CV</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{baseUrlLang}}contact">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{baseUrl}}fr{{currentPage}}">FR</a>
-                    <a class="nav-link" href="{{baseUrl}}en{{currentPage}}">EN</a>
-
-                </li>
-
-            </ul>
-        </div>
+<!-- Preloader -->
+<div id="preloader">
+    <div class="preload-content">
+        <div id="original-load"></div>
     </div>
-</nav>
+</div>
+
 
             {% block headerbanner %}{% endblock %}
 
 
-            {% block content %}{% endblock %}
+{% include 'block/newspopin.html'  %}
+{% include 'block/newspopin.html'  %}
+{% include 'block/header.html' %}
 
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <ul class="list-inline text-center">
-                    <li class="list-inline-item">
-                        <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                  </span>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
-                  </span>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a href="#">
-                  <span class="fa-stack fa-lg">
-                    <i class="fas fa-circle fa-stack-2x"></i>
-                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                  </span>
-                        </a>
-                    </li>
-                </ul>
-                <p class="copyright text-muted">Copyright &copy; Your Website 2018</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-9">
+            {% block content %}{% endblock %}
+        </div>
+
+
+
+        <!-- ##### Sidebar Area ##### -->
+        <div class="col-12 col-md-4 col-lg-3">
+            <div class="post-sidebar-area">
+
+                <!-- Widget Area -->
+                <div class="sidebar-widget-area">
+                    <form action="#" class="search-form">
+                        <input type="search" name="search" id="searchForm" placeholder="Search">
+                        <input type="submit" value="submit">
+                    </form>
+                </div>
+
+                <!-- Widget Area -->
+                <div class="sidebar-widget-area">
+                    <h5 class="title subscribe-title">Subscribe to my newsletter</h5>
+                    <div class="widget-content">
+                        <form action="#" class="newsletterForm">
+                            <input type="email" name="email" id="subscribesForm" placeholder="Your e-mail here">
+                            <button type="submit" class="btn original-btn">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Widget Area -->
+                <div class="sidebar-widget-area">
+                    <h5 class="title">Advertisement</h5>
+                    <a href="#"><img src="img/bg-img/add.gif" alt=""></a>
+                </div>
+
+                <!-- Widget Area -->
+                <div class="sidebar-widget-area">
+                    <h5 class="title">Latest Posts</h5>
+
+                    <div class="widget-content">
+
+                        <!-- Single Blog Post -->
+                        <div class="single-blog-post d-flex align-items-center widget-post">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="img/blog-img/lp1.jpg" alt="">
+                            </div>
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <a href="#" class="post-tag">Lifestyle</a>
+                                <h4><a href="#" class="post-headline">Party people in the house</a></h4>
+                                <div class="post-meta">
+                                    <p><a href="#">12 March</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Blog Post -->
+                        <div class="single-blog-post d-flex align-items-center widget-post">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="img/blog-img/lp2.jpg" alt="">
+                            </div>
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <a href="#" class="post-tag">Lifestyle</a>
+                                <h4><a href="#" class="post-headline">A sunday in the park</a></h4>
+                                <div class="post-meta">
+                                    <p><a href="#">12 March</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Blog Post -->
+                        <div class="single-blog-post d-flex align-items-center widget-post">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="img/blog-img/lp3.jpg" alt="">
+                            </div>
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <a href="#" class="post-tag">Lifestyle</a>
+                                <h4><a href="#" class="post-headline">Party people in the house</a></h4>
+                                <div class="post-meta">
+                                    <p><a href="#">12 March</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Blog Post -->
+                        <div class="single-blog-post d-flex align-items-center widget-post">
+                            <!-- Post Thumbnail -->
+                            <div class="post-thumbnail">
+                                <img src="img/blog-img/lp4.jpg" alt="">
+                            </div>
+                            <!-- Post Content -->
+                            <div class="post-content">
+                                <a href="#" class="post-tag">Lifestyle</a>
+                                <h4><a href="#" class="post-headline">A sunday in the park</a></h4>
+                                <div class="post-meta">
+                                    <p><a href="#">12 March</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Widget Area -->
+                <div class="sidebar-widget-area">
+                    <h5 class="title">Tags</h5>
+                    <div class="widget-content">
+                        <ul class="tags">
+                            <li><a href="#">design</a></li>
+                            <li><a href="#">fashion</a></li>
+                            <li><a href="#">travel</a></li>
+                            <li><a href="#">music</a></li>
+                            <li><a href="#">party</a></li>
+                            <li><a href="#">video</a></li>
+                            <li><a href="#">photography</a></li>
+                            <li><a href="#">adventure</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
-</footer>
+    </div>
+{% include 'block/footer.html' %}
 
-<!-- Bootstrap core JavaScript -->
-<script src="{{baseUrl}}vendor/jquery/jquery.min.js"></script>
-<script src="{{baseUrl}}vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Custom scripts for this template -->
-<script src="{{baseUrl}}js/clean-blog.min.js"></script>
+
+<script src="{{baseUrl}}js/jquery/jquery-2.2.4.min.js"></script>
+<script src="{{baseUrl}}js/popper.min.js"></script>
+<script src="{{baseUrl}}js/bootstrap.min.js"></script>
+<script src="{{baseUrl}}js/plugins.js"></script>
+<script src="{{baseUrl}}js/active.js"></script>
+
 
 
 </body>

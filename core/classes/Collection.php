@@ -28,6 +28,7 @@ class Collection implements IteratorAggregate
     public function load()
     {
         $this->collection = [];
+        $this->count_all = $this->model->get_list_count($this->id_lang, false);
         $results = $this->model->get_list($this->id_lang, false);
         foreach ($results as $r)
         {

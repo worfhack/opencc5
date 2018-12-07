@@ -30,11 +30,13 @@ class Context
         $this->config = Configuration::getAllConfig();
         return $this;
     }
-    public function getConfig($key=false)
+    public function getConfig($key=false, $default=0)
     {
       if ($key)
       {
-          return $this->config[$key];
+          if (isset( $this->config[$key])) {
+              return $this->config[$key];
+          }return $default;
       }
       return $this->config;
     }
@@ -90,8 +92,24 @@ class Context
         $result = [];
         if (preg_match('~^/[a-z]{2}(?:/|$)~', $this->requestUri, $result)) {
             $iso = $result[0];
+
             $this->requestUri = '/' . str_replace($iso, '', $this->requestUri);
             $iso = str_replace('/', '', $iso);
+            $this->currentLanguage = Language::loadLanguageByIso($iso);
+            if (!$this->currentLanguage) {
+                $this->currentLanguage = new Language($this->gl_config['id_lang']);
+            }
+
+        }
+
+       else  if (preg_match('~^/'._ADMIN_URI_.'/([a-z]{2})(?:/|$)~', $this->requestUri, $result)) {
+
+            $iso = $result[1];
+
+          $this->requestUri = str_replace($iso, '', $this->requestUri);
+            $this->requestUri = str_replace("//", '/', $this->requestUri);
+           $iso = str_replace('/', '', $iso);
+
             $this->currentLanguage = Language::loadLanguageByIso($iso);
             if (!$this->currentLanguage) {
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
@@ -106,7 +124,6 @@ class Context
         }
         $_SESSION['current_id_lang'] = $this->currentLanguage->id_lang;
         define('_ID_LANG_', $this->currentLanguage->id_lang);
-
         return $this;
 
     }

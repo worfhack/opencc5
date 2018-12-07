@@ -1,0 +1,42 @@
+/**
+Custom module for you to write your own javascript functions
+**/
+var Custom = function () {
+
+    // private functions & variables
+
+    var myFunc = function(text) {
+        alert(text);
+    }
+
+    // public functions
+    return {
+
+        //main function
+        init: function () {
+            //initialize here something.
+            $("#save_password").click(function() {
+                var action = $("#form_action").val();
+                console.log(action);
+                $(this).closest('form').attr("action",action);
+                $(this).closest('form').submit();
+            });
+        },
+
+        //some helper function
+        doSomeStuff: function () {
+            myFunc();
+        }
+
+    };
+
+}();
+
+jQuery(document).ready(function() {    
+   Custom.init(); 
+});
+
+/***
+Usage
+***/
+//Custom.doSomeStuff();

@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block navbar %}
+    {% include('pages/blocks/navbar.html') %}
+{% endblock %}
+
+{% block content %}
+<div class="portlet light bordered">
+    <a href="{{base_admin_url_lang() }}/article/add" class="btn btn-success pull-right">Add an article</a>
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">
+                article list
+            </span>
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-body flip-scroll">
+            <table class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content">
+                    <tr>
+                        <th>Titre</th>
+                        <th>Nom</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <th>{{ article.title }}</th>
+                        <th>{{ article.Name }}</th>
+
+                        <th>
+                            <a href="{{base_admin_url_lang() }}/article/edit/{{ article.id_article }}" class="btn btn-default btn-xs">Edit</a>
+                            <a href="{{ base_admin_url_lang() }}/article/remove/{{ article.id_article }}" class="btn btn-danger btn-xs">Delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

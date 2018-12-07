@@ -1,0 +1,19 @@
+{% macro tree(items, base) %}
+    {% import _self as m %}
+    {% if items %}
+
+        {% for i in items %}
+
+            <li class="">
+                <a class=""
+                   href="{{cleanUrl( "/category/" ~ base ~ '/' ~ i.url_rewrite)}}">{{ i.title }}</a>
+                {% if i.children %}
+                    <ul class="dropdown">
+                        {{ m.tree(i.children,  base ~ '/' ~ i.url_rewrite ) }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+
+    {% endif %}
+{% endmacro %}

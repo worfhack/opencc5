@@ -11,4 +11,9 @@ class RenderFront extends Render
     protected $baseTpl = 'front';
 
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 }
