@@ -1,0 +1,71 @@
+@font-face {
+  font-family: 'fastpasstours';
+  src:  url('fonts/fastpasstours.eot?vslgh8');
+  src:  url('fonts/fastpasstours.eot?vslgh8#iefix') format('embedded-opentype'),
+    url('fonts/fastpasstours.ttf?vslgh8') format('truetype'),
+    url('fonts/fastpasstours.woff?vslgh8') format('woff'),
+    url('fonts/fastpasstours.svg?vslgh8#fastpasstours') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fpt-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'fastpasstours' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fpt-camera:before {
+  content: "\e906";
+}
+.fpt-chat:before {
+  content: "\e907";
+}
+.fpt-check-bold:before {
+  content: "\e908";
+}
+.fpt-check:before {
+  content: "\e909";
+}
+.fpt-circle:before {
+  content: "\e90a";
+}
+.fpt-clock:before {
+  content: "\e90b";
+}
+.fpt-compass:before {
+  content: "\e90c";
+}
+.fpt-cross:before {
+  content: "\e90d";
+}
+.fpt-disc:before {
+  content: "\e90e";
+}
+.fpt-dots-v:before {
+  content: "\e90f";
+}
+.fpt-eye:before {
+  content: "\e910";
+}
+.fpt-layers:before {
+  content: "\e911";
+}
+.fpt-location:before {
+  content: "\e912";
+}
+.fpt-map:before {
+  content: "\e913";
+}
+.fpt-markers:before {
+  content: "\e914";
+}

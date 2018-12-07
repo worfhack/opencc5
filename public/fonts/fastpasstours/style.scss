@@ -1,0 +1,104 @@
+@import "variables";
+
+@font-face {
+  font-family: 'fastpasstours';
+  src:  url('#{$icomoon-font-path}/fastpasstours.eot?vslgh8');
+  src:  url('#{$icomoon-font-path}/fastpasstours.eot?vslgh8#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/fastpasstours.ttf?vslgh8') format('truetype'),
+    url('#{$icomoon-font-path}/fastpasstours.woff?vslgh8') format('woff'),
+    url('#{$icomoon-font-path}/fastpasstours.svg?vslgh8#fastpasstours') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fpt-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'fastpasstours' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fpt-camera {
+  &:before {
+    content: $fpt-camera;
+  }
+}
+.fpt-chat {
+  &:before {
+    content: $fpt-chat;
+  }
+}
+.fpt-check-bold {
+  &:before {
+    content: $fpt-check-bold;
+  }
+}
+.fpt-check {
+  &:before {
+    content: $fpt-check;
+  }
+}
+.fpt-circle {
+  &:before {
+    content: $fpt-circle;
+  }
+}
+.fpt-clock {
+  &:before {
+    content: $fpt-clock;
+  }
+}
+.fpt-compass {
+  &:before {
+    content: $fpt-compass;
+  }
+}
+.fpt-cross {
+  &:before {
+    content: $fpt-cross;
+  }
+}
+.fpt-disc {
+  &:before {
+    content: $fpt-disc;
+  }
+}
+.fpt-dots-v {
+  &:before {
+    content: $fpt-dots-v;
+  }
+}
+.fpt-eye {
+  &:before {
+    content: $fpt-eye;
+  }
+}
+.fpt-layers {
+  &:before {
+    content: $fpt-layers;
+  }
+}
+.fpt-location {
+  &:before {
+    content: $fpt-location;
+  }
+}
+.fpt-map {
+  &:before {
+    content: $fpt-map;
+  }
+}
+.fpt-markers {
+  &:before {
+    content: $fpt-markers;
+  }
+}
+
