@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block head %}
+<link href="/public/js/assets/pages/css/profile.min.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block navbar %}
+    {% include('pages/blocks/navbar.html') %}
+{% endblock %}
+
+{% block content %}
+    {% if author is defined and author is not null %}
+        {% set edit = true %}
+    {% else %}
+        {% set edit = false %}
+    {% endif %}
+
+    {#<a href="{{base_admin_url_lang() }}author" class="btn btn-default">Retour à la liste</a>#}
+
+    {% if error is defined %}
+        <div style="background-color: rgba(231, 76, 60,0.5); padding: 12px; margin: 15px 0; border-radius: 5px; text-align: center">
+            {{ error }}
+        </div>
+    {% endif %}
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form role="form" enctype='multipart/form-data' method="post"
+                                  {% if edit and myprofile == true %}
+                                  action="{{base_admin_url_lang() }}myprofile/">
+                                  {% else %}
+                                    action="{{base_admin_url_lang() }}author/{% if edit %}edit/{{ author.id_administrator }}{% else %}add{% endif %}">
+                                {% endif %}
+                                {% if edit == true %}
+                                <!-- BEGIN PROFILE SIDEBAR -->
+                                <div class="profile-sidebar">
+                                    <!-- PORTLET MAIN -->
+                                    <div class="portlet light profile-sidebar-portlet bordered">
+                                        <!-- SIDEBAR USERPIC -->
+                                        <div class="profile-userpic">
+
+
+                                        <div class="profile-usertitle">
+                                            <div class="profile-usertitle-name"> {{author.firstname}} </div>
+                                            <div class="profile-usertitle-job"> {{author.lastname}} </div>
+                                        </div>
+
+
+                                        <!-- END SIDEBAR USER TITLE -->
+                                    </div>
+                                    <!-- END PORTLET MAIN -->
+                                </div>
+                                <!-- END BEGIN PROFILE SIDEBAR -->
+                                {% endif %}
+                                <!-- BEGIN PROFILE CONTENT -->
+                                <div class="profile-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="portlet light bordered">
+                                                <div class="portlet-title tabbable-line">
+                                                    <div class="caption caption-md">
+                                                        <i class="icon-globe theme-font hide"></i>
+                                                        <span class="caption-subject font-blue-madison bold uppercase">
+                                                            {% if edit %}
+                                                                Add an author
+                                                            {% else %}
+                                                                Edit an author
+                                                            {% endif %}
+                                                        </span>
+                                                    </div>
+                                                    <ul class="nav nav-tabs">
+                                                        {% if edit == true %}
+                                                        <li class="active">
+                                                            <a href="#tab_1_1" data-toggle="tab">Personal Info</a>
+                                                        </li>
+
+
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="tab-content">
+                                                            <!-- PERSONAL INFO TAB -->
+                                                            <div class="tab-pane active" id="tab_1_1">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">First Name</label>
+                                                                    <input type="text" placeholder="John"  id="firstname" name="firstname" required class="form-control" {% if edit %} value="{{author.firstname}}" {% endif %}/> </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Last Name</label>
+                                                                    <input type="text" placeholder="Doe" id="lastname" name="lastname" required class="form-control" {% if edit %} value="{{author.lastname}}" {% endif %}/> </div>
+                                                               <div class="form-group">
+                                                                    <label for="mail">Mail address</label>
+                                                                    <input type="email" class="form-control" id="mail" name="mail" required {% if edit %} value="{{author.mail}}" {% endif %}>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Password</label>
+                                                                    <input type="password" placeholder=""  id="newpassword" name="newpassword"  class="form-control" /> </div>
+
+
+                                                                <div class="margiv-top-10">
+                                                                    <button type="submit" class="btn green"> Save Changes </button>
+                                                                    <a href="{{base_admin_url_lang()}}/author" class="btn default"> Cancel </a>
+                                                                </div>
+                                                            </div>
+                                                            <!-- END PERSONAL INFO TAB -->
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END PROFILE CONTENT -->
+                            </form>
+                        </div>
+                    </div>
+                    <!-- END PAGE BASE CONTENT -->
+                </div>
+
+
+
+
+
+
+
+
+{% endblock %}

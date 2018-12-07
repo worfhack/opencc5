@@ -83,12 +83,262 @@ $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
     '_controller' => 'AdminLoginController::index',
     'methods' => 'GET'
 ]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/logout', [
+
+    'params' => [],
+    '_controller' => 'AdminLoginController::logout',
+    'methods' => 'GET'
+]));
 $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
 
     'params' => [],
     '_controller' => 'AdminLoginController::singin',
     'methods' => 'POST'
 ]));
+
+
+
+
+
+
+
+
+
+
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminMediaController::list',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminMediaController::form',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminMediaController::add',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/edit/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminMediaController::form',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminMediaController::remove',
+    'methods' => 'GET'
+]));
+
+
+
+
+
+
+
+
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminAuthorController::list',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminAuthorController::form',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminAuthorController::add',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author/edit/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminAuthorController::form',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminAuthorController::remove',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/author/edit/([0-9]+)' , [
+
+    'params'     => [ 'id'] ,
+    '_controller' => 'AdminAuthorController::edit',
+    'methods' => 'POST'
+]));
+
+
+
+
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminConfigurationController::list',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminConfigurationController::form',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminConfigurationController::add',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration/edit/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminConfigurationController::form',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminConfigurationController::remove',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/configuration/edit/([0-9]+)' , [
+
+    'params'     => [ 'id'] ,
+    '_controller' => 'AdminConfigurationController::edit',
+    'methods' => 'POST'
+]));
+
+
+
+
+
+
+
+$collection->attachRoute(new Route('/category/([0-9a-z\-\/]+)', [
+
+    'params' => ['rewrite'],
+    '_controller' => 'CategoryController::index',
+    'methods' => 'GET'
+]));
+
+
+$collection->attachRoute(new Route('/[0-9a-z\-]+-([0-9]+)', [
+
+    'params' => ['id_article'],
+    '_controller' => 'ArticleController::index',
+    'methods' => 'GET'
+]));
+
+
+
+
+
+
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminCategoryController::list',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminCategoryController::form',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminCategoryController::add',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category/edit/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminCategoryController::form',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminCategoryController::remove',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/category/edit/([0-9]+)' , [
+
+    'params'     => [ 'id'] ,
+    '_controller' => 'AdminCategoryController::edit',
+    'methods' => 'POST'
+]));
+
+
+
+
+
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminArticleController::list',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminArticleController::form',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article/add' , [
+
+    'params'     => ['link_rewrite'] ,
+    '_controller' => 'AdminArticleController::add',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article/edit/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminArticleController::form',
+    'methods' => 'GET'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminArticleController::remove',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/article/edit/([0-9]+)' , [
+
+    'params'     => [ 'id'] ,
+    '_controller' => 'AdminArticleController::edit',
+    'methods' => 'POST'
+]));
+
+
+
+
+
+
 
 $collection->attachRoute(new Route('/[0-9a-z]+-([0-9])+', [
 

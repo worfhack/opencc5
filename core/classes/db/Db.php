@@ -118,7 +118,7 @@ abstract class Db
             if ($limit)
                 $query .= ' LIMIT ' . intval($limit);
             if ($debug) die($query);
-//p($query);
+
             return $this->q($query);
         } elseif (strtoupper($type) == 'UPDATE') {
             $query = 'UPDATE `' . $table . '` SET ';

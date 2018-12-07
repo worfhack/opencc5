@@ -4,10 +4,14 @@ RewriteEngine On
 
 
 
-
+RewriteRule ^image/ - [L,NC]
 RewriteRule ^bin - [L,NC]
 RewriteRule ^css/ - [L,NC]
+RewriteRule ^style.css - [L,NC]
+RewriteRule ^scss/ - [L,NC]
+RewriteRule ^img/ - [L,NC]
 RewriteRule ^media/ - [L,NC]
+RewriteRule ^fonts/ - [L,NC]
 RewriteRule ^dist/ - [L,NC]
 RewriteRule ^bower_components/ - [L,NC]
 RewriteRule ^js/ - [L,NC]

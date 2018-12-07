@@ -29,10 +29,12 @@ class Render
     }
     public function __construct()
     {
-
         $context = Context::getContext();
         $this->params['baseUrl'] = $context->getBaseurl();
+
+
         $this->params['baseUrlLang'] = $context->getBaseurlLang();
+
         $this->params['currentPage'] = $context->getCurrentUrl();
         $this->params['siteName'] = $context->getConfig('_SITE_NAME_');
         $this->params['siteBaseLine'] = $context->getConfig('_SITE_BASE_LINE_');
@@ -40,9 +42,11 @@ class Render
         $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
 
         $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
+
         $this->twig_filters[] = new Twig_Filter('trans', function ($string, ...$var) {
             return Tools::translate($string, $var);
         });
+
         $this->twig_filters[] = new Twig_Filter('datetime', function ($d, $format) {
 
 
@@ -56,18 +60,35 @@ class Render
 
             return strftime($format, $d);
         });
+        $this->twig_functions[] = new Twig_SimpleFunction('cleanUrl', function ($string) {
+            $pattern = '!([^:])(//)!';
 
+            $url = _BASE_URL_.'/' . $string;
+            return preg_replace($pattern,  "$1/", $url);
+        });
         $this->twig_functions[] = new Twig_SimpleFunction('add_js_var', function ($string) {
 
             return $string;
         });
+        $this->twig_functions[] = new Twig_SimpleFunction('base_admin_url', function () {
+            $url = _BASE_ADMIN_URL_;
+            return $url ;
+        });
 
+        $this->twig_functions[] = new Twig_SimpleFunction('base_admin_url_lang', function () {
+            $url = _BASE_ADMIN_URL_LANG_;
+            return $url ;
+        });
 
         $this->twig_functions[] = new Twig_SimpleFunction('base_url_lang', function () {
             $url = _BASE_URL_LANG_;
             return $url ;
         });
 
+        $this->twig_functions[] = new Twig_SimpleFunction('base_url', function () {
+            $url = _BASE_URL_;
+            return $url ;
+        });
 
 
 
@@ -78,11 +99,11 @@ class Render
             'debug' => true,
         ));
 
-//        $this->twig->addExtension(new Twig_Extension_Debug());
-//        foreach ($this->twig_filters as $filter)
-//            $this->twig->addFilter($filter);
-//        foreach ($this->twig_functions as $func)
-//            $this->twig->addFunction($func);
+        $this->twig->addExtension(new Twig_Extension_Debug());
+        foreach ($this->twig_filters as $filter)
+            $this->twig->addFilter($filter);
+        foreach ($this->twig_functions as $func)
+            $this->twig->addFunction($func);
 //
 //
 //        foreach ($this->global_var  as $itemName=>$itemVal)

@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block navbar %}
+    {% include('pages/blocks/navbar.html') %}
+{% endblock %}
+
+{% block content %}
+<div class="portlet light bordered">
+    <a href="{{base_admin_url_lang() }}author/add" class="btn btn-success pull-right">Add an author</a>
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">
+                Author list
+            </span>
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-body flip-scroll">
+            <table class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content">
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in authors %}
+                    <tr>
+                        <th>{{ employee.firstname }}</th>
+                        <th>{{ employee.lastname }}</th>
+                        <th>{{ employee.mail }}</th>
+                        <th>
+                            <a href="{{base_admin_url_lang() }}author/edit/{{ employee.id_administrator }}" class="btn btn-default btn-xs">Edit</a>
+                            <a href="{{ base_admin_url_lang() }}author/remove/{{ employee.id_administrator }}" class="btn btn-danger btn-xs">Delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

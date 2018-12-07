@@ -59,9 +59,62 @@ class Tools
 
 
     }
+
+    static function substr ($str , $start , $length = false , $encoding = 'utf-8')
+    {
+        if ( is_array ($str) )
+        {
+            return false;
+        }
+        if ( function_exists ('mb_substr') )
+        {
+            return mb_substr ($str , intval ($start) , ($length === false ? Tools::strlen ($str) : intval ($length)) , $encoding);
+        }
+        return substr ($str , $start , $length);
+    }
+
+    static public function link_rewrite ($str , $utf8_decode = false)
+    {
+        $purified = '';
+        $length = self::strlen ($str);
+        if ( $utf8_decode )
+        {
+            $str = utf8_decode ($str);
+        }
+        for ($i = 0; $i < $length; $i++)
+        {
+            $char = self::substr ($str , $i , 1);
+            if ( self::strlen (htmlentities ($char)) > 1 )
+            {
+                $entity = htmlentities ($char , ENT_COMPAT , 'UTF-8');
+                $purified .= $entity{1};
+            }
+            elseif ( preg_match ('|[[:alpha:]]{1}|u' , $char) )
+            {
+                $purified .= $char;
+            }
+            elseif ( preg_match ('<[[:digit:]]|-{1}>' , $char) )
+            {
+                $purified .= $char;
+            }
+            elseif ( $char == ' ' )
+            {
+                $purified .= '-';
+            }
+        }
+        return trim (self::strtolower ($purified));
+    }
     static public function isSubmit ($submit)
     {
         return (isset($_POST[$submit]) OR isset($_POST[$submit . '_x']) OR isset($_POST[$submit . '_y']) OR isset($_GET[$submit]) OR isset($_GET[$submit . '_x']) OR isset($_GET[$submit . '_y']));
+    }
+    static public function redirectAdmin ($url)
+    {
+
+        $context = Context::getContext();
+        header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso. '/'. $url);
+
+        exit;
     }
     static public function redirect ($url)
     {
@@ -196,7 +249,7 @@ static function xml_attribute($object, $attribute, $default='')
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
         if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            throw new FastPastToursException($string);
+            throw new BlogException($string);
         } else if ('Fatal error' !== $string) {
             return $string;
         }
