@@ -10,6 +10,7 @@ define('TWIG_CACHE_DIR', ROOT_DIR.'cache/twig');
 define('VIEW_DIR', ROOT_DIR.'views/');
 define('VENDOR_DIR', $g_base_dir.'vendor/');;
 define('MEDIA_DIR', $g_base_dir.'public/media/');
+define('MEDIA_CACHE_DIR', $g_base_dir.'public/media_cache/');
 define('IMAGE_DIR', $g_base_dir.'public/images');
 define('AVATAR_DIR', $g_base_dir.'public/images/avatars');
 define('PRODUCT_IMAGE_DIR', $g_base_dir.'public/images/product');

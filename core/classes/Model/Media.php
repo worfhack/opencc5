@@ -16,4 +16,6 @@ class Media extends ObjectModel
     public $id_media;
     public $name;
 
+    public $json_fields = ['id_media', 'name'];
+
 }

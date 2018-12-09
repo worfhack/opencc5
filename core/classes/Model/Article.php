@@ -19,10 +19,12 @@ class Article extends ObjectModel
     public $name;
     public $id_author;
     public $resume;
-
+    public $id_thumbnail;
 
     public $author_lastname;
     public $author_firstname;
+    public $thumbnail_name;
+
 
     public $fields_join = [
         [
@@ -30,7 +32,14 @@ class Article extends ObjectModel
             'key'=>'author',
             'onleft'=>'id_author',
             'onright'=>'id_administrator',
-            'fields'=>['firstname', 'lastname']]
+            'fields'=>['firstname', 'lastname'],
+            'table'=>'media',
+            'key'=>'thumbnail',
+            'onleft'=>'id_thumbnail',
+            'onright'=>'id_media',
+            'fields'=>['name'],
+
+            ]
     ];
 
     public $author_name;
@@ -58,6 +67,25 @@ class Article extends ObjectModel
     {
         return $this->resume;
     }
+    /**
+     * @return mixed
+     */
+    public function getThumbnailName()
+    {
+        return $this->thumbnail_name;
+    }
+    public function getThumbnailNameFormatResize($size)
+    {
+        return _BASE_URL_."/picture/$size/".$this->thumbnail_name;
+    }
+
+    public function getThumbnailNameFormat()
+    {
+
+        return _BASE_URL_."/media/".$this->thumbnail_name;
+    }
+
+
 
     /**
      * @param mixed $resume

@@ -36,7 +36,36 @@ class Collection implements IteratorAggregate
         }
 
     }
+public function toArray()
+{
+    $array = [];
+    foreach ($this->collection as $k)
+    {
+        $array[] = $k;
+    }
+    return $array;
+}
+    public function toArrayJSON()
+    {
+        $array = [];
+        foreach ($this->collection as &$k)
+        {
+            if (is_object($k))
+            {
+                $k = get_object_vars($k);
 
+            }
+
+            if (is_array($k))
+            {
+                $k = array_intersect_key($k, array_fill_keys($this->model->json_fields, 0));
+
+            }
+
+            $array[] = $k;
+        }
+        return $array;
+    }
 
     public function getIterator()
     {

@@ -25,6 +25,8 @@ abstract class ObjectModel
     public $fields_validate = []; //Tableau des indes qui doivent être véfifiés
     public $fields_join = [];
     public $admin_tab = [];
+
+    public $json_fields = [];
     public $where = false;
     public $order_by = false;
     public $order_way = 'ASC';

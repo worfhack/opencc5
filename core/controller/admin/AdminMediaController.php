@@ -14,12 +14,38 @@ class AdminMediaController extends AdminController
         $collectionManager = new MediaCollection($this->id_lang);
         $collectionManager->load();
 
+
         $this->viewManager->initVariable(
 
             array('medias' => $collectionManager)
         );
-        echo $this->viewManager->render('pages/media/list.html', [
-        ]);
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+        {
+            $format = Tools::getValue('format', 'json');
+            switch ($format)
+            {
+                case 'tiny':
+                    header('Content-type: text/json');
+                    echo $this->viewManager->render('pages/media/listTiny.html', [
+                    ]);
+                    break;
+                case "json":
+                default:
+                 die(json_encode( $collectionManager->toArrayJSON()));
+
+
+
+            }
+         
+        
+            //CODE HERE
+        }else
+        {
+           
+            echo $this->viewManager->render('pages/media/list.html', [
+            ]);
+        }
+
     }
 
     public function form($id_media = false)
@@ -67,10 +93,26 @@ class AdminMediaController extends AdminController
                                 $media = new Media();
                                 $media->name = basename($_FILES["file"]["name"]);
                                 $media->add();
+                                if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                                {
 
+                                    die(json_encode(array('name'=>$media->name, "id"=>$media->id)));
+                                    //CODE HERE
+                                }
+                                else{
+                                    Tools::redirectAdmin('/media');
+                                }
                             }else
                             {
-                                die("i");
+                                if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+                                {
+
+                                    die(json_encode(array('error'=>true)));
+                                    //CODE HERE
+                                }
+                                else{
+                                    Tools::redirectAdmin('/media');
+                                }
                             }
                         }
                     }
@@ -78,7 +120,17 @@ class AdminMediaController extends AdminController
             }
 
         }
-        Tools::redirectAdmin('/media');
+
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+        {
+
+            die(json_encode(array('error'=>true)));
+            //CODE HERE
+        }
+        else{
+            Tools::redirectAdmin('/media');
+        }
+
     }
 
 
