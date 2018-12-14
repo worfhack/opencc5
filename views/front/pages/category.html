@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block headerbanner %}
+{% block headerbanner2 %}
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('img/home-bg.jpg')">
   <div class="overlay"></div>
@@ -20,43 +20,20 @@
 
 {% block content %}
 
+{% for pub in articles %}
+  {% include 'block/item-block.html'   with {'pub':pub}  %}
 
-<!-- Post Content -->
-<div class="container">
-  <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-      {% for pub in articles %}
+  {% else %}
+      No articles found
+{% endfor %}
 
-      <div class="post-preview">
-        <a href=" {{pub.getPostLink()}}">
-          <h2 class="post-title">
-            {{pub.getTitle()}}
-          </h2>
-          <h3 class="post-subtitle">
-            {{pub.getResume()}}
-          </h3>
-        </a>
-        <p class="post-meta">Posted by
-          <a href="#">{{pub.getAuthorFirstName}} {{pub.getAuthorLastName}}</a>
-          on {{pub.getDateAdd()}}</p>
-      </div>
-      <hr>
-
-      {% endfor %}
-
-
-
-      <!-- Pager -->
-      <div class="clearfix">
-        {% if prev != false %}
-        <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{prev}}">Prev Posts &rarr;</a>
-        {% endif %}
-        {% if next != false %}
-        <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{next}}">Older Posts &rarr;</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+<div class="clearfix">
+  {% if prev != false %}
+  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{prev}}">Prev Posts &rarr;</a>
+  {% endif %}
+  {% if next != false %}
+  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{next}}">Older Posts &rarr;</a>
+  {% endif %}
 </div>
 
 
