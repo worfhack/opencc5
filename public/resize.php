@@ -21,7 +21,7 @@ if (!empty($size) &&  empty($width) && empty(!$height)) {
             $thumbHeight = 510;
             break;
         default:
-            die('Invalid image size');
+            throw new Exception('Invalid image size');
     }
     $key_file =$size;
 } else {
@@ -38,13 +38,13 @@ if (isset($retina)) {
 }
 // Check the original file exists
 if (!is_file($original)) {
-    die('File doesn\'t exist');
+    throw new Exception('File doesn\'t exist');
 }
 // Make sure the directory exists
 if (!is_dir(MEDIA_CACHE_DIR . '/' . $key_file)) {
     mkdir(MEDIA_CACHE_DIR . '/' . $key_file);
     if (!is_dir(MEDIA_CACHE_DIR . '/' . $key_file)) {
-        die('Cannot create directory');
+        throw new Exception('Cannot create directory');
     }
     chmod(MEDIA_CACHE_DIR . '/' . $key_file, 0775);
 }
@@ -81,7 +81,7 @@ $data = getimagesize($original);
 //
 
 if (!$data) {
-    die("Cannot get mime type");
+    throw new Exception("Cannot get mime type");
 } else {
     header('Content-Type: ' . $data['mime']);
 }

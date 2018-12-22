@@ -75,7 +75,7 @@ class Users extends ObjectModel
      */
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_user as id_user, e.password as password FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . pSql::pSQL($mail) . '\' ';
+        $sql = 'SELECT e.id_user as id_user, e.password as password FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($mail) . '\' ';
 
         $user = Db::getInstance()->getRow($sql);
         if (!$user) {
@@ -132,7 +132,7 @@ class Users extends ObjectModel
 
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . pSql::pSQL($email) . '\'',
+        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($email) . '\'',
             $memcached = false);
     }
 

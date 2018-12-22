@@ -7,6 +7,8 @@ if (!defined("_DEBUG_") || _DEBUG_ != true)
     ini_set('display_startup_errors', 0);
 
 }
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 define('ROOT_DIR', $g_base_dir.'/');
 define('CORE_DIR', ROOT_DIR.'core/');
 define('CLASS_CORE_DIR', CORE_DIR.'classes/');
