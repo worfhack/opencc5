@@ -8,7 +8,7 @@ class CommentController extends FrontController
         $id_article = Tools::getValue('id_article');
         $message = Tools::getValue('message');
         $article = new Article($id_article, _ID_LANG_);
-        if (!$article->id_article or !$this->user)
+        if (!$article->id_article || !$this->user)
         {
             throw new NotFoundException();
         }

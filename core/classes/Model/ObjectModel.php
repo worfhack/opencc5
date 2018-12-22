@@ -96,12 +96,12 @@ abstract class ObjectModel
                     $key_name = $j['key'];
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                         ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                    if (isset($j['lang']) and $j['lang'] == true)
+                    if (isset($j['lang']) &&  $j['lang'] == true)
                     {
                         $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
 
                     }
-                    if (isset($j['andwhere']) and !empty($j['andwhere']))
+                    if (isset($j['andwhere']) && !empty($j['andwhere']))
                     {
                         $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
                     }
@@ -565,7 +565,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $key_name = $j['key'];
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                if (isset($j['andwhere']) and !empty($j['andwhere']))
+                if (isset($j['andwhere']) && !empty($j['andwhere']))
                 {
                     $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
                 }
@@ -647,12 +647,12 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $key_name = $j['key'];
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-               if (isset($j['lang']) and $j['lang'] == true)
+               if (isset($j['lang']) && $j['lang'] == true)
                {
                   $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
 
                }
-                if (isset($j['andwhere']) and !empty($j['andwhere']))
+                if (isset($j['andwhere']) &&  !empty($j['andwhere']))
                 {
                     $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
                 }

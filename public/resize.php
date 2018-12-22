@@ -14,7 +14,7 @@ $original = MEDIA_DIR . "/$file";
 
 
 // Check the size is valid
-if (!empty($size) and empty($width) and empty(!$height)) {
+if (!empty($size) &&  empty($width) && empty(!$height)) {
     switch ($size) {
         case 'thumbnail':
             $thumbWidth = 398;

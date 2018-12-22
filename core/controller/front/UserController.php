@@ -34,7 +34,7 @@ class UserController extends FrontController
         $password2 = Tools::getValue('password2');
         $user = new Users($this->user->id_user, _ID_LANG_);
 
-        if (!$firstName or !$lastName or ($password and !$password2)) {
+        if (!$firstName || !$lastName || ($password && !$password2)) {
             $error = 'Required field empty';
         }
         if ($password2 != $password) {
