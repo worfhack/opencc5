@@ -68,9 +68,9 @@ class Validate
      */
     static public function isModuleUrl($url, &$errors)
     {
-        if (!$url OR $url == 'http://')
+        if (!$url || $url == 'http://')
             $errors[] = Tools::displayError('please specify module URL');
-        elseif (substr($url, -4) != '.tar' AND substr($url, -4) != '.zip' AND substr($url, -4) != '.tgz' AND substr($url, -7) != '.tar.gz')
+        elseif (substr($url, -4) != '.tar' &&  substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz')
             $errors[] = Tools::displayError('unknown archive type');
         else
         {
@@ -120,7 +120,7 @@ class Validate
 
     static public function isUnsignedFloat($float)
     {
-        return strval(floatval($float)) == strval($float) AND $float >= 0;
+        return strval(floatval($float)) == strval($float) &&  $float >= 0;
     }
 
     /**
@@ -131,19 +131,10 @@ class Validate
      */
     static public function isOptFloat($float)
     {
-        return empty($float) OR self::isFloat($float);
+        return empty($float) || self::isFloat($float);
     }
 
-    /**
-     * Check for a carrier name validity
-     *
-     * @param string $name Carrier name to validate
-     * @return boolean Validity is ok or not
-     */
-    static public function isCarrierName($name)
-    {
-        return empty($name) OR preg_match('/^[^<>;=#{}]*$/ui', $name);
-    }
+
 
     /**
      * Check for an image size validity
@@ -158,7 +149,7 @@ class Validate
 
     static public function isOptId($id)
     {
-        return empty($id) OR self::isUnsignedId($id);
+        return empty($id) || self::isUnsignedId($id);
     }
 
     /**
@@ -366,7 +357,7 @@ class Validate
      */
     static public function isLinkRewrite($link)
     {
-        return empty($link) OR preg_match('/^[_a-z0-9-]+$/ui', $link);
+        return empty($link) || preg_match('/^[_a-z0-9-]+$/ui', $link);
     }
 
     /**
@@ -388,7 +379,7 @@ class Validate
      */
     static public function isAddress($address)
     {
-        return empty($address) OR preg_match('/^[^!<>?=+@{}_$%]*$/ui', $address);
+        return empty($address) || preg_match('/^[^!<>?=+@{}_$%]*$/ui', $address);
     }
 
     /**
@@ -421,7 +412,7 @@ class Validate
      */
     static public function isGenericName($name)
     {
-        return empty($name) OR preg_match('/^[^<>;=#{}]*$/ui', $name);
+        return empty($name) || preg_match('/^[^<>;=#{}]*$/ui', $name);
     }
 
     /**
@@ -514,7 +505,7 @@ class Validate
      */
     static public function isBool($bool)
     {
-        return is_null($bool) OR is_bool($bool) OR preg_match('/^[0|1]{1}$/ui', $bool);
+        return is_null($bool) || is_bool($bool) || preg_match('/^[0|1]{1}$/ui', $bool);
     }
 
     /**
@@ -528,33 +519,6 @@ class Validate
         return preg_match('/^[+0-9. ()-]*$/ui', $phoneNumber);
     }
 
-    /**
-     * Check for barcode validity (EAN-13)
-     *
-     * @param string $ean13 Barcode to validate
-     * @return boolean Validity is ok or not
-     */
-    static public function isEan13($ean13)
-    {
-        return !$ean13 OR preg_match('/[0-9]{0,13}/ui', $ean13);
-    }
-
-    /**
-     * Check for postal code validity
-     *
-     * @param string $postcode Postal code to validate
-     * @return boolean Validity is ok or not
-     */
-
-    /*
-       *  uk : /^([A-Za-z]{1,2}[0-9]{1,2}[A-Za-z]?[ ]?)([0-9]{1}[A-Za-z]{2})$/
-     *     fr : /^[a-z 0-9-]+$/ui
-     */
-    static public function isPostCode($postcode)
-    {
-        $_MOD_POSTCODE_REGEX_ = Configuration::get('_MOD_POSTCODE_REGEX_PHP','/^[a-z 0-9-]+$/ui');
-        return preg_match($_MOD_POSTCODE_REGEX_, $postcode);
-    }
 
     /**
      * Check for table or identifier validity
@@ -636,7 +600,7 @@ class Validate
      */
     static public function isUnsignedInt($int)
     {
-        return ((int) ((string) $int) OR $int == 0) AND $int < 4294967296 AND $int >= 0;
+        return ((int) ((string) $int) || $int == 0) && $int < 4294967296 && $int >= 0;
     }
 
     /**
@@ -653,7 +617,7 @@ class Validate
 
     static public function isNullOrUnsignedId($id)
     {
-        return is_null($id) OR self::isUnsignedId($id);
+        return is_null($id) || self::isUnsignedId($id);
     }
 
     /**
@@ -664,7 +628,7 @@ class Validate
      */
     static public function isLoadedObject($object)
     {
-        return is_object($object) AND $object->id;
+        return is_object($object) && $object->id;
     }
 
     /**
@@ -753,7 +717,7 @@ class Validate
      */
     static public function isGranularityValue($value)
     {
-        return (!is_null($value) AND ($value === 'd' OR $value === 'm' OR $value === 'y'));
+        return (!is_null($value) && ($value === 'd' || $value === 'm' || $value === 'y'));
     }
 
     /**
@@ -764,7 +728,7 @@ class Validate
      */
     static public function IsSortDirection($value)
     {
-        return (!is_null($value) AND ($value === 'ASC' OR $value === 'DESC'));
+        return (!is_null($value) && ($value === 'ASC' || $value === 'DESC'));
     }
 
     /**

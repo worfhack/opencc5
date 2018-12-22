@@ -117,7 +117,6 @@ abstract class Db
             $query = rtrim($query, ',') . ')';
             if ($limit)
                 $query .= ' LIMIT ' . intval($limit);
-            if ($debug) die($query);
 
             return $this->q($query);
         } elseif (strtoupper($type) == 'UPDATE') {
@@ -240,11 +239,7 @@ abstract class Db
         return $ret;
     }
 
-    static public function ds($query)
-    {
-        Db::s($query);
-        die();
-    }
+
 
     /**
      * Get Row and get value

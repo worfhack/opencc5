@@ -85,8 +85,8 @@ class AdminMediaController extends AdminController
 
                     if (!($_FILES["file"]["size"] > 5000000)) {
 
-                        if ($imageFileType == "jpg" or $imageFileType == "png" or $imageFileType == "jpeg"
-                            or $imageFileType == "gif"
+                        if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg"
+                            || $imageFileType == "gif"
                         ) {
 
                             if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {

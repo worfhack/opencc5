@@ -67,8 +67,8 @@ abstract class ObjectModel
     {
 
         /* Connect to database and check SQL table/identifier */
-        if (!Validate::isTableOrIdentifier($this->identifier) OR !Validate::isTableOrIdentifier($this->table)) {
-            die(Tools::displayError());
+        if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table)) {
+            throw new Exception(Tools::displayError());
         }
         $this->identifier = pSQL($this->identifier);
 
@@ -130,7 +130,7 @@ abstract class ObjectModel
                 $result = Db::getInstance()->ExecuteS($sql);
                 if ($result) {
                     foreach ($result as $row) foreach ($row AS $key => $value)
-                        if (key_exists($key, $this) AND $key != $this->identifier) {
+                        if (key_exists($key, $this) && $key != $this->identifier) {
                             $this->{$key}[$row['id_lang']] = stripslashes($value);
                         }
                 }
@@ -446,14 +446,10 @@ AND `id_lang` = ' . intval($id_lang);
             }
 
             if (!method_exists('Validate', $validate_function)) {
-// TODO : Attention, il y a des die pas très joli là !
-                die("h");
                 Tools::displayError('Fonction de validation "' . $validate_function . '" incconue', $die);
                 return false;
             } elseif (!call_user_func(['Validate', $validate_function], $this->{$row})) {
 
-// TODO : Attention, il y a des die pas très joli là !
-                die("p");
                 Tools::displayError('le champs "' . $row . '" ne répond pas à la fonction de validation "' . $validate_function . '"',
                     $die);
                 return false;
@@ -518,47 +514,6 @@ AND `id_lang` = ' . intval($id_lang);
         }
     }
 
-//Ajoute des condition à la requête générée via la fonction get_list en fonction des filtres selevtionnés.
-// A dupliquer dans les class si plus de filtres que date_add
-
-    public function export_list($fields = false)
-    {
-        if (!$fields) {
-            $fields = $this->get_list($id_lang = false, $forselect = false, $field_forselect_name = 'name',
-                $title_forselect_name = false, $separator = ' ', $limits = false);
-        }
-        if (!$fields) {
-            return false;
-        }
-
-        $fic_name = $this->table . '-' . date('d-m-Y_H-i') . '.csv';
-        if (!$handle = fopen(_EXPORTS_DIR_ . $fic_name, 'w')) {
-            Tools::displayError('Impossible de créer le fichier d\'export. ' . _EXPORTS_DIR_ . $fic_name);
-        }
-
-        $titles = ['Identifiant'];
-        foreach ($this->admin_tab as $key => $value) $titles[] = utf8_decode($value['th']);
-        fputcsv($handle, $titles, ';');
-
-        foreach ($fields as $field) {
-            $rows = [$field[$this->identifier]];
-            foreach ($this->admin_tab as $key => $value) {
-
-                if (is_array($value) && array_key_exists('function',
-                        $value) && isset($value['callFunctionOnExport']) && is_array($field) && array_key_exists($key,
-                        $field)
-                ) {
-                    $rows[] = strip_tags(call_user_func($value['function'], $field[$key]));
-                }
-
-                if (array_key_exists($key, $field)) {
-                    $rows[] = utf8_decode($field[$key]);
-                }
-            }
-            fputcsv($handle, $rows, ';');
-        }
-        return $fic_name;
-    }
 
 
 //Affiche les filtres
@@ -588,7 +543,7 @@ AND `id_lang` = ' . intval($id_lang);
         }
         foreach ($this->fields_join as $j) {
             $key_name = $j['key'];
-            if(isset($j['fields']) and !empty($j['fields'])) {
+            if(isset($j['fields']) && !empty($j['fields'])) {
                 foreach ($j['fields'] as $jfield) {
                     $sql .= ',' . $key_name . '.' . $jfield . ' as ' . $key_name . '_' . $jfield;
 

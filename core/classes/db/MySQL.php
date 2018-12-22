@@ -66,7 +66,7 @@ class MySQL extends Db
             return $this->_result;
         }
         else {
-            if ( $this->_link AND $this->_result = mysqli_query ($this->_link, $query) ) {
+            if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query)) ) {
                 $this->_result = mysqli_fetch_assoc ($this->_result);
                 if ( $memcached ) {
                     self::MemCached ()->set ($memcached_key , $this->_result , 3600);
@@ -97,7 +97,7 @@ class MySQL extends Db
             return $this->_result;
         }
         else {
-            if ( $this->_link AND $this->_result = mysqli_query ($this->_link, $query ) AND is_array ($tmpArray = mysqli_fetch_assoc ($this->_result)) ) {
+            if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) && is_array ($tmpArray = mysqli_fetch_assoc ($this->_result)) ) {
                 $this->_result = array_shift ($tmpArray);
                 if ( $memcached ) {
                     self::MemCached ()->set ($memcached_key , $this->_result , 3600);
@@ -110,10 +110,6 @@ class MySQL extends Db
         }
         return false;
 
-        // $this->_result = false;
-        // if ($this->_link AND $this->_result = mysql_query($query.' LIMIT 1', $this->_link) AND is_array($tmpArray = mysqli_fetch_assoc($this->_result)))
-        // return array_shift($tmpArray);
-        // return false;
     }
 
     public function truncate ($table)
@@ -157,7 +153,7 @@ class MySQL extends Db
         }
         else {
             $this->_result = false;
-            if ( $this->_link && $this->_result = mysqli_query ($this->_link, $query ) ) {
+            if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) ) {
                 $this->displayMySQLError ($query);
                 if ( !$array ) {
                     return $this->_result;
@@ -196,7 +192,7 @@ class MySQL extends Db
 
     public function NumRows ()
     {
-        if ( $this->_link AND $this->_result ) {
+        if ( $this->_link && $this->_result ) {
             return mysqli_num_rows ($this->_result);
         }
     }
@@ -247,12 +243,8 @@ class MySQL extends Db
     public function displayMySQLError ($query = false)
     {
 
-        if ( _PS_DEBUG_ AND mysqli_errno  ($this->_link) ) {
-            if ( $query ) {
-                die(Tools::displayError (mysqli_error ($this->_link) . '<br /><br /><pre>' . $query . '</pre>'));
-            }
-            die(Tools::displayError ((mysqli_error ($this->_link))));
-        }
+
+
     }
 
     static public function tryToConnect ($server , $user , $pwd , $db)
@@ -323,7 +315,7 @@ class MySQL extends Db
             $SqlAttack->pattern = implode (', ' , $preg_match_patterns);
             $SqlAttack->add ();
 
-            die('Tentative de piratage');
+            throw new Exception('Tentative de piratage');
         }
         // }
         return true;
