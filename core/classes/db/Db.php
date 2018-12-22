@@ -123,7 +123,7 @@ abstract class Db
                 $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',');
             if ($where)
-                $query .= ' WHERE ' . $where;
+                $query .= ' WHERE ' .$where;
            return $this->q($query);
         }
         return false;
@@ -207,9 +207,4 @@ abstract class Db
     abstract public function getMsgError();
 
 
-    static function getSingleR($tables, $field, $condition)
-    {
-        $row = Db::getInstance()->getRow('SELECT `' . $field . '` FROM `' . $tables . '` WHERE ' . $condition);
-        return $row[0][$field];
-    }
 }

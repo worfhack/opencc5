@@ -148,15 +148,7 @@ abstract class ObjectModel
         return Db::getInstance()->Execute($sql);
     }
 
-    static public function getMultipleInfo($table, $where_row, $where_value, $row, $memcached = false)
-    {
 
-
-        $sql = 'SELECT ' . implode(',',
-                $row) . ' FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'';
-
-        return Db::getInstance()->getRow($sql, $memcached);
-    }
 
     static public function getSingleInfo($table, $where_row, $where_value, $row, $memcached = false)
     {
@@ -208,11 +200,7 @@ AND `id_lang` = ' . intval($id_lang);
         return Db::getInstance()->Execute('DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'');
     }
 
-    static public function selectLast($table)
-    {
-        $sql = 'SELECT * FROM `' . $table . '` ORDER BY `date_add` DESC';
-        return Db::getInstance()->getRow($sql);
-    }
+
 
     public function Exist()
     {
