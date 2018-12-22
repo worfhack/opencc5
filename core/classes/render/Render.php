@@ -6,6 +6,7 @@
  * Date: 15/10/2018
  * Time: 16:47
  */
+
 class Render
 {
     protected $baseTpl;
@@ -16,11 +17,21 @@ class Render
     protected $twig;
     protected $global_var = [];
     protected $params= [];
-
-    public function render($template)
+    protected $translator;
+    public function render($template, $display=true)
     {
-        echo $this->twig->render($template, $this->params);
+
+        $text =  $this->twig->render($template, $this->params);
+        if ($display)
+        {
+            echo $text;
+        }
+        else
+        {
+            return $text;
+        }
     }
+
     public function initVariable($params)
     {
         if ($params) {
@@ -31,34 +42,20 @@ class Render
     {
         $context = Context::getContext();
         $this->params['baseUrl'] = $context->getBaseurl();
-
-
         $this->params['baseUrlLang'] = $context->getBaseurlLang();
-
         $this->params['currentPage'] = $context->getCurrentUrl();
         $this->params['siteName'] = $context->getConfig('_SITE_NAME_');
         $this->params['siteBaseLine'] = $context->getConfig('_SITE_BASE_LINE_');
         $this->params['siteTitle'] = $context->getConfig('_SITE_TITLE_');
         $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
-
+//d($this->params['cvPath']);
         $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
 
-        $this->twig_filters[] = new Twig_Filter('trans', function ($string, ...$var) {
-            return Tools::translate($string, $var);
-        });
-
-        $this->twig_filters[] = new Twig_Filter('datetime', function ($d, $format) {
-
-
-            if ($d instanceof \DateTime) {
-                $d = $d->getTimestamp();
-            }else
-            {
-                $d = strtotime($d);
-
-            }
-
-            return strftime($format, $d);
+        $this->twig_functions[] = new Twig_SimpleFunction('displayDate', function ($dateTime, $format) {
+                $context = Context::getContext();
+            $moment = new \Moment\Moment($dateTime, _LOCAL_ZONE_);
+            \Moment\Moment::setLocale($context->getCurrentLanguage()->local);
+            return ($moment->format($format, new \Moment\CustomFormats\MomentJs())); // 2016-09-13T14:32:06+0100
         });
         $this->twig_functions[] = new Twig_SimpleFunction('cleanUrl', function ($string) {
             $pattern = '!([^:])(//)!';
@@ -74,7 +71,9 @@ class Render
             $url = _BASE_ADMIN_URL_;
             return $url ;
         });
-
+        $this->twig_functions[]= new Twig_Function('trans', function ($string) {
+         return Tools::translate($string);
+        });
         $this->twig_functions[] = new Twig_SimpleFunction('base_admin_url_lang', function () {
             $url = _BASE_ADMIN_URL_LANG_;
             return $url ;
@@ -91,9 +90,6 @@ class Render
         });
 
 
-
-
-
         $this->twig = new Twig_Environment(  $this->loader, array(
 
             'debug' => true,
@@ -104,35 +100,6 @@ class Render
             $this->twig->addFilter($filter);
         foreach ($this->twig_functions as $func)
             $this->twig->addFunction($func);
-//
-//
-//        foreach ($this->global_var  as $itemName=>$itemVal)
-//        {
-//
-//            $this->twig->addGlobal($itemName, $itemVal);
-//
-//        }
-//        $js_var_text  = '';
-//        foreach ($this->js_vars  as $itemName=>$itemVal)
-//        {
-//            $js_var_text .= 'var ' . $itemName . ' = ';
-//            switch (gettype($itemVal))
-//            {
-//                case "boolean":
-//                default:
-//                    $js_var_text .= $itemVal;
-//
-//
-//            }
-//
-//            $js_var_text .= ';';
-//        }
-//
-//        $this->twig->addGlobal('global_js', $js_var_text);
-//        $this->twig->addGlobal('page_name', $this->pageName);
-//        $this->twig->addGlobal('base_url', _BASE_URL_);
-//        $this->twig->addGlobal('base_url_front', _BASE_URL_);
-//        $this->twig->addGlobal('current_page', _CURRENT_URL_);
 
 
     }

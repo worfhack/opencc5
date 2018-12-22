@@ -1,12 +1,10 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+
 session_start();
 if (file_exists('../config/settings.inc.php')) {
     require_once('../config/settings.inc.php');
 }
 define('CONFIG_DIR', $g_base_dir . 'config/');;
-error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 // init des constantes
@@ -48,6 +46,8 @@ $context = Context::getContext();
 
 
 
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 $collection = new RouteCollection();
 $host = $_SERVER['HTTP_HOST'];
 $env_host = $gl_config['webhost'];
@@ -70,13 +70,83 @@ $collection->attachRoute(new Route('/contact', [
     'methods' => 'GET'
 ]));
 
+
+$collection->attachRoute(new Route('/user/register', [
+
+    'params' => [''],
+    '_controller' => 'UserController::register',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/user/logout', [
+
+    'params' => [''],
+    '_controller' => 'UserController::logout',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/user/sigin', [
+
+    'params' => [''],
+    '_controller' => 'UserController::sigin',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/user/lostpassword', [
+
+    'params' => [''],
+    '_controller' => 'UserController::renewPassword',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/user/lostpassword', [
+
+    'params' => [''],
+    '_controller' => 'UserController::renewPassword',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/user/sigin', [
+
+    'params' => [''],
+    '_controller' => 'UserController::login',
+    'methods' => 'POST'
+]));
+$collection->attachRoute(new Route('/user/register', [
+
+    'params' => [''],
+    '_controller' => 'UserController::addUser',
+    'methods' => 'POST'
+]));
+
+$collection->attachRoute(new Route('/user/account', [
+
+    'params' => [''],
+    '_controller' => 'UserController::index',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/user/account', [
+
+    'params' => [''],
+    '_controller' => 'UserController::edit',
+    'methods' => 'POST'
+]));
+
+$collection->attachRoute(new Route('/comment', [
+
+    'params' => [''],
+    '_controller' => 'CommentController::addComment',
+    'methods' => 'POST'
+]));
+
+
 $collection->attachRoute(new Route('/' . _ADMIN_URI_, [
 
     'params' => [],
     '_controller' => 'AdminDashBoardController::index',
     'methods' => 'GET'
 ]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
 
+    'params' => [],
+    '_controller' => 'AdminLoginController::index',
+    'methods' => 'GET'
+]));
 $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
 
     'params' => [],
@@ -101,11 +171,6 @@ $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
 
 
 
-
-
-
-
-
 $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media' , [
 
     'params'     => ['link_rewrite'] ,
@@ -123,6 +188,19 @@ $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/add' , [
     'params'     => ['link_rewrite'] ,
     '_controller' => 'AdminMediaController::add',
     'methods' => 'POST'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/comment/publish/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminCommentController::publish',
+    'methods' => 'GET'
+]));
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/comment/remove/([0-9]+)' , [
+
+    'params'     => ['id'] ,
+    '_controller' => 'AdminCommentController::remove',
+    'methods' => 'GET'
 ]));
 $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/media/edit/([0-9]+)' , [
 

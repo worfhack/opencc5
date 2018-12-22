@@ -1,6 +1,12 @@
 <?php
 
 
+if (!defined("_DEBUG_") or _DEBUG_ != true)
+{
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+
+}
 define('ROOT_DIR', $g_base_dir.'/');
 define('CORE_DIR', ROOT_DIR.'core/');
 define('CLASS_CORE_DIR', CORE_DIR.'classes/');
@@ -10,6 +16,7 @@ define('TWIG_CACHE_DIR', ROOT_DIR.'cache/twig');
 define('VIEW_DIR', ROOT_DIR.'views/');
 define('VENDOR_DIR', $g_base_dir.'vendor/');;
 define('MEDIA_DIR', $g_base_dir.'public/media/');
+define('MEDIA_CACHE_DIR', $g_base_dir.'public/media_cache/');
 define('IMAGE_DIR', $g_base_dir.'public/images');
 define('AVATAR_DIR', $g_base_dir.'public/images/avatars');
 define('PRODUCT_IMAGE_DIR', $g_base_dir.'public/images/product');

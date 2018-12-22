@@ -32,11 +32,13 @@ class AdminCategoryController extends AdminController
         {
             $category =  NULL;
         }
-        $collectionManager = new AdministratorCollection($this->id_lang);
+        $collectionManager = new CategoryCollection($this->id_lang);
         $collectionManager->load();
+
         $this->viewManager->initVariable(
             [
                 'category'=>$category,
+                'categories'=>$collectionManager,
             ]);
 
 

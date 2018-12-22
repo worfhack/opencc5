@@ -30,7 +30,7 @@
                                 <!-- BEGIN PROFILE CONTENT -->
                                 <div class="profile-content">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-7">
                                             <div class="portlet light bordered">
                                                 <div class="portlet-title tabbable-line">
                                                     <div class="caption caption-md">
@@ -62,23 +62,45 @@
                                                                     <label class="control-label">Autheur</label>
                                                                     <select name="id_author">
                                                                         {% for author in authors %}
-                                                                        <option value="{{author.id_administrator}}">{{author.firstname}}</option>
+                                                                            <option {% if author.id_administrator == article.id_author %} selected {% endif%} value="{{author.id_administrator}}">{{author.firstname}}</option>
                                                                         {% endfor %}
 
                                                                     </select>
                                                                   </div>
+                                                                <input type="hidden" name="id_thumbnail" id="id_thumbnail" value="{{article.id_thumbnail}}">
+                                                                <label class="control-label">Categories</label>
+                                                                <select multiple name="categories[]">
+                                                                    {% for category in categories %}
+                                                                    <option {% if category.id_category in article_cat %} selected {% endif%} value="{{category.id_category}}">{{category.title}}</option>
+                                                                    {% endfor %}
+
+                                                                </select>
 
 
-
-                                                                <div class="margiv-top-10">
-                                                                    <button type="submit" class="btn green"> Save Changes </button>
-                                                                    <a href="{{base_admin_url_lang() }}/article" class="btn default"> Cancel </a>
-                                                                </div>
                                                             </div>
                                                             <!-- END PERSONAL INFO TAB -->
 
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+
+                                            <button type="button" class="media-selector btn btn-sm btn-danger" data-toggle="modal" data-image-target="image_thumbnail_show"data-id-target="id_thumbnail" data-target="#media-modal">
+                                                Thumbnail Image
+                                            </button>
+
+                                            <div id="image_thumbnail_show">  <img src="{{article.getThumbnailNameFormat()}}"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+
+
+                                            <div class="margiv-top-10">
+                                                <button type="submit" class="btn green"> Save Changes </button>
+                                                <a href="{{base_admin_url_lang() }}/article" class="btn default"> Cancel </a>
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +115,7 @@
 
 
 
-
+{% include 'block/media_input.html' %}
 
 
 

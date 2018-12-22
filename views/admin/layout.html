@@ -7,7 +7,9 @@
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
     <link href="/js/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="/js/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="/js/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="/js/assets/global/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="/js/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME GLOBAL STYLES -->
@@ -24,14 +26,24 @@
             src="/js/jquery.js"
            ></script>
     <script type="text/javascript"
+            src="/js/bootstrap.min.js"
+    ></script>
+    <script type="text/javascript"
             src="/js/admin.js"
     ></script>
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+    <script type="text/javascript"
+            src="/js/jquery.ui.widget.js"
+    ></script>
+    <script type="text/javascript"
+            src="/js/jquery.fileupload.js"
+    ></script>
+
     <script id="languages_json" >{{ langs|raw }}</script>
-    
+
     {% block head %}
 
-    {% endblock %} 
+    {% endblock %}
     <link href="/public/css/layouts/layout4/custom.css" rel="stylesheet" type="text/css" />
     <script>
 
@@ -43,11 +55,14 @@
         var gl_page_info =
         {
             pageName: '{{page_name}}',
-            baseUrl : '{{base_url}}',
+            baseUrl : '{{base_admin}}',
+
+            baseUrlAdmin : '{{base_admin_url}}',
 
         };
 
     </script>
+    <script src="../../public/js/bootstrap.min.js"></script>
 </head>
 <body class="page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo {%if page_name == 'admin_login' %}login{% endif %}">
 
@@ -58,7 +73,7 @@
 
         <!-- BEGIN LOGO -->
 
-        <!-- END LOGO -->   
+        <!-- END LOGO -->
         {% block navbar %}{% endblock %}
     </div>
     <!-- /container -->

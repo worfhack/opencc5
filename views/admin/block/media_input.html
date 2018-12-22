@@ -1,0 +1,170 @@
+<!-- media modal... -->
+
+<style>
+    #librayr a{
+        float:left;
+        position:relative;
+        border: 1px solid #e7e7e7;
+    }
+    div#image_thumbnail_show img {
+        max-width: 200px;
+    }
+    /*==================== styles........ =========================*/
+    .product-img{
+        float:left;
+        position:relative;
+        border: 1px solid #e9e9e9;
+        margin-right: 10px;
+    }
+
+    .product-img .btn{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+    #librayr img{
+        width: 100px;
+    }
+
+    #librayr input{
+        position:absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+    #librayr a:hover{
+        border: 1px solid red;
+    }
+
+    .product-images img{
+        width: 100px;
+    }
+</style>
+<div id="media-modal" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4>Media Manager</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- nav tabs -->
+                <ul class="nav nav-tabs" id="myTabs">
+                    <li class=""><a href="#upload" data-toggle="tab">Upload</a></li>
+                    <li class="active show"><a href="#librayr" data-toggle="tab">Library</a></li>
+                </ul>
+
+                <!-- tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="upload">
+
+                        <input id="fileupload" type="file" name="file" multiple="">
+                    </div>
+
+                    <!-- library tab -->
+                    <div class="tab-pane fade  active  in" id="librayr">
+                        <!-- images hard coded.. -->
+                        <!-- data-image-id contains image id from database... -->
+                        <div id="libItem"></div>
+
+                        <div class="clearfix"></div>
+                        <!-- insert button -->
+                    </div><!-- end .library -->
+                </div><!-- end tab-content -->
+            </div>
+        </div><!-- end .modal-content -->
+    </div><!-- end .modal-dialog -->
+</div><!-- end .modal -->
+
+<script>
+
+
+
+
+    var image_calback = '';
+    var id_callback = '';
+    var mediaModal = $('#media-modal'),
+        library = $('#librayr'); //tab
+
+    library.on('click','a',function(e){
+        e.preventDefault();
+        //checkboxprocessing........
+                var checkbox = e.currentTarget;
+
+                var imageId = $(checkbox).data('image-id');
+                var imgSrc =  $(checkbox).find("img").attr("src");
+
+                    $('#' + id_callback).val(imageId);
+                    $('#' + image_calback).html(
+                        "<img src='"+imgSrc+"'>"
+                    );
+
+
+        //hide modal
+        mediaModal.modal('hide');
+
+
+
+    });
+    $('#media-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        id_callback = button.data('id-target'); // Extract info from data-* attributes
+        image_calback = button.data('image-target'); // Extract info from data-* attributes
+
+
+        $.getJSON( gl_page_info.baseUrlAdmin+"/media", function( data ) {
+            var links = '';
+            $.each( data, function( key, val ) {
+
+             links = links +  "<a href='#' data-image-id='"+val.id_media+"'>"+
+                    "<img src='"+ gl_page_info.baseUrl+"media/"+val.name+"' alt=''>"+
+                    ""+
+                    "</a>";
+
+            });
+            $('#libItem').html(links);
+
+        });
+    })
+    //insert button and send images to the form and hidden fields tooo....
+    $('.insert').click(function(e){
+        //collect checkbox
+
+    });
+
+    $(function () {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = gl_page_info.baseUrlAdmin+"/media/add";
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: 'json',
+            done: function (e, data) {
+
+                $.getJSON( gl_page_info.baseUrlAdmin+"/media", function( data ) {
+                    var links = '';
+                    $.each(data, function (key, val) {
+
+                        links = links + "<a href='#' data-image-id='" + val.id_media + "'>" +
+                            "<img src='" + gl_page_info.baseUrl + "media/" + val.name + "' alt=''>" +
+                            "<input type='radio' name='images-check'>" +
+                            "</a>";
+
+                    });
+                    $('#libItem').html(links);
+                });
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+
+</script>

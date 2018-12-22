@@ -31,6 +31,7 @@ class Configuration extends ObjectModel
         {
             $config[$r['key']] = ($r['value_lang']!= ''?$r['value_lang']:$r['value']);
         }
+
         return $config;
     }
 

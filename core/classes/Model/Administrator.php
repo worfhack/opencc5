@@ -87,8 +87,24 @@ public function update()
     //Check si un customer existe déjà. (Avant la création de son compte et donc le lancement de la method add)
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_administrator FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.pSQL($mail).'\' AND e.password = \''.Tools::encrypt($password).'\'' ;
-        return Db::getInstance()->getValue($sql);
+        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.pSQL($mail).'\' ' ;
+        $admin =  Db::getInstance()->getRow($sql);
+        if (!$admin)
+        {
+            return false;
+        }
+
+
+
+
+        $hash =  $admin['password'];
+        $test = password_verify($password, $hash);
+        if (!$test)
+        {
+            return false;
+        }
+        return  $admin['id_administrator'];
+
     }
 
     static public function getName($idEmployee)
@@ -170,7 +186,7 @@ public function update()
     }
 
     public function changePassword($newPass) {
-        $this->password = $newPass;
+        $this->newpassword = $newPass;
         $this->add();
     }
 

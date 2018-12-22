@@ -1,0 +1,13 @@
+<div class="single-blog-post d-flex align-items-center widget-post">
+    <!-- Post Thumbnail -->
+    <div class="post-thumbnail">
+        <img src="{{pub.getThumbnailFormatResize('100', '70')}}" alt="">
+    </div>
+    <!-- Post Content -->
+    <div class="post-content">
+        <h4><a href="{{pub.getPostLink()}}" class="post-headline"> {{pub.getResume()}}</a></h4>
+        <div class="post-meta">
+            <p><a href="#">{{displayDate(pub.getDateAdd(), "LL")}}</a></p>
+        </div>
+    </div>
+</div>

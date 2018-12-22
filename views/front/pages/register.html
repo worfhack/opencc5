@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+<div class="contact-form">
+    <h5>{{trans('Create my account')}}</h5>
+    <!-- Contact Form -->
+    <div class="error">{{error}}</div>
+    <form action="{{base_url_lang()}}/user/register" method="post">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="group">
+                    <input type="text" name="firstname" id="firstname" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>{{trans('firstname')}}</label>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="group">
+                    <input type="text" name="lastname" id="lastname" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>{{trans('lastname')}}</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-12">
+                <div class="group">
+                    <input type="email" name="email" id="email" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>{{trans('email')}}</label>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-md-6">
+                <div class="group">
+                    <input type="password" name="password" id="password" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>{{trans('password')}}</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="group">
+                    <input type="password" name="password2" id="password2" required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>{{trans('password verification')}}</label>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn original-btn">{{trans('Create my account')}}</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

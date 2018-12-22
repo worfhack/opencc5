@@ -25,6 +25,8 @@ abstract class ObjectModel
     public $fields_validate = []; //Tableau des indes qui doivent être véfifiés
     public $fields_join = [];
     public $admin_tab = [];
+
+    public $json_fields = [];
     public $where = false;
     public $order_by = false;
     public $order_way = 'ASC';
@@ -94,6 +96,11 @@ abstract class ObjectModel
                     $key_name = $j['key'];
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                         ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
+                    if (isset($j['lang']) and $j['lang'] == true)
+                    {
+                        $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
+
+                    }
                     if (isset($j['andwhere']) and !empty($j['andwhere']))
                     {
                         $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
@@ -638,7 +645,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_max_result);
             }
         }
-     //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
+   //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         $results = Db::getInstance()->ExecuteS($sql, $array = true, $memcached);
         if (!$results) {
             return [];
@@ -685,6 +692,11 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $key_name = $j['key'];
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
+               if (isset($j['lang']) and $j['lang'] == true)
+               {
+                  $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
+
+               }
                 if (isset($j['andwhere']) and !empty($j['andwhere']))
                 {
                     $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
@@ -714,7 +726,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
         }
 
-     //   echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
+       //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         $results = Db::getInstance()->getValue($sql, $array = true, $memcached);
 
         if (!$results) {

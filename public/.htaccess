@@ -3,19 +3,12 @@ RewriteEngine On
 
 
 
+RewriteRule ^picture/([0-9]+)/([0-9]+)/(.+) resize.php?width=$1&file=$3&height=$2
+    RewriteRule ^picture/([a-z]+)/(.+) resize.php?size=$1&file=$2
 
-RewriteRule ^image/ - [L,NC]
-RewriteRule ^bin - [L,NC]
-RewriteRule ^css/ - [L,NC]
-RewriteRule ^style.css - [L,NC]
-RewriteRule ^scss/ - [L,NC]
-RewriteRule ^img/ - [L,NC]
-RewriteRule ^media/ - [L,NC]
-RewriteRule ^fonts/ - [L,NC]
-RewriteRule ^dist/ - [L,NC]
-RewriteRule ^bower_components/ - [L,NC]
-RewriteRule ^js/ - [L,NC]
-RewriteRule ^vendor/ - [L,NC]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
 RewriteRule ^(.*)$ index.php [NC,L]
 
 

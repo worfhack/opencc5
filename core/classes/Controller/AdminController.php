@@ -13,7 +13,8 @@ class AdminController extends Controller
 
         $this->viewManager->initVariable(
 
-            array('base_admin_url'=>_BASE_URL_.'/'._ADMIN_URI_,'page_name'=>$this->pageName
+            array('base_admin_url'=>_BASE_URL_.'/'._ADMIN_URI_,'page_name'=>$this->pageName,
+                'base_admin'=>_BASE_URL_.'/',
 
             ));
         //

@@ -1,0 +1,7 @@
+[
+                {% for media in medias %}
+
+{% if not loop.first %},{% endif %}{"title":"{{ media.name }}", "value":"{{base_url()}}/media/{{ media.name }}"}
+
+                {% endfor %}
+]

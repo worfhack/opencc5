@@ -19,10 +19,12 @@ class Article extends ObjectModel
     public $name;
     public $id_author;
     public $resume;
-
+    public $id_thumbnail;
 
     public $author_lastname;
     public $author_firstname;
+    public $thumbnail_name;
+
 
     public $fields_join = [
         [
@@ -30,7 +32,15 @@ class Article extends ObjectModel
             'key'=>'author',
             'onleft'=>'id_author',
             'onright'=>'id_administrator',
-            'fields'=>['firstname', 'lastname']]
+            'fields'=>['firstname', 'lastname'],
+        ],[
+            'table'=>'media',
+            'key'=>'thumbnail',
+            'onleft'=>'id_thumbnail',
+            'onright'=>'id_media',
+            'fields'=>['name'],
+
+            ]
     ];
 
     public $author_name;
@@ -58,7 +68,44 @@ class Article extends ObjectModel
     {
         return $this->resume;
     }
+    /**
+     * @return mixed
+     */
+    public function getThumbnailName()
+    {
+        return $this->thumbnail_name;
+    }
+    public function getThumbnailNameFormatResize($size)
+    {
+        return _BASE_URL_."/picture/$size/".$this->thumbnail_name;
+    }
+    public function getThumbnailFormatResize($with, $height)
+    {
+        return _BASE_URL_."/picture/$with/$height/".$this->thumbnail_name;
+    }
+    public function getThumbnailNameFormat()
+    {
 
+        return _BASE_URL_."/media/".$this->thumbnail_name;
+    }
+
+    public function getCategories()
+    {
+        $sql = 'select ca.id_category from '._DB_PREFIX_.'category_article ca    where id_article = '.$this->id_article;
+        return array_column(Db::getInstance()->ExecuteS($sql), 'id_category');
+
+    }
+    public function setCategories($categories)
+    {
+        $sql = "DELETE from " . _DB_PREFIX_ .'category_article where id_article =' .$this->id_article;
+        Db::getInstance()->execute($sql);
+            foreach ($categories as $id_category)
+            {
+                Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'category_article', array('id_article' => intval($this->id_article),
+                   'id_category' => intval($id_category)), 'insert');
+
+            }
+    }
     /**
      * @param mixed $resume
      */
@@ -79,7 +126,13 @@ class Article extends ObjectModel
     {
         return $this->author_firstname;
     }
-
+    public function getComments()
+    {
+        $collectionManager = new CommentCollection(_ID_LANG_);
+        $collectionManager->getFromArticle($this->id_article);
+        $collectionManager->load();
+        return $collectionManager;
+    }
     public function getPostLink()
     {
         return Link::getPageLink($this->getName() . '-' .$this->id_article);
