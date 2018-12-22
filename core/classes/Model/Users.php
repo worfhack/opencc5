@@ -216,7 +216,7 @@ class Users extends ObjectModel
                 'link' => $link,
                 'validate' => 1,
                 'end_validate' => $max_link_date->format('Y-m-d H:i:s'),
-            ), 'INSERT', $where = false, $limit = false, $psql = true, $debug = false);
+            ), 'INSERT', $where = false, $psql = true);
 
     }
     static public function resetLinkExist($link)

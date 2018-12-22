@@ -103,7 +103,7 @@ abstract class Db
      * @param string $limit LIMIT clause (optional)
      * @return mixed|boolean SQL query result
      */
-    public function autoExecute($table, $values, $type, $where = false, $limit = false, $psql = true, $debug = false)
+    public function autoExecute($table, $values, $type, $where = false, $psql = true)
     {
 
 
@@ -115,8 +115,6 @@ abstract class Db
             foreach ($values AS $key => $value)
                 $query .= '\'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',') . ')';
-            if ($limit)
-                $query .= ' LIMIT ' . intval($limit);
 
             return $this->q($query);
         } elseif (strtoupper($type) == 'UPDATE') {
@@ -126,53 +124,8 @@ abstract class Db
             $query = rtrim($query, ',');
             if ($where)
                 $query .= ' WHERE ' . $where;
-            if ($limit)
-                $query .= ' LIMIT ' . intval($limit);
-
-
            return $this->q($query);
         }
-        return false;
-    }
-
-
-    /**
-     * Filter SQL query within a blacklist
-     *
-     * @param string $table Table where insert/update data
-     * @param string $values Data to insert/update
-     * @param string $type INSERT or UPDATE
-     * @param string $where WHERE clause, only for UPDATE (optional)
-     * @param string $limit LIMIT clause (optional)
-     * @return mixed|boolean SQL query result
-     */
-    public function autoExecuteWithNullValues($table, $values, $type, $where = false, $limit = false)
-    {
-        if (!sizeof($values))
-            return true;
-        if (strtoupper($type) == 'INSERT') {
-            $query = 'INSERT INTO `' . $table . '` (';
-            foreach ($values AS $key => $value)
-                $query .= '`' . $key . '`,';
-            $query = rtrim($query, ',') . ') VALUES (';
-            foreach ($values AS $key => $value)
-                $query .= (($value === '' OR $value === NULL) ? 'NULL' : '\'' . $value . '\'') . ',';
-            $query = rtrim($query, ',') . ')';
-            if ($limit)
-                $query .= ' LIMIT ' . intval($limit);
-            return $this->q($query);
-        } elseif (strtoupper($type) == 'UPDATE') {
-            $query = 'UPDATE `' . $table . '` SET ';
-            foreach ($values AS $key => $value)
-                $query .= '`' . $key . '` = ' . (($value === '' OR $value === NULL) ? 'NULL' : '\'' . $value . '\'') . ',';
-            $query = rtrim($query, ',');
-            if ($where)
-                $query .= ' WHERE ' . $where;
-            if ($limit)
-                $query .= ' LIMIT ' . intval($limit);
-            return $this->q($query);
-        }
-
         return false;
     }
 

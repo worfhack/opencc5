@@ -1,4 +1,5 @@
 {
+    "name": "worf/openccblog",
     "require": {
 	"twig/twig":"~2.0",
         "bluem/tree": "^2.0",
