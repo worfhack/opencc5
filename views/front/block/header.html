@@ -8,7 +8,10 @@
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
-                    <a href="index.html" class="original-logo"><img src="img/core-img/logo.png" alt=""></a>
+                    <div class="site-heading">
+                        <h1>{{siteName}}</h1>
+                        <span class="subheading">{{siteBaseLine}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,24 +43,25 @@
                         <!-- Nav Start -->
                         <div class="classynav">
                             <ul>
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{{base_url_lang()}}">{{trans('Home')}}</a></li>
 
 
 
                                 {{ m.tree(menuCat,  '') }}
 
 
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="{{base_url_lang()}}/contact">Contact</a></li>
+                                <li><a href="{{cvPath}}">CV</a></li>
+                                {% if user %}
+                                    <li><a href="{{base_url_lang()}}user/account">{{trans('My account')}}</a></li>
+                                    <li><a href="{{base_url_lang()}}user/logout">{{trans('logout')}}</a></li>
+                                {% else %}
+                                <li><a href="{{base_url_lang()}}user/sigin">{{trans('Sigin')}}</a></li>
+                                <li><a href="{{base_url_lang()}}user/register">{{trans('Register')}}</a></li>
+                                {% endif %}
                             </ul>
 
-                            <!-- Search Form  -->
-                            <div id="search-wrapper">
-                                <form action="#">
-                                    <input type="text" id="search" placeholder="Search something...">
-                                    <div id="close-icon"></div>
-                                    <input class="d-none" type="submit" value="">
-                                </form>
-                            </div>
+
                         </div>
                         <!-- Nav End -->
                     </div>

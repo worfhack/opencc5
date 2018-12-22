@@ -6,6 +6,8 @@
  * Date: 20/10/2018
  * Time: 19:10
  */
+use Symfony\Component\Translation\Translator;
+
 class Context
 {
     static $_context;
@@ -17,13 +19,28 @@ class Context
     private $baseUrlLang;
     private $server_request_scheme;
     private $config;
+    private $translator;
+    //private $moment;
+
     private function __construct()
     {
         global $gl_config;
+        $this->translator = new Translator('fr_FR');
+
 
         $this->gl_config = $gl_config;
         $this->requestUri = $_SERVER['REQUEST_URI'];
         $this->setLanguage()->setCurrentUrl()->setBaseUrl()->setBaseUrlLang()->setConfig();
+        $this->translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
+        $this->translator->addResource('yaml', ROOT_DIR .'translate/'.$this->getCurrentLanguage()->iso.'.yaml', $this->getCurrentLanguage()->iso);
+//        $this->moment = new \Moment\Moment();
+//        \Moment\Moment::setLocale($this->getCurrentLanguage()->local);
+     //   echo  $this->moment->format(); // e.g. 2012-10-03T10:00:00+0000
+
+    }
+    public function getTranslator()
+    {
+        return $this->translator;
     }
     public function setConfig()
     {

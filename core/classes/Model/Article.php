@@ -33,6 +33,7 @@ class Article extends ObjectModel
             'onleft'=>'id_author',
             'onright'=>'id_administrator',
             'fields'=>['firstname', 'lastname'],
+        ],[
             'table'=>'media',
             'key'=>'thumbnail',
             'onleft'=>'id_thumbnail',
@@ -78,15 +79,33 @@ class Article extends ObjectModel
     {
         return _BASE_URL_."/picture/$size/".$this->thumbnail_name;
     }
-
+    public function getThumbnailFormatResize($with, $height)
+    {
+        return _BASE_URL_."/picture/$with/$height/".$this->thumbnail_name;
+    }
     public function getThumbnailNameFormat()
     {
 
         return _BASE_URL_."/media/".$this->thumbnail_name;
     }
 
+    public function getCategories()
+    {
+        $sql = 'select ca.id_category from '._DB_PREFIX_.'category_article ca    where id_article = '.$this->id_article;
+        return array_column(Db::getInstance()->ExecuteS($sql), 'id_category');
 
+    }
+    public function setCategories($categories)
+    {
+        $sql = "DELETE from " . _DB_PREFIX_ .'category_article where id_article =' .$this->id_article;
+        Db::getInstance()->execute($sql);
+            foreach ($categories as $id_category)
+            {
+                Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'category_article', array('id_article' => intval($this->id_article),
+                   'id_category' => intval($id_category)), 'insert');
 
+            }
+    }
     /**
      * @param mixed $resume
      */
@@ -107,7 +126,13 @@ class Article extends ObjectModel
     {
         return $this->author_firstname;
     }
-
+    public function getComments()
+    {
+        $collectionManager = new CommentCollection(_ID_LANG_);
+        $collectionManager->getFromArticle($this->id_article);
+        $collectionManager->load();
+        return $collectionManager;
+    }
     public function getPostLink()
     {
         return Link::getPageLink($this->getName() . '-' .$this->id_article);

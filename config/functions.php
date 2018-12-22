@@ -27,3 +27,5 @@ function pSQL ($string , $htmlOK = false , $strip = true)
     }
     return $string;
 }
+
+//function sendMail($content)

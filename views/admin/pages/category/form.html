@@ -55,7 +55,14 @@
                                                                     <input type="text" placeholder="" class="form-control" name="resume" {% if edit %} value="{{category.resume}}" {% endif %}/> </div>
 
 
+                                                                <label class="control-label">parent Category</label>
+                                                                <select name="id_parent">
+                                                                    <option value="0">Root</option>
+                                                                    {% for cat in categories %}
+                                                                            <option   {% if cat.id_category == category.id_parent %} selected {% endif%} value="{{cat.id_category}}">{{cat.title}}</option>
+                                                                    {% endfor %}
 
+                                                                </select>
 
 
                                                                 <div class="margiv-top-10">

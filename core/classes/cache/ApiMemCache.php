@@ -39,9 +39,34 @@ class ApiMemCache
       
       ');
 
-        }
-        $this->Memcached = new Memcached();
-        $this->Memcached->addServer(_MEMCACHED_SERVER_, _MEMCACHED_PORT_);
+        }       eval('
+      class Memcached2
+      {
+              function get()
+              {
+                  return NULL;
+              }
+              
+              function set()
+              {
+              
+                  return NULL;
+              }
+
+              function flush(){
+              }
+              
+              function addServer()
+              {
+              
+              }
+      
+      }
+      
+      ');
+
+            $this->Memcached = new Memcached2();
+            $this->Memcached->addServer(_MEMCACHED_SERVER_, _MEMCACHED_PORT_);
     }
 
     public static function getInstance()

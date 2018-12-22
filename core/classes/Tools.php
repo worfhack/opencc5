@@ -28,37 +28,10 @@ class Tools
     }
 
 
-    static public function getModelValue($node, $element, $lang_field = false)
-    {
-
-        if ($lang_field == true) {
-            $array_lang_field = array();
-            foreach ($node->$element->language as $l) {
-                $id_lang = (string)$l->attributes();
-                $value = (string)$l;
-
-                $array_lang_field[$id_lang] = $value;
-
-            }
-            return $array_lang_field;
-        } else {
-            return (string)$node->$element;
-        }
-    }
 
 
-    static public function getModelApi($webService, $route, $id, $root)
-    {
-
-        $opt = array();
-        $opt['resource'] = $route . '/' . $id;
-        $xml = $webService->get($opt);
-        $model = $xml->$root->children();
-
-        return $model;
 
 
-    }
 
     static function substr ($str , $start , $length = false , $encoding = 'utf-8')
     {
@@ -116,6 +89,12 @@ class Tools
 
         exit;
     }
+    static public function translate($string)
+    {
+        $context = Context::getContext();
+        $translated = $context->getTranslator()->trans($string);
+        return $translated;
+    }
     static public function redirect ($url)
     {
 
@@ -124,83 +103,16 @@ class Tools
 
         exit;
     }
-    static public function encrypt ($passwd)
-    {
 
-        return md5 (_KEY_ . $passwd);
+    public static function encrypt($password)
+    {
+        $options = [
+            'cost' => 11,
+        ];
+        return password_hash( $password, PASSWORD_BCRYPT, $options);
     }
 
 
-    static public function translate($string, ...$var)
-    {
-        global $gl_trad;
-        $md5 = md5($string);
-        if (isset($gl_trad) && isset($gl_trad[$md5]))
-        {
-            $source = $gl_trad[$md5];
-        }else
-        {
-            $source = $string;
-        }
-
-        return vsprintf($source , $var);
-
-    }
-
-    static public function fetchModelApi($root, $need_vars, $mapping = [], $lang_fields = [])
-    {
-        $return = new ApiResult();
-
-
-        foreach ($need_vars as $v) {
-            if (in_array($v, $lang_fields)) {
-                $lang_field = true;
-            } else {
-                $lang_field = false;
-            }
-            $data = Tools::getModelValue($root, $v, $lang_field);
-
-
-            if (array_key_exists($v, $mapping)) {
-
-
-
-                $name_key = $mapping[$v];
-                if (is_callable($mapping[$v]))
-                {
-                    $mapping[$v]($data, $name_key);
-                }
-            } else {
-                $name_key = $v;
-            }
-            $return->$name_key = $data;
-        }
-        return $return;
-
-    }
-static function xml_attribute($object, $attribute, $default='')
-    {
-        $atts_array = (array) $object;
-        $atts_array = $atts_array['@attributes'];
-        if(isset($atts_array[$attribute]))
-            return (string) $atts_array[$attribute];
-        return $default;
-
-    }
-    static public function getCollections($webService, $route, $filter, $root,  $sort='')
-    {
-
-        $opt = array();
-
-        $query_data = array('filter' => $filter);
-        $params = urldecode(http_build_query($query_data).($sort?'&sort='.$sort: ''));
-        $opt['resource'] = $route . '/?' . $params;
-        $xml = $webService->get($opt);
-        $collection = $xml->$root->children();
-        return $collection;
-
-
-    }
 
     public static function getValue($key, $default_value = false)
     {
@@ -226,13 +138,6 @@ static function xml_attribute($object, $attribute, $default='')
         return strlen($str);
     }
 
-    static function need_to_be_cgi()
-    {
-        global $gl_context;
-        if ($gl_context != 'cgi') {
-            die(self::displayError('Need to be lunch in cgi mode'));
-        }
-    }
 
     public static function isEmpty($field)
     {

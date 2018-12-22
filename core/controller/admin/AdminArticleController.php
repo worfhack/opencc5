@@ -33,12 +33,16 @@ class AdminArticleController extends AdminController
         {
             $article =  NULL;
         }
-        $collectionManager = new AdministratorCollection($this->id_lang);
-        $collectionManager->load();
+        $categories = new CategoryCollection($this->id_lang);
+        $categories->load();
+        $authors = new AdministratorCollection($this->id_lang);
+        $authors->load();
         $this->viewManager->initVariable(
             [
                 'article'=>$article,
-                'authors'=>$collectionManager,
+                'article_cat'=>$article->getCategories(),
+                'categories'=>$categories,
+                'authors'=>$authors,
             ]);
 
 
@@ -65,9 +69,10 @@ class AdminArticleController extends AdminController
     public function edit($id)
     {
 
-
+        $categories = Tools::getValue('categories');
         $article = new Article($id, _ID_LANG_);
         $article->copy_from_post();
+        $article->setCategories($categories);
         $article->update();
 
         Tools::redirectAdmin('/article');

@@ -1,46 +1,79 @@
 {% extends "layout.html" %}
 
-{% block headerbanner %}
-<!-- Page Header -->
-<header class="masthead" style="background-image: url('img/post-bg.jpg')">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        <div class="post-heading">
-          <h1>{{title}}</h1>
-          <span class="meta">Posted by
-                <a href="#">{{authorFirstName}} {{authorLastName}}</a>
-                on {{dateAdd}}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
 
-{% endblock %}
 
 {% block content %}
-<!-- Post Content -->
-<article>
-  <div class="container blog-item-page">
-    <div class="row">
-      <div class="col-lg-8 col-md-8 mx-auto">
-        {{content | raw  }}
+  <!-- Single Blog Area  -->
+  <div class="single-blog-area blog-style-2 mb-50">
+    <!-- Blog Content -->
+    <div class="single-blog-content">
+      <div class="line"></div>
+      <h4><a href="#" class="post-headline mb-0">{{title}}</a></h4>
+      <div class="post-meta mb-50">
+        <p>{{trans('By')}} <a href="#">{{authorFirstName}} {{authorLastName}}</a></p>
       </div>
+        {{content | raw  }}
 
 
-    <div id="respond" class="comment-respond">
-      <h3 id="reply-title" class="comment-reply-title">Laisser un commentaire <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2018/11/25/le-yemen-victime-de-laffaire-khashoggi/#respond" style="display:none;">Annuler la réponse.</a></small></h3>			<form action="http://filiu.blog.lemonde.fr/wp-comments-post.php" method="post" id="commentform" class="comment-form">
-      <p class="comment-notes"><span id="email-notes">Votre adresse de messagerie ne sera pas publiée.</span> Les champs obligatoires sont indiqués avec <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Commentaire</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">Nom <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" aria-required="true" required="required"></p>
-      <p class="comment-form-email"><label for="email">Adresse de messagerie <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required="true" required="required"></p>
-      <p class="comment-form-url"><label for="url">Site web</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200"></p>
-      <p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Laisser un commentaire"> <input type="hidden" name="comment_post_ID" value="1557" id="comment_post_ID">
-        <input type="hidden" name="comment_parent" id="comment_parent" value="0">
-      </p></form>
-    </div>
+
+
+      <!-- Comment Area Start -->
+      <div class="comment_area clearfix mt-70">
+        <h5 class="title">{{trans("Comments")}}</h5>
+
+
+        <ol>
+          {% for comment in comments %}
+          <!-- Single Comment Area -->
+          <li class="single_comment_area">
+            <!-- Comment Content -->
+            <div class="comment-content d-flex">
+
+              <!-- Comment Meta -->
+              <div class="comment-meta">
+                <a href="#" class="post-date">{{displayDate(comment.getDateAdd(), "LL")}}</a>
+                <p><a href="#" class="post-author">{{comment.getUserFirstname()}} {{comment.getUserLastname()}}</a></p>
+                <p>{{comment.getMessage()}}</p>
+              </div>
+            </div>
+
+          </li>
+          {% endfor %}
+
+          <!-- Single Comment Area -->
+
+        </ol>
+      </div>
+      {% if user  %}
+      <div class="post-a-comment-area mt-70">
+        <h5>{{trans("Leave a reply")}}</h5>
+        <!-- Reply Form -->
+        <form action="{{base_url_lang()}}comment" method="post">
+          <input type="hidden" name="id_article" value="{{id_article}}">
+          <div class="row">
+
+
+
+            <div class="col-12">
+              <div class="group">
+                <textarea name="message" id="message" required></textarea>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>{{trans("Comment")}}</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn original-btn">{{trans("Reply")}}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      {% else %}
+       {{trans("You have to be log to comments")}}
+      {% endif %}
+      <p> </p>
     </div>
   </div>
-</article>
+
 
 {% endblock %}

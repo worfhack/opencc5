@@ -17,8 +17,8 @@ class Category extends ObjectModel
     public $date_add;
     public $url_rewrite;
     public $resume;
-    private $articles ;
-
+    public $articles ;
+    public $id_parent;
     public $fields_lang = ['title', 'url_rewrite', 'resume'];
 
     /**

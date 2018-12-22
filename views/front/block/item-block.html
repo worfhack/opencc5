@@ -4,9 +4,9 @@
     <div class="row align-items-center">
         <div class="col-12 col-md-6">
             <div class="single-blog-thumbnail">
-                <img src="{{baseUrl}}img/blog-img/3.jpg" alt="">
+                <img src="{{pub.getThumbnailNameFormatResize('thumbnail')}}" alt="">
                 <div class="post-date">
-                    <a href="#">{{pub.getDateAdd()}}</a>
+                    <a href="#">{{displayDate(pub.getDateAdd(), "LL")}}</a>
                 </div>
             </div>
         </div>
@@ -18,7 +18,6 @@
                 <p>  {{pub.getResume()}}</p>
                 <div class="post-meta">
                     <p>By <a href="#">{{pub.getAuthorFirstName}}  {{pub.getAuthorLastName}}</a></p>
-                    <p>3 comments</p>
                 </div>
             </div>
         </div>

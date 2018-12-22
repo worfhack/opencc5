@@ -44,11 +44,15 @@
 
 <div class="container">
     <div class="row">
+        {% if with_sidebar == true %}
         <div class="col-12 col-lg-9">
+            {% else %}
+            <div class="col-12 col-lg-12">
+                {% endif %}
             {% block content %}{% endblock %}
         </div>
 
-        {% include 'block/sidebar.html'   with {'sidebarData':sidebarData}  %}
+            {% if with_sidebar == true %}{% include 'block/sidebar.html'   with {'sidebarData':sidebarData}  %}  {% endif %}
 
 
     </div>

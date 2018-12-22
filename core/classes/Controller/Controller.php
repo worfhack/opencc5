@@ -8,6 +8,7 @@ abstract class Controller
     protected $context;
     protected $id_lang;
     protected $pageName = '';
+    protected $need_to_be_log = false;
 
 
     public function __construct()
