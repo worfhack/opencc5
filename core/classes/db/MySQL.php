@@ -45,7 +45,7 @@ class MySQL extends Db
     public function disconnect ()
     {
         if ( $this->_link ) {
-            @mysqli_close ($this->_link);
+            mysqli_close ($this->_link);
         }
         $this->_link = false;
     }
@@ -249,26 +249,26 @@ class MySQL extends Db
 
     static public function tryToConnect ($server , $user , $pwd , $db)
     {
-        if ( !$link = @@mysqli_connect ($server , $user , $pwd) ) {
+        if ( !$link = mysqli_connect ($server , $user , $pwd) ) {
             return 1;
         }
-        if ( !@mysqli_select_db ($link , $db) ) {
+        if ( !mysqli_select_db ($link , $db) ) {
             return 2;
         }
-        @mysqli_close  ($link);
+        mysqli_close  ($link);
         return 0;
     }
 
     static public function tryUTF8 ($server , $user , $pwd)
     {
-        $link = @mysqli_connect ($server , $user , $pwd);
+        $link = mysqli_connect ($server , $user , $pwd);
         if ( !mysqli_query ($link, 'SET NAMES \'utf8\'' ) ) {
             $ret = false;
         }
         else {
             $ret = true;
         }
-        @mysqli_close ($link);
+        mysqli_close ($link);
         return $ret;
     }
 

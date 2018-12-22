@@ -59,31 +59,6 @@ class Validate
         return false;
     }
 
-    /**
-     * Check for module URL validity
-     *
-     * @param string $url module URL to validate
-     * @param array $errors Reference array for catching errors
-     * @return boolean Validity is ok or not
-     */
-    static public function isModuleUrl($url, &$errors)
-    {
-        if (!$url || $url == 'http://')
-            $errors[] = Tools::displayError('please specify module URL');
-        elseif (substr($url, -4) != '.tar' &&  substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz')
-            $errors[] = Tools::displayError('unknown archive type');
-        else
-        {
-            if ((strpos($url, 'http')) === false)
-                $url = 'http://'.$url;
-            if (!is_array(@get_headers($url)))
-                $errors[] = Tools::displayError('invalid URL');
-        }
-        if (!sizeof($errors))
-            return true;
-        return false;
-
-    }
 
     /**
      * Check for MD5 string validity
