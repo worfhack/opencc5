@@ -66,7 +66,7 @@ if (!file_exists($target) ) {
             $image = imagecreatefrompng($original);
             break;
         default:
-            die("Invalid image type (#{$type} = " . image_type_to_extension($type) . ")");
+            throw new Exception("Invalid image type (#{$type} = " . image_type_to_extension($type) . ")");
     }
     // Calculate height automatically if not given
     if ($thumbHeight === null) {

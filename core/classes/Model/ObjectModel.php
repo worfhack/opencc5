@@ -96,7 +96,7 @@ abstract class ObjectModel
                     $key_name = $j['key'];
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                         ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                    if (isset($j['lang']) &&  $j['lang'] == true)
+                    if (isset($j['lang']) &&  $j['lang'] === true)
                     {
                         $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
 
@@ -433,7 +433,7 @@ AND `id_lang` = ' . intval($id_lang);
                 } else if ($return_error) {
                     return ['error' => (bool)true,
                         'error_detail' => 'Le champs "' . $field_required . '" n\'est pas renseigné'];
-                } else if ($display_error == true) {
+                } else if ($display_error === true) {
 //Tools::displayError ('Le champs "' . $field_required . '" n\'est pas renseigné' , $die);
                     return false;
                 }
@@ -647,7 +647,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $key_name = $j['key'];
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-               if (isset($j['lang']) && $j['lang'] == true)
+               if (isset($j['lang']) && $j['lang'] === true)
                {
                   $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
 
@@ -781,240 +781,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         return $return;
     }
 
-//Récupère une valeur dans une table précise.
 
-    public function display_list($fields = false, $module, $selectable = true, $sortable = false, $checked_val = [],
-                                 $datas_table_width = "100%", $table_id = false)
-    {
-// Tools::debug($fields, true);
-        if (_TRACE_PERF_) {
-            Tools::trace_perfs('ObjectModel::display_list // Chargement de la liste des éléments DEB');
-        }
-        if ($fields === false) {
-
-            $fields = $this->get_list();
-        }
-
-        $this->get_list_count = $this->count_fields();
-
-        $columns = Db::getInstance()->getMysqlColumns(_DB_PREFIX_ . $this->table); //Recupère le nom de champs de la table
-        if (in_array('position', $columns)) {
-            $sortable = true;
-        }
-
-        $class_name = get_class($this);
-
-//Check les droits pour le live_edit
-        if (!$this->edit) {
-            $this->live_edit = false;
-        }
-
-//Initialise les variable javascripts relatives à l'objet
-        echo '
-<script type="text/javascript">
-    var class_name = "' . get_class($this) . '";
-    var class_identifier = "' . $this->identifier . '";
-</script>';
-        if (isset($_POST['redirect_admin_url_force'])) {
-            $force_redirect = '&redirect_admin_url_force=' . base64_encode($_POST['redirect_admin_url_force']);
-        } else {
-            $force_redirect = '';
-        }
-        $table = '<div class="datas_table_wrapper" style="margin:0 0 20px 0;width:' . $datas_table_width . '">
-    <div>
-        <h3 style="float:left;margin:0">' . $module->public_name . '</h3>
-        <div class="right">
-            ' . ($this->exportable ? '
-            <a href="index.php?module=' . $module->name . '&action=export_' . $class_name . '" class="button" data-icon-primary="ui-icon-print" data-icon-only="false title="Exporter">Exporter</a>
-            ' : '') . '
-            ' . ($this->add ? '
-            <a href="index.php?module=' . $module->name . '&action=' . $this->link_add . $this->link_add_params . $force_redirect . '" class="button" data-icon-primary="ui-icon-circle-plus" data-icon-only="false" title="Nouveau">Nouveau</a>
-            ' : '') . '
-
-            ' . ($this->delete ? '
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:void(0);" class="button delete-object-selection" data-icon-primary="ui-icon-circle-plus" data-icon-only="false" title="Supprimer la selection">Supprimer la selection</a>
-            ' : '') . '
-        </div>
-    </div>
-    <div class="clear" style="margin:10px 0"></div>';
-
-        if ($this->active_filters || $class_name == 'Order') {
-            $table .= '<hr/>' . $this->display_filters();
-        }
-
-        if ($this->active_filters) {
-            $table .= '<hr/>' . $this->display_search_filters() . '<hr/>';
-        }
-
-        $table .= '
-    ' . ($this->delete ? '<form id="form_' . $class_name . '_listing" method="post">' : '') . '
-        <table id="' . ($table_id ? $table_id : 'datas_table_' . $class_name) . '" class=" ' . (count($fields) == 0 ? 'datas_table_css' : 'datas_table') . ' ' . ($sortable ? 'tab-sortable' : '') . '">
-            <thead>';
-        $table .= '<tr>';
-
-        //Checkbox "cocher tout"
-        if ($selectable) {
-            $table .= '<td width="10" align="center" style="padding:5px;"><input type="checkbox" name="checkAllObject" value="" class="checked-all-object"/></td>';
-        }
-
-        //Identifiant
-        $table .= '<th width="20">ID</th>';
-        foreach ($this->admin_tab as $key => $value) {
-            $width = (array_key_exists('width', $value) ? $value['width'] : '');
-            $table .= '<th width="' . $width . '">' . $value['th'] . '</th>';
-        }
-
-        //TH Voir, modifier, supprimer
-        if ($this->view || $this->edit || $this->delete) {
-            $table .= '<td width="90"></td>';
-        }
-
-        $table .= '</tr></thead><tbody>';
-
-
-        if (!$fields) { // Si la liste est vide
-            //Compte le nombre de th pour le colspan
-            $colspan = count($this->admin_tab) + 1; //Le +1 c'est pour l'id
-            if ($selectable) {
-                $colspan++;
-            }
-            if ($module) {
-                $colspan++;
-            }
-            if ($this->view || $this->edit || $this->delete) {
-                $colspan++;
-            }
-
-            $table .= '<tr><td colspan="' . $colspan . '" style="font-size:14px;color:#434343;padding:10px 0" align="center"> Aucun élément trouvé </td></tr>';
-        } else {
-            // Tools::debug($fields, true);
-            foreach ($fields as $field) {
-                if (!$field) {
-                    continue;
-                }
-
-                $new_entry = in_array('is_new', $columns) && $field['is_new'];
-
-                $table .= '<tr id="elem_' . $field[$this->identifier] . '" ' . ($new_entry ? 'style="background:#FDCECE"' : '') . '>';
-
-                //Checkbox
-                if ($selectable) {
-                    $table .= '<td align="center" style="padding:5px;"><input type="checkbox" name="checkedObject[]" value="' . $field[$this->identifier] . '" class="checked-object" ' . (in_array($field[$this->identifier],
-                            $checked_val) ? 'checked="checked"' : '') . '/></td>';
-                }
-
-                //Nouvel element
-                // if(in_array('is_new', $columns))
-                // $table .= '<td align="center" style="padding:5px;">'.Tools::boolToPicture($field['is_new']).'</td>';
-
-                //Ajoute l'identifiant
-
-                $table .= '<td width="30px" align="center">' . $field[$this->identifier] . '</td>';
-                foreach ($this->admin_tab as $key => $value) {
-                    $align = (array_key_exists('align', $value) ? $value['align'] : 'left');
-                    $valign = (array_key_exists('valign', $value) ? $value['valign'] : 'top');
-                    $width = (array_key_exists('width', $value) ? $value['width'] : '');
-                    $height = (array_key_exists('height', $value) ? $value['height'] : '');
-                    $style = (array_key_exists('style', $value) ? $value['style'] : '');
-                    $class = (array_key_exists('class', $value) ? $value['class'] : '');
-
-                    if (is_array($value) && array_key_exists('function',
-                            $value) && is_array($field) && array_key_exists($key, $field)
-                    ) {
-                        $table .= '<td width="' . $width . '"  align="' . $align . '" valign="' . $valign . '" height="' . $height . '">' . call_user_func($value['function'],
-                                $field[$key]) . '</td>';
-                    } else if (is_array($value) && array_key_exists('function2',
-                            $value) && is_array($field) && array_key_exists($key, $field)
-                    ) {
-                        $table .= '<td width="' . $width . '"  align="' . $align . '" valign="' . $valign . '" height="' . $height . '">' . call_user_func($value['function2'],
-                                $field[$key], $key) . '</td>';
-                    } //Appel d'un fonction avec plusieurs arguments
-                    elseif (is_array($field) && array_key_exists('function_array', $value) && array_key_exists($key,
-                            $field)
-                    ) {
-                        $params = [];
-                        //Création du tableau des paramètres pour la fonction à appeler
-                        $wanted_params = explode(',', $value['function_array']['params']);
-                        foreach ($wanted_params as $wanted_param) {
-                            if (array_key_exists(trim($wanted_param), $field)) {
-                                $params[] = $field[trim($wanted_param)];
-                            }
-                        }
-                        $table .= '<td width="' . $width . '"  align="' . $align . '" valign="' . $valign . '" height="' . $height . '">' . call_user_func_array($value['function_array']['function'],
-                                $params) . '</td>';
-                    } //Cas d'un choix multibox en live edit
-                    elseif (is_array($field) && array_key_exists($key, $field)) {
-                        $table .= '<td style="' . $style . '" width="' . $width . '" align="' . $align . '" valign="' . $valign . '"  height="' . $height . '">';
-                        if ($this->live_edit) {
-                            if (array_key_exists('live_edit', $value) && !$value['live_edit']) {
-                                $table .= $field[$key];
-                            } else {
-                                $table .= '<input type="text" name="live_edit[' . $field[$this->identifier] . '][' . $key . ']" value="' . $field[$key] . '" class="live_edit_value ' . $class . '" style="width:' . $width . 'px"/>';
-                            }
-                            //onChange="javascript:live_edit(\''.get_class($this).'\', \''.$field[$this->identifier].'\', \''.$key.'\', $(this).val() , '._ID_LANG_.');"
-                        } else {
-                            $table .= $field[$key];
-                        }
-                        $table .= '</td>';
-                    } else {
-                        $table .= '<td>&nbsp;</td>';
-                    }
-                }
-
-                if ($this->view || $this->edit || $this->delete) {
-                    $table .= '<td class="action" align="center">';
-                }
-
-
-                if ($this->live_edit && $this->edit) {
-                    $link = 'index.php?module=' . $module->name . '&action=' . $this->link_edit . '&' . $this->identifier . '=' . $field[$this->identifier] . $this->link_edit_params;
-                    $table .= '<a class="button live_edit_save" title="Sauvegarder" data-icon-primary="ui-icon-disk" data-icon-only="true" href="javascript:void(0);">&nbsp;</a>';
-
-                }
-                //TR Voir, modifier, supprimer
-                if ($this->view) {
-                    $link = 'index.php?module=' . $module->name . '&action=' . $this->link_view . '&' . $this->identifier . '=' . $field[$this->identifier] . $this->link_view_params;
-                    $table .= '<a class="button" title="Voir" data-icon-primary="ui-icon-zoomin" data-icon-only="true" href="' . $link . '">&nbsp;</a>';
-                }
-
-                //TR Voir, modifier, supprimer
-                if ($this->edit) {
-                    $link = 'index.php?module=' . $module->name . '&action=' . $this->link_edit . '&' . $this->identifier . '=' . $field[$this->identifier] . $this->link_edit_params;
-                    if (isset($_POST['redirect_admin_url_force'])) {
-                        $link .= '&redirect_admin_url_force=' . base64_encode($_POST['redirect_admin_url_force']);
-                    }
-                    $table .= '<a class="button" title="Editer" data-icon-primary="ui-icon-pencil" data-icon-only="true" href="' . $link . '">&nbsp;</a>';
-                }
-
-                if ($this->delete) {
-
-                    $table .= '<a href="javascript:void(0);" class="button" title="Supprimer" data-icon-primary="ui-icon-trash" data-icon-only="true" onClick="deleteObject(\'' . get_class($this) . '\',\'' . $field[$this->identifier] . '\', \'' . ($table_id ? $table_id : 'datas_table_' . get_class($this)) . '\');return false;">&nbsp;</a>';
-                }
-                if ($this->view || $this->edit || $this->delete) {
-                    $table .= '</td>';
-                }
-                $table .= '</tr>';
-            }
-        }
-        //END TR Voir, modifier, supprimer
-        $table .= '</tbody></table>
-        ' . ($this->delete ? '</form>' : '');
-
-        if ($sortable) {
-            $table .= '
-    <form method="post" style="display:none;margin-top:10px" id="datas_table_' . get_class($this) . 'SubmitPosition">
-        <p id="datas_table_' . get_class($this) . '_order" style="display:none"></p>
-        <button class="button button-gray ui-button-default submitPosition" id="submitPosition" type="submit" name="update_' . get_class($this) . 'Position"><span class="accept"></span>Enregister l\'ordre</button>
-    </form>';
-        }
-
-        $table .= '</div>';
-        if (_TRACE_PERF_) {
-            Tools::trace_perfs('ObjectModel::display_list // Chargement de la liste des éléments END');
-        }
-        echo $table;
-    }
 
 //Récupère la position à attribuer à un nouvel object
 

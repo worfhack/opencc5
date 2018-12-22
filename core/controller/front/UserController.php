@@ -148,7 +148,6 @@ class UserController extends FrontController
                     $user->update();
                 }
                 Tools::redirect(_BASE_URL_ . '/user/sigin');
-                die();
             } else {
                 $this->viewManager->initVariable(
 

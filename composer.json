@@ -1,5 +1,6 @@
 {
     "name": "worf/openccblog",
+    "description": "Projet openclassroom blog",
     "require": {
 	"twig/twig":"~2.0",
         "bluem/tree": "^2.0",
