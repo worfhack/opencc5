@@ -6,67 +6,46 @@
  * Date: 17/08/17
  * Time: 11:43
  */
+
+class Memcached2
+{
+    function get()
+    {
+        return NULL;
+    }
+
+    function set()
+    {
+
+        return NULL;
+    }
+
+    function flush(){
+    }
+
+    function addServer()
+    {
+
+    }
+
+}
 class ApiMemCache
 {
     private static $_memcached;
     private $Memcached;
     private function __construct()
     {
-        if(! class_exists('Memcached')) {
-            eval('
-      class Memcached
-      {
-              function get()
-              {
-                  return NULL;
-              }
-              
-              function set()
-              {
-              
-                  return NULL;
-              }
+        if(! class_exists('Memcached') && define("_USE_MEMCACHED")) {
 
-              function flush(){
-              }
-              
-              function addServer()
-              {
-              
-              }
-      
-      }
-      
-      ');
+            $this->Memcached = new Memcached();
+            $this->Memcached->addServer(_MEMCACHED_SERVER_, _MEMCACHED_PORT_);
 
-        }       eval('
-      class Memcached2
-      {
-              function get()
-              {
-                  return NULL;
-              }
-              
-              function set()
-              {
-              
-                  return NULL;
-              }
-
-              function flush(){
-              }
-              
-              function addServer()
-              {
-              
-              }
-      
-      }
-      
-      ');
-
+        }else
+        {
             $this->Memcached = new Memcached2();
             $this->Memcached->addServer(_MEMCACHED_SERVER_, _MEMCACHED_PORT_);
+        }
+
     }
 
     public static function getInstance()

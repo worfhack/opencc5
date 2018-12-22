@@ -6,7 +6,7 @@ class Mail
 
 public static function send($to, $subject, $template, $params)
 {
-    global $gl_config;
+     $gl_config = Tools::get_config();
     /**
      * This example shows settings to use when sending via Google's Gmail servers.
      * This uses traditional id & password authentication - look at the gmail_xoauth.phps

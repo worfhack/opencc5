@@ -87,13 +87,12 @@ public function update()
     //Check si un customer existe déjà. (Avant la création de son compte et donc le lancement de la method add)
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.pSQL($mail).'\' ' ;
+        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.Tools::pSQL($mail).'\' ' ;
         $admin =  Db::getInstance()->getRow($sql);
         if (!$admin)
         {
             return false;
         }
-
 
 
 
@@ -119,7 +118,7 @@ public function update()
      */
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . pSQL($email) . '\'',
+        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'',
             $memcached = false);
     }
 

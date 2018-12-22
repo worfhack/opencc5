@@ -146,10 +146,21 @@ class Tools
 
     static public function get_config()
     {
-        global $gl_config;
-        return $gl_config;
+        return Config::getInstance();
     }
-
+    static function pSQL($string, $htmlOK = false, $strip = true)
+    {
+        if (is_array($string)) {
+            return $string;
+        }
+        if (!is_numeric($string)) {
+            if (get_magic_quotes_gpc()) {
+                $string = stripslashes($string);
+            }
+            $string = mysqli_real_escape_string(Db::getInstance()->getLink(), $string);
+        }
+        return $string;
+    }
 
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {

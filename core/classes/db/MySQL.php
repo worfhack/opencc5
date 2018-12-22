@@ -185,7 +185,7 @@ class MySQL extends Db
 
         $this->_result = false;
         if ( $this->_link ) {
-            return mysqli_query ($this->_link, 'DELETE FROM `' . pSQL ($table) . '`' . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . intval ($limit) : '') );
+            return mysqli_query ($this->_link, 'DELETE FROM `' . Tools::pSQL ($table) . '`' . ($where ? ' WHERE ' . $where : '') . ($limit ? ' LIMIT ' . intval ($limit) : '') );
         }
         return false;
     }

@@ -82,7 +82,7 @@ abstract class Db
      */
     public function __construct()
     {
-     global   $gl_config;
+     $gl_config = Tools::get_config();
 
 
         $this->_server = $gl_config['database_master']['params']['host'];
@@ -113,7 +113,7 @@ abstract class Db
                 $query .= '`' . $key . '`,';
             $query = rtrim($query, ',') . ') VALUES (';
             foreach ($values AS $key => $value)
-                $query .= '\'' . ($psql ? pSQL($value) : $value) . '\',';
+                $query .= '\'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',') . ')';
             if ($limit)
                 $query .= ' LIMIT ' . intval($limit);
@@ -122,7 +122,7 @@ abstract class Db
         } elseif (strtoupper($type) == 'UPDATE') {
             $query = 'UPDATE `' . $table . '` SET ';
             foreach ($values AS $key => $value)
-                $query .= '`' . $key . '` = \'' . ($psql ? pSQL($value) : $value) . '\',';
+                $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',');
             if ($where)
                 $query .= ' WHERE ' . $where;

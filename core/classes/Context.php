@@ -24,7 +24,7 @@ class Context
 
     private function __construct()
     {
-        global $gl_config;
+         $gl_config =Tools::get_config();
         $this->translator = new Translator('fr_FR');
 
 

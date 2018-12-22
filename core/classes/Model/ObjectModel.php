@@ -70,7 +70,7 @@ abstract class ObjectModel
         if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table)) {
             throw new Exception(Tools::displayError());
         }
-        $this->identifier = pSQL($this->identifier);
+        $this->identifier = Tools::pSQL($this->identifier);
 
         if ($id_lang) {
             $this->current_id_lang = $id_lang;
@@ -88,7 +88,7 @@ abstract class ObjectModel
                 }
             }
 
-            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . pSQL(_DB_PREFIX_ . $this->table) . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '');
+            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '');
 
 
             if ($this->fields_join) {
@@ -124,7 +124,7 @@ abstract class ObjectModel
             }
             /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
             if (!$id_lang) {
-                $sql = 'SELECT * FROM `' . pSQL(_DB_PREFIX_ . $this->table) . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
+                $sql = 'SELECT * FROM `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
 
 
                 $result = Db::getInstance()->ExecuteS($sql);

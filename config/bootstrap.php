@@ -38,6 +38,7 @@ function set_language($id_lang, $language=false)
 }
 
 $gl_config = new Config($configArray);
+Config::setInstance($gl_config);
 define('_BASE_URL_', _MODE_HTTP_ . $gl_config['webhost']);
 
 
