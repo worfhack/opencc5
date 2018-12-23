@@ -51,9 +51,6 @@ public function update()
         if (isset($_SESSION['id_administrator']))
         {
             $admin = new Administrator($_SESSION['id_administrator']);
-            $admin->picture_min = $admin->getPicture(true);
-            $admin->picture_full = $admin->getPicture();
-
             return $admin;
         }else
         {
@@ -73,7 +70,6 @@ public function update()
         {
             $this->password = Tools::encrypt($this->newpassword);
         }
-        //Purge de memcached
 
         return parent::add();
     }
@@ -118,8 +114,7 @@ public function update()
      */
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'',
-            $memcached = false);
+        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'');
     }
 
 
@@ -132,25 +127,9 @@ public function update()
         $sql ='
             SELECT e.*
             FROM `'._DB_PREFIX_.'administrator` e';
-        return Db::getInstance()->ExecuteS($sql, $array = true, $memcached = false);
+        return Db::getInstance()->ExecuteS($sql, $array = true);
     }
 
-    public function getPicture($thumb = false)
-    {
-        return '';
-//        if ($thumb == true) {
-//
-//            $file = AVATAR_DIR . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//            $url = _AVATAR_BASE_URL_ . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//        } else {
-//            $file = AVATAR_DIR . '/HD/' . $this->id . ".jpg";
-//            $url = _AVATAR_BASE_URL_ . '/HD/' . $this->id . ".jpg";
-//        }
-//
-//        if (file_exists($file)) {
-//            return $url;
-//        }
-    }
 
     static public function getCleanAdmin($adminEdit = false)
     {

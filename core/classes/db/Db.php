@@ -29,7 +29,6 @@ abstract class Db
     /** @var mixed Object instance for singleton */
     private static $_instance;
 
-    private static $_memcached;
 
 
     public function getLink()
@@ -39,11 +38,9 @@ abstract class Db
 
     public function getMysqlColumns($table)
     {
-//return $this->s('SHOW COLUMNS FROM '.$table);
 
         $tab = array();
         $rows = $this->s('SHOW COLUMNS FROM ' . $table);
-// return $rows;
         if ($rows) {
             foreach ($rows as $key => $row) $tab[] = $row['Field'];
         }
@@ -62,15 +59,6 @@ abstract class Db
             self::$_instance = new MySQL();
         return self::$_instance;
     }
-
-    public static function MemCached()
-    {
-
-        self::$_memcached = ApiMemCache::getInstance();
-
-        return self::$_memcached;
-    }
-
 
     public function __destruct()
     {
@@ -118,7 +106,7 @@ abstract class Db
 
             return $this->q($query);
         } elseif (strtoupper($type) == 'UPDATE') {
-            $query = 'UPDATE `' . $table . '` SET ';
+            $query = 'UPDATE `' . Tools::pSQL($table) . '` SET ';
             foreach ($values AS $key => $value)
                 $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',');

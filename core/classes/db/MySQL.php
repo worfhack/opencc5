@@ -50,66 +50,43 @@ class MySQL extends Db
         $this->_link = false;
     }
 
-    public function getRow ($query , $memcached = false)
+    public function getRow ($query )
     {
         self::sanitizeQuery ($query);
-        if ( $this->isAdmin () ) {
-            $memcached = false;
-        }
+
         $this->_result = false;
         $query = $query . ' LIMIT 1';
-        $memcached_key = md5 ($this->_database . $query);
-
-        if ( $memcached && $this->_result = self::MemCached ()->get ($memcached_key) ) {
 
 
-            return $this->_result;
-        }
-        else {
             if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query)) ) {
                 $this->_result = mysqli_fetch_assoc ($this->_result);
-                if ( $memcached ) {
-                    self::MemCached ()->set ($memcached_key , $this->_result , 3600);
-                }
                 $this->displayMySQLError ($query);
                 return $this->_result;
             }
-        }
         $this->displayMySQLError ($query);
         return false;
     }
 
-    public function getValue ($query , $memcached = false)
+    public function getValue ($query )
     {
-        /*if ($memcached == false)
-        echo ($query) .  "<br><br><br>memcache est $memcached";*/
+
         self::sanitizeQuery ($query);
 
         if ( $this->isAdmin () ) {
-            $memcached = false;
         }
 
         $this->_result = false;
         $query = $query . ' LIMIT 1';
-        $memcached_key = md5 ($this->_database . $query);
 
-        if ( $memcached && $this->_result = self::MemCached ()->get ($memcached_key) ) {
-            return $this->_result;
-        }
-        else {
+
             if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) && is_array ($tmpArray = mysqli_fetch_assoc ($this->_result)) ) {
                 $this->_result = array_shift ($tmpArray);
-                if ( $memcached ) {
-                    self::MemCached ()->set ($memcached_key , $this->_result , 3600);
-                }
                 return $this->_result;
             }
             else {
                 return false;
             }
-        }
         return false;
-
     }
 
     public function truncate ($table)
@@ -137,21 +114,12 @@ class MySQL extends Db
         return false;
     }
 
-    public function ExecuteS ($query , $array = true , $memcached = false)
+    public function ExecuteS ($query , $array = true )
     {
         //p($query);
         self::sanitizeQuery ($query);
 
-        if ( $this->isAdmin () ) {
-            $memcached = false;
-        }
 
-        $memcached_key = md5 ($this->_database . $query);
-
-        if ( $memcached && $this->_result = self::MemCached ()->get ($memcached_key) ) {
-            return $this->_result;
-        }
-        else {
             $this->_result = false;
             if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) ) {
                 $this->displayMySQLError ($query);
@@ -164,13 +132,8 @@ class MySQL extends Db
                     $resultArray[] = $row;
                 }
 
-                if ( $memcached ) {
-                    self::MemCached ()->set ($memcached_key , $resultArray , 1800);
-                }
                 return $resultArray;
             }
-        }
-        $this->displayMySQLError ($query);
         return false;
     }
 
@@ -298,7 +261,8 @@ class MySQL extends Db
                     $query = str_replace ($matche , '[-- Sanitized String --]' , $query);
 
                     $explode_matche = '';
-                    for ($i = 0; $i < strlen ($matche); $i++) $explode_matche .= $matche[$i] . ' ';
+                    $match_len = strlen ($matche);
+                    for ($i = 0; $i <$match_len;  $i++) $explode_matche .= $matche[$i] . ' ';
                     $preg_match_patterns[] = $explode_matche;
                 }
             }

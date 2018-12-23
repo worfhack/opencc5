@@ -31,6 +31,7 @@ abstract class ObjectModel
     public $order_by = false;
     public $order_way = 'ASC';
     public $date_add;
+
     /**
      * @return mixed
      */
@@ -96,14 +97,12 @@ abstract class ObjectModel
                     $key_name = $j['key'];
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                         ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                    if (isset($j['lang']) &&  $j['lang'] === true)
-                    {
-                        $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
+                    if (isset($j['lang']) && $j['lang'] === true) {
+                        $sql .= ' AND ' . $j['onleft'] . '.id_lang=' . _ID_LANG_;
 
                     }
-                    if (isset($j['andwhere']) && !empty($j['andwhere']))
-                    {
-                        $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
+                    if (isset($j['andwhere']) && !empty($j['andwhere'])) {
+                        $sql .= ' AND (' . $j['andwhere'] . ' ) ';
                     }
                 }
             }
@@ -149,11 +148,10 @@ abstract class ObjectModel
     }
 
 
-
-    static public function getSingleInfo($table, $where_row, $where_value, $row, $memcached = false)
+    static public function getSingleInfo($table, $where_row, $where_value, $row)
     {
         $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'';
-        return Db::getInstance()->getValue($sql, $memcached);
+        return Db::getInstance()->getValue($sql);
     }
 
     static public function toObject($array)
@@ -172,20 +170,17 @@ abstract class ObjectModel
     $fields = array avec en key le nom des champs de la table + value
     //*/
 
-    static public function getSingleInfoLang($table, $where_row, $where_value, $row, $id_lang = false,
-                                             $memcached = false)
+    static public function getSingleInfoLang($table, $where_row, $where_value, $row, $id_lang = false)
     {
         if (!$id_lang) {
             $id_lang = Configuration::get('_ID_LANG_DEFAULT_');
         }
 
-
-
         $sql = 'SELECT `' . $row . '`
 FROM `' . _DB_PREFIX_ . $table . '`
 WHERE `' . $where_row . '` = \'' . $where_value . '\'
 AND `id_lang` = ' . intval($id_lang);
-        return Db::getInstance()->getValue($sql, $memcached);
+        return Db::getInstance()->getValue($sql);
     }
 
 //Mise à jour d'un objet
@@ -199,7 +194,6 @@ AND `id_lang` = ' . intval($id_lang);
     {
         return Db::getInstance()->Execute('DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'');
     }
-
 
 
     public function Exist()
@@ -503,16 +497,20 @@ AND `id_lang` = ' . intval($id_lang);
     }
 
 
-
 //Affiche les filtres
 
-    public function get_list($id_lang = false, $forselect = false, $field_forselect_name = 'name',
-                             $title_forselect_name = false, $separator = ' ', $limits = true, $memcached = false)
+    public function getList($id_lang = false, $count = false)
     {
+        $field_forselect_name = 'name';
+        $title_forselect_name = false;
+        $separator = ' ';
+        $limits = true;
+        $sql_prepare = '';
+        $bind_params = array();
+
 //Si la lang n'est pas renseigné on affiche la lang par défaut chargé dans le init ( Configuration::loadConfig )
         if (!$id_lang) {
             $context = Context::getContext();
-
             $id_lang = $context->getCurrentLanguage()->id_lang;
 
         }
@@ -520,59 +518,60 @@ AND `id_lang` = ' . intval($id_lang);
         if (array_key_exists('fields_lang', $this)) {
             $fields_lang = count($this->fields_lang);
         }
-
+        if ($count === false) {
 //Selectionne tous par défaut dans la table de la classe
-        $sql = 'SELECT ' . _DB_PREFIX_ . $this->table . '.* ';
-
+            $sql = 'SELECT ' . _DB_PREFIX_ . $this->table . '.* ';
+            $sql_prepare = 'SELECT ?.*  ';
+            $bind_params[] =  array("s"=>_DB_PREFIX_ . $this->table);
 //Si le tableau field_lang de la class n'est pas vide on ajoute tous les champs de la lang
-        if ($fields_lang) {
-            $sql .= ', ' . _DB_PREFIX_ . $this->table . '_lang.' . implode(', ' . _DB_PREFIX_ . $this->table . '_lang.',
-                    $this->fields_lang);
-        }
-        foreach ($this->fields_join as $j) {
-            $key_name = $j['key'];
-            if(isset($j['fields']) && !empty($j['fields'])) {
-                foreach ($j['fields'] as $jfield) {
-                    $sql .= ',' . $key_name . '.' . $jfield . ' as ' . $key_name . '_' . $jfield;
+            if ($fields_lang) {
 
+                $sql .= ', ' . _DB_PREFIX_ . $this->table . '_lang.' . implode(', ' . _DB_PREFIX_ . $this->table . '_lang.',
+                        $this->fields_lang);
+               // die(var_dump($sql));
+            }
+
+            foreach ($this->fields_join as $j) {
+                $key_name = $j['key'];
+                if (isset($j['fields']) && !empty($j['fields'])) {
+                    foreach ($j['fields'] as $jfield) {
+                        $sql .= ',' . $key_name . '.' . $jfield . ' as ' . $key_name . '_' . $jfield;
+
+                    }
                 }
             }
+        } else {
+            $sql = 'SELECT count(*) ';
         }
         $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` ';
-
 //Si le tableau field_lang de la class n'est pas vide on ajoute les left join
         if ($fields_lang) {
             $sql .= '  JOIN `' . _DB_PREFIX_ . $this->table . '_lang`
 ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX_ . $this->table . '_lang.' . $this->identifier . ' AND  
  ' . _DB_PREFIX_ . $this->table . '_lang.id_lang = ' . $id_lang;
         }
-
-
         if ($this->fields_join) {
             foreach ($this->fields_join as $j) {
                 $key_name = $j['key'];
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                if (isset($j['andwhere']) && !empty($j['andwhere']))
-                {
-                    $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
+                if (isset($j['andwhere']) && !empty($j['andwhere'])) {
+                    $sql .= ' AND (' . $j['andwhere'] . ' ) ';
                 }
             }
         }
         $sql .= ' WHERE 1 = 1 ';
 
-
-//Si l'objet à la propriété deleted, récupère uniquement ceux qui sont a deleted 0
         if (array_key_exists('deleted', $this)) {
             $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.deleted = 0';
         }
-
         if ($this->where && is_array($this->where)) {
-            foreach ($this->where as $where) $sql .= ' AND ' . $where;
-        }
+           foreach ($this->where as $row=>$value) {
 
-        $sql .= $this->get_list_filters();
-        $sql .= $this->get_list_search_filters();
+
+            //   $sql .= ' AND ' . $where;
+           }
+        }
 
         if (array_key_exists('position', $this)) {
             $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
@@ -581,107 +580,24 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         } elseif (!$this->order_by && $this->order_way) {
             $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
         }
-        if ($limits) {
-            if ($this->get_list_limit_force) {
-                $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_limit_end);
-            } else {
-                $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_max_result);
+        if ($this->get_list_limit_force) {
+            $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_limit_end);
+        }
+          echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
+        if ($count === false) {
+            $results = Db::getInstance()->ExecuteS($sql, $array = true);
+            echo "<pre>";
+            print_r($results);
+            echo "</pre>";
+            if (!$results) {
+                return [];
             }
-        }
-   //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
-        $results = Db::getInstance()->ExecuteS($sql, $array = true, $memcached);
-        if (!$results) {
-            return [];
-        }
-
-        if ($forselect) {
-            return $this->forselect($results, $field_forselect_name, $title_forselect_name, $separator);
+        }else{
+            return  Db::getInstance()->getValue($sql, $array = true);
         }
         return $results;
     }
 
-    public function get_list_count($id_lang = false, $forselect = false, $field_forselect_name = 'name',
-                                   $title_forselect_name = false, $separator = ' ', $limits = true, $memcached = false)
-    {
-//Si la lang n'est pas renseigné on affiche la lang par défaut chargé dans le init ( Configuration::loadConfig )
-        if (!$id_lang) {
-            $context = Context::getContext();
-
-            $id_lang = $context->getCurrentLanguage()->id_lang;
-
-        }
-        $fields_lang = false;
-        if (array_key_exists('fields_lang', $this)) {
-            $fields_lang = count($this->fields_lang);
-        }
-
-//Selectionne tous par défaut dans la table de la classe
-        $sql = 'SELECT  count(*)  as nbr';
-
-//Si le tableau field_lang de la class n'est pas vide on ajoute tous les champs de la lang
-
-        $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` ';
-
-//Si le tableau field_lang de la class n'est pas vide on ajoute les left join
-        if ($fields_lang) {
-            $sql .= '  JOIN `' . _DB_PREFIX_ . $this->table . '_lang`
-ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX_ . $this->table . '_lang.' . $this->identifier . ' AND  
- ' . _DB_PREFIX_ . $this->table . '_lang.id_lang = ' . $id_lang;
-        }
-
-
-        if ($this->fields_join) {
-            foreach ($this->fields_join as $j) {
-                $key_name = $j['key'];
-                $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
-                    ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-               if (isset($j['lang']) && $j['lang'] === true)
-               {
-                  $sql .= ' AND ' . $j['onleft']. '.id_lang='. _ID_LANG_;
-
-               }
-                if (isset($j['andwhere']) &&  !empty($j['andwhere']))
-                {
-                    $sql .=  ' AND (' . $j['andwhere'] . ' ) ';
-                }
-            }
-        }
-        $sql .= ' WHERE 1 = 1 ';
-
-
-//Si l'objet à la propriété deleted, récupère uniquement ceux qui sont a deleted 0
-        if (array_key_exists('deleted', $this)) {
-            $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.deleted = 0';
-        }
-
-        if ($this->where && is_array($this->where)) {
-            foreach ($this->where as $where) $sql .= ' AND ' . $where;
-        }
-
-        $sql .= $this->get_list_filters();
-        $sql .= $this->get_list_search_filters();
-
-        if (array_key_exists('position', $this)) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
-        } elseif ($this->order_by) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->order_by . ' ' . $this->order_way;
-        } elseif (!$this->order_by && $this->order_way) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
-        }
-
-       //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
-        $results = Db::getInstance()->getValue($sql, $array = true, $memcached);
-
-        if (!$results) {
-            return [];
-        }
-
-        if ($forselect) {
-            return $this->forselect($results, $field_forselect_name, $title_forselect_name, $separator);
-        }
-
-        return $results;
-    }
 
 // Ajoute des conditions SQL si le champs recherche est renseigné
 
@@ -739,207 +655,6 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
     }
 
 
-//Formate un tableau pour pouvoir directement le passer un paramtère dans la method Form::addSelectBox
-// Le tableau de sorti est sous la forme : array( id_object => value, id_object => value )
-
-    public function forselect($fields, $field_value_name = 'name', $title = false, $separator = ' ')
-    {
-// Tools::debug($fields, true);
-        if (!is_array($fields)) {
-            return false;
-        }
-        $return = [];
-
-//Si le titre est renseigné, on l'ajoute avec l'index 0.
-        if ($title) {
-            $return[0] = $title;
-        }
-
-        foreach ($fields as $field) {
-//Si field_value_name est un tableu, on concat les infos.
-            if (is_array($field_value_name)) {
-                $return[$field[$this->identifier]] = [];
-                foreach ($field_value_name as $field_name)
-                    $return[$field[$this->identifier]] [] = $field[$field_name];
-                $return[$field[$this->identifier]] = implode($separator, $return[$field[$this->identifier]]);
-            } else {
-                $return[$field[$this->identifier]] = $field[$field_value_name];
-            }
-        }
-        return $return;
-    }
-
-
-
-//Récupère la position à attribuer à un nouvel object
-
-    public function count_fields()
-    {
-//Selectionne tous par défaut dans la table de la classe
-        $sql = 'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $this->table . '` WHERE 1 = 1 ';
-//Si l'objet à la propriété deleted, récupère uniquement ceux qui sont a deleted 0
-        if (array_key_exists('deleted', $this)) {
-            $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.deleted = 0';
-        }
-        if ($this->where && is_array($this->where)) {
-            foreach ($this->where as $where) $sql .= ' AND ' . $where;
-        }
-        $sql .= $this->get_list_filters();
-
-        return Db::getInstance()->getValue($sql);
-    }
-
-//Récupère une valeur dans une table précise.
-
-    public function display_filters()
-    {
-        $table = '';
-
-        $columns = Db::getInstance()->getMysqlColumns(_DB_PREFIX_ . $this->table); //Recupère le nom de champs de la table
-        $class_name = get_class($this);
-        $date_from = '';
-        $date_to = '';
-        $limits = '0-' . $this->get_list_max_result;
-
-        if ($this->active_filters) {
-            if (Tools::isSubmit('filtrer_' . $class_name) && $filters = Tools::getValue('filter')) {
-                if (is_array($filters) && array_key_exists($class_name, $filters)) {
-                    $date_from = (array_key_exists('date_from',
-                        $filters[$class_name]) ? $filters[$class_name]['date_from'] : '');
-                    $date_to = (array_key_exists('date_to',
-                        $filters[$class_name]) ? $filters[$class_name]['date_to'] : '');
-                    $limits = (array_key_exists('limits',
-                        $filters[$class_name]) ? $filters[$class_name]['limits'] : '');
-                }
-            }
-
-            $table .= '
-<div>
-    <div class="right">
-        <form method="post"  stlye="margin:10px 10px 0 10px">';
-
-            //Si le nombre de résultats est top grand pour tout afficher en JS
-            // echo $this->get_list_count;
-            if ($this->get_list_count > $this->get_list_max_result) {
-                $table .= 'Nombre de résultats <select name="filter[' . $class_name . '][limits]" style="width:150px">';
-                for ($i = 0; $i < ($this->get_list_count / $this->get_list_max_result); $i++) {
-                    $limit_deb = $i * $this->get_list_max_result;
-                    $limi_end = $i * $this->get_list_max_result + $this->get_list_max_result;
-
-                    $table .= '<option value="' . $limit_deb . '-' . $limi_end . '" ' . ($limits == $limit_deb . '-' . $limi_end ? 'selected="selected"' : '') . '>' . $limit_deb . ' à ' . $limi_end . '</option>';
-                }
-
-                $table .= '</select>&nbsp;&nbsp;&nbsp;';
-            }
-            if (in_array('date_add', $columns)) {
-                $table .= '
-            Date de Début 	<input type="date" name="filter[' . $class_name . '][date_from]" value="' . $date_from . '"/>
-            &nbsp;&nbsp;&nbsp;
-            Date de Fin  	<input type="date" name="filter[' . $class_name . '][date_to]" value="' . $date_to . '"/>';
-            }
-
-            $table .= '
-            <button class="button button-gray ui-button-default" type="submit" name="filtrer_' . $class_name . '"><span class="accept"></span>Filtrer</button>
-        </form>
-    </div>
-    <div class="clear" style="margin:10px 0"></div>
-</div>';
-            $table .= '<div class="clear" style="margin:10px 0"></div>';
-        }
-
-        return $table;
-    }
-
-//Récupère une valeur dans une table précise.
-
-    public function display_search_filters()
-    {
-        $table = '';
-        $class_name = get_class($this);
-        $selected_colomn = Tools::getValue('search_filters_column_' . $class_name);
-        $columns = Db::getInstance()->getMysqlColumns(_DB_PREFIX_ . $this->table); //Recupère le nom de champs de la table
-        if ($this->fields_lang) {
-            $columns = array_merge($columns, Db::getInstance()->getMysqlColumns(_DB_PREFIX_ . $this->table . '_lang'));
-        }
-
-        $table .= '
-<div>
-    <div class="right">
-        <form method="post"  stlye="margin:10px 10px 0 10px">';
-
-        $table .= ' Rechercher <input type="text" name="search_filter_' . $class_name . '" value="' . Tools::getValue('search_filter_' . $class_name) . '" />&nbsp;&nbsp;&nbsp;';
-
-        $table .= 'Champs de recherche <select name="search_filters_column_' . $class_name . '">
-                <option value="0">-- Selectionnez --</option>';
-        foreach ($columns as $column) {
-            $table .= '<option value="' . $column . '" ' . ($selected_colomn == $column ? 'selected="selected"' : '') . '>' . $column . '</option>';
-        }
-        $table .= '</select>&nbsp;&nbsp;&nbsp;';
-
-        $table .= '
-            <button class="button button-gray ui-button-default" type="submit" name="search_' . $class_name . '"><span class="accept"></span>Rechercher</button>
-        </form>
-    </div>
-    <div class="clear" style="margin:10px 0"></div>
-</div>';
-        $table .= '<div class="clear" style="margin:10px 0"></div>';
-
-
-        return $table;
-    }
-
-//Récupère une valeur dans une table précise.
-
-    public function get_joins_infos($table = false, $identifier = false, $order_by = false, $order_type = false)
-    {
-        if ($table) {
-            $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . ($identifier ? $identifier : $this->identifier) . '` = ' . intval($this->id);
-            $sql .= ' ORDER BY `' . ($order_by ? $order_by : ($identifier ? $identifier : $this->identifier)) . '` ' . ($order_type ? $order_type : 'ASC');
-            $this->{$table} = Db::getInstance()->ExecuteS($sql);
-        } else {
-            if (!array_key_exists('joins_tables', $this)) {
-                return;
-            }
-            foreach ($this->joins_tables as $table) {
-                $this->{$table} = Db::getInstance()->ExecuteS('SELECT * FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . ($identifier ? $identifier : $this->identifier) . '` = ' . intval($this->id));
-            }
-        }
-    }
-
-    public function setViewed()
-    {
-        if (!array_key_exists('is_new', $this)) {
-            return;
-        }
-        return self::updateSingleInfo($table = $this->table, $row = 'is_new', $new_value = 0,
-            $where_row = $this->identifier, $where_value = $this->id);
-    }
-
-    static public function updateSingleInfo($table, $row, $new_value, $where_row, $where_value)
-    {
-        $sql = 'UPDATE `' . _DB_PREFIX_ . $table . '` SET `' . $row . '` = \'' . $new_value . '\'
-WHERE `' . $where_row . '` = \'' . $where_value . '\'';
-        return Db::getInstance()->Execute($sql);
-    }
-
-//Delete en masse à partir d'UN champs
-
-    public function getHighestPosition()
-    {
-        if (!array_key_exists('position', $this)) {
-            return;
-        }
-
-        $highestPosition = Db::getInstance()->getValue('
-SELECT `position` FROM `' . _DB_PREFIX_ . $this->table . '`
-ORDER BY `position` DESC');
-        if (!$highestPosition) {
-            $this->position = 0;
-        } else {
-            $this->position = $highestPosition + 1;
-        }
-    }
-
     public function active()
     {
 
@@ -952,10 +667,6 @@ ORDER BY `position` DESC');
         return $clone;
     }
 
-    public function getApiModel()
-    {
-        return get_object_vars($this);
-    }
 
 }
 

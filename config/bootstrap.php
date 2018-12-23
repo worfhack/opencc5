@@ -15,6 +15,14 @@ require_once(CLASS_CORE_DIR . 'Autoload.php');
 
 setlocale(LC_TIME, 'fr_FR.UTF8', 'fr.UTF8', 'fr_FR.UTF-8', 'fr.UTF-8');
 
+spl_autoload_register('__autoload');
+
+
+
+// bootstrap.php
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+
 
 function __autoload($className)
 {
@@ -26,9 +34,10 @@ function __autoload($className)
     }
 }
 
-spl_autoload_register('__autoload');
 
 require_once('config.inc.php');
+
+
 
 function set_language($id_lang, $language=false)
 {
@@ -44,7 +53,6 @@ define('_BASE_URL_', _MODE_HTTP_ . $gl_config['webhost']);
 
 define('_DB_PREFIX_', $gl_config['database_master']['prefix']);
 $context = Context::getContext();
-
 
 
 //ini_set('display_errors', 1);
