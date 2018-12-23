@@ -160,7 +160,7 @@ private  $params;
 
     public function isRegex()
     {
-        if (!isset($this->config['regex']) || $this->config['regex'] != true){
+        if (!isset($this->config['regex']) || $this->config['regex'] !== true){
             return false;
         }
         return true;

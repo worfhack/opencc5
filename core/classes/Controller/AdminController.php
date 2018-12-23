@@ -18,7 +18,7 @@ class AdminController extends Controller
 
             ));
         //
-        if ($this->admin == false && $this->need_to_be_log == true) {
+        if ($this->admin === false && $this->need_to_be_log ===  true) {
             Tools::redirect(_BASE_URL_.'/'._ADMIN_URI_ . '/login');
         }
 

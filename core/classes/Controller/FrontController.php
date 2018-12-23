@@ -21,7 +21,7 @@ class FrontController extends Controller
     {
         $this->user =  Users::getUsers();
 
-        if ($this->user == false && $this->need_to_be_log == true) {
+        if ($this->user === false && $this->need_to_be_log === true) {
             Tools::redirect(_BASE_URL_. '/login');
         }
 

@@ -25,7 +25,7 @@ class AdminConfigurationController extends AdminController
     public function form($id_configuration = false)
     {
 
-        if ($id_configuration != false)
+        if ($id_configuration !== false)
         {
             $configuration = new Configuration($id_configuration, _ID_LANG_ );
         }else

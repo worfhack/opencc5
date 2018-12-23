@@ -25,7 +25,7 @@ class AdminCategoryController extends AdminController
     public function form($id_article = false)
     {
 
-        if ($id_article != false)
+        if ($id_article !== false)
         {
             $category = new Category($id_article, _ID_LANG_ );
         }else

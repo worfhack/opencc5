@@ -106,7 +106,7 @@ abstract class ObjectModel
                     }
                 }
             }
-            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . intval($id);
+            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . Tools::pSQL(intval($id));
             $result = Db::getInstance()->getRow($sql);
             if (!$result) {
                 return false;
