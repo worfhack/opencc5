@@ -63,7 +63,6 @@ class Configuration extends ObjectModel
         $config->name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $config->value = filter_input(INPUT_POST, 'value', FILTER_SANITIZE_STRING);
         $config->value_lang = filter_input(INPUT_POST, 'value_lang', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         $config->description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
 
 

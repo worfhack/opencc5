@@ -24,7 +24,7 @@ class AdminAuthorController extends AdminController
     public function form($id_author = false)
     {
 
-        if ($id_author != false)
+        if ($id_author !== false)
         {
             $author = new Administrator($id_author, _ID_LANG_ );
         }else

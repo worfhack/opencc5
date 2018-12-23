@@ -51,7 +51,7 @@ class AdminMediaController extends AdminController
     public function form($id_media = false)
     {
 
-        if ($id_media != false) {
+        if ($id_media !== false) {
             $media = new Media($id_media, _ID_LANG_);
         } else {
             $media = NULL;

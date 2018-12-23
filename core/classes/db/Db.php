@@ -111,7 +111,7 @@ abstract class Db
                 $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
             $query = rtrim($query, ',');
             if ($where)
-                $query .= ' WHERE ' .$where;
+                $query .= ' WHERE ' .Tools::pSQL($where);
            return $this->q($query);
         }
         return false;

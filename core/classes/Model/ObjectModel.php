@@ -467,7 +467,6 @@ AND `id_lang` = ' . intval($id_lang);
 
     public function copy_from_array($array, $excludes_keys = [])
     {
-// $_POST = array_merge($_POST, $_GET);
         if (is_array($array)) {
             foreach ($array as $params => $value)
                 if (array_key_exists($params, $this) && !in_array($params, $excludes_keys)) {
@@ -523,12 +522,10 @@ AND `id_lang` = ' . intval($id_lang);
             $sql = 'SELECT ' . _DB_PREFIX_ . $this->table . '.* ';
             $sql_prepare = 'SELECT ?.*  ';
             $bind_params[] =  array("s"=>_DB_PREFIX_ . $this->table);
-//Si le tableau field_lang de la class n'est pas vide on ajoute tous les champs de la lang
             if ($fields_lang) {
 
                 $sql .= ', ' . _DB_PREFIX_ . $this->table . '_lang.' . implode(', ' . _DB_PREFIX_ . $this->table . '_lang.',
                         $this->fields_lang);
-               // die(var_dump($sql));
             }
 
             foreach ($this->fields_join as $j) {

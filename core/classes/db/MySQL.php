@@ -103,7 +103,6 @@ class MySQL extends Db
     public function Execute ($query)
     {
         self::sanitizeQuery ($query);
-        //p($query);
         $this->_result = false;
         if ( $this->_link ) {
             $this->_result = mysqli_query ($this->_link, $query);
@@ -116,7 +115,6 @@ class MySQL extends Db
 
     public function ExecuteS ($query , $array = true )
     {
-        //p($query);
         self::sanitizeQuery ($query);
 
 
@@ -177,7 +175,6 @@ class MySQL extends Db
     protected function q ($query)
     {
         self::sanitizeQuery ($query);
-        //p($query);
         $this->_result = false;
         if ( $this->_link ) {
             return mysqli_query ($this->_link, $query );
@@ -279,7 +276,6 @@ class MySQL extends Db
 
             throw new Exception('Tentative de piratage');
         }
-        // }
         return true;
     }
 }
