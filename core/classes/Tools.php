@@ -46,7 +46,7 @@ class Tools
         return substr ($str , $start , $length);
     }
 
-    static public function link_rewrite ($str , $utf8_decode = false)
+    static public function linkRewrite ($str , $utf8_decode = false)
     {
         $purified = '';
         $length = self::strlen ($str);
@@ -144,7 +144,7 @@ class Tools
         return ($field === '' || $field === null);
     }
 
-    static public function get_config()
+    static public function getConfig()
     {
         return Config::getInstance();
     }
@@ -169,7 +169,6 @@ class Tools
         } else if ('Fatal error' !== $string) {
             return $string;
         }
-        //return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
 

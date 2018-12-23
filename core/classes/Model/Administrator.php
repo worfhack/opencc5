@@ -105,7 +105,7 @@ public function update()
     static public function getName($idEmployee)
     {
         $sql = "SELECT firstname, lastname FROM "._DB_PREFIX_."administrator WHERE id_administrator=".$idEmployee;
-        return Db::getInstance()->ExecuteS($sql);
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
@@ -127,7 +127,7 @@ public function update()
         $sql ='
             SELECT e.*
             FROM `'._DB_PREFIX_.'administrator` e';
-        return Db::getInstance()->ExecuteS($sql, $array = true);
+        return Db::getInstance()->executeS($sql, $array = true);
     }
 
 
@@ -152,7 +152,6 @@ public function update()
         $admin->mail = filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_EMAIL);
         $admin->firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $admin->lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         if(!$adminEdit) {
             $admin->password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
         } else {

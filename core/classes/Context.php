@@ -24,7 +24,7 @@ class Context
 
     private function __construct()
     {
-         $gl_config =Tools::get_config();
+         $gl_config =Tools::getConfig();
         $this->translator = new Translator('fr_FR');
 
 
@@ -33,9 +33,7 @@ class Context
         $this->setLanguage()->setCurrentUrl()->setBaseUrl()->setBaseUrlLang()->setConfig();
         $this->translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
         $this->translator->addResource('yaml', ROOT_DIR .'translate/'.$this->getCurrentLanguage()->iso.'.yaml', $this->getCurrentLanguage()->iso);
-//        $this->moment = new \Moment\Moment();
-//        \Moment\Moment::setLocale($this->getCurrentLanguage()->local);
-     //   echo  $this->moment->format(); // e.g. 2012-10-03T10:00:00+0000
+
 
     }
     public function getTranslator()

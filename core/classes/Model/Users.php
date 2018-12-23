@@ -43,8 +43,6 @@ class Users extends ObjectModel
     {
         if (isset($_SESSION['id_user'])) {
             $admin = new Users($_SESSION['id_user']);
-            $admin->picture_min = $admin->getPicture(true);
-            $admin->picture_full = $admin->getPicture();
 
             return $admin;
         } else {
@@ -62,7 +60,6 @@ class Users extends ObjectModel
         if ($this->newpassword) {
             $this->password = Tools::encrypt($this->newpassword);
         }
-        //Purge de memcached
 
         return parent::add();
     }
@@ -127,7 +124,7 @@ class Users extends ObjectModel
     static public function getName($id_user)
     {
         $sql = "SELECT firstname, lastname FROM " . _DB_PREFIX_ . "users WHERE id_user=" . $id_user;
-        return Db::getInstance()->ExecuteS($sql);
+        return Db::getInstance()->executeS($sql);
     }
 
     static public function emailExist($email)
@@ -146,27 +143,11 @@ class Users extends ObjectModel
         $sql = '
             SELECT e.*
             FROM `' . _DB_PREFIX_ . 'administrator` e';
-        return Db::getInstance()->ExecuteS($sql, $array = true, $memcached = false);
+        return Db::getInstance()->executeS($sql, $array = true, $memcached = false);
     }
 
-    public function getPicture($thumb = false)
-    {
-        return '';
-//        if ($thumb == true) {
-//
-//            $file = AVATAR_DIR . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//            $url = _AVATAR_BASE_URL_ . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//        } else {
-//            $file = AVATAR_DIR . '/HD/' . $this->id . ".jpg";
-//            $url = _AVATAR_BASE_URL_ . '/HD/' . $this->id . ".jpg";
-//        }
-//
-//        if (file_exists($file)) {
-//            return $url;
-//        }
-    }
 
-    static public function CreateUserFromForm(&$error)
+    static public function createUserFromForm(&$error)
     {
         if (empty($_POST['email']) || empty($_POST['firstname']) || empty($_POST['lastname'])
             || empty($_POST['password'])
@@ -184,7 +165,6 @@ class Users extends ObjectModel
         $user->email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $user->firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $user->lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         $user->password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
         $password2 = filter_input(INPUT_POST, 'password2', FILTER_DEFAULT);
         if ($password2 != $user->password)

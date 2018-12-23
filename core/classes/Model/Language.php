@@ -22,7 +22,7 @@ class Language extends ObjectModel
     {
         if (self::$_language == NULL) {
             $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'lang`';
-            self::$_language = Db::getInstance()->ExecuteS($sql);
+            self::$_language = Db::getInstance()->executeS($sql);
         }
         return self::$_language;
     }

@@ -48,7 +48,6 @@ class Render
         $this->params['siteBaseLine'] = $context->getConfig('_SITE_BASE_LINE_');
         $this->params['siteTitle'] = $context->getConfig('_SITE_TITLE_');
         $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
-//d($this->params['cvPath']);
         $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
 
         $this->twig_functions[] = new Twig_SimpleFunction('displayDate', function ($dateTime, $format) {

@@ -106,7 +106,7 @@ abstract class ObjectModel
                     }
                 }
             }
-            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . Tools::pSQL(intval($id));
+            $sql .= ' WHERE a.`' . Tools::pSQL($this->identifier) . '` = ' . Tools::pSQL(intval($id));
             $result = Db::getInstance()->getRow($sql);
             if (!$result) {
                 return false;
@@ -116,8 +116,6 @@ abstract class ObjectModel
 
 
                 if (key_exists($key, $this)) {
-                    //   echo "kkk";
-                    //     d($key);
                     $this->{$key} = stripslashes($value);
                 }
             }
@@ -126,7 +124,7 @@ abstract class ObjectModel
                 $sql = 'SELECT * FROM `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
 
 
-                $result = Db::getInstance()->ExecuteS($sql);
+                $result = Db::getInstance()->executeS($sql);
                 if ($result) {
                     foreach ($result as $row) foreach ($row AS $key => $value)
                         if (key_exists($key, $this) && $key != $this->identifier) {
@@ -144,13 +142,13 @@ abstract class ObjectModel
             return;
         }
         $sql = 'DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $identifier . '` = ' . $value;
-        return Db::getInstance()->Execute($sql);
+        return Db::getInstance()->execute($sql);
     }
 
 
     static public function getSingleInfo($table, $where_row, $where_value, $row)
     {
-        $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'';
+        $sql = 'SELECT `' . Tools::pSQL($row) . '` FROM `' . _DB_PREFIX_ . Tools::pSQL($table) . '` WHERE `' . Tools::pSQL($where_row ). '` = \'' . Tools::pSQL($where_value) . '\'';
         return Db::getInstance()->getValue($sql);
     }
 
@@ -176,10 +174,10 @@ abstract class ObjectModel
             $id_lang = Configuration::get('_ID_LANG_DEFAULT_');
         }
 
-        $sql = 'SELECT `' . $row . '`
-FROM `' . _DB_PREFIX_ . $table . '`
-WHERE `' . $where_row . '` = \'' . $where_value . '\'
-AND `id_lang` = ' . intval($id_lang);
+        $sql = 'SELECT `' . Tools::pSQL($row ). '`
+FROM `' . _DB_PREFIX_ . Tools::pSQL($table ). '`
+WHERE `' . Tools::pSQL($where_row) . '` = \'' . Tools::pSQL($where_value ). '\'
+AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
         return Db::getInstance()->getValue($sql);
     }
 
@@ -192,15 +190,10 @@ AND `id_lang` = ' . intval($id_lang);
 
     static public function deleteInfos($table, $where_row, $where_value)
     {
-        return Db::getInstance()->Execute('DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'');
+        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'');
     }
 
 
-    public function Exist()
-    {
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . ' ` WHERE `' . $this->identifier . '` = ' . $this->id;
-        return Db::getInstance()->ExecuteS($sql);
-    }
 
     /*
     Supprime un objet instancié. Dans cette fonction global, on supprimer uniquement la ligne dans la table associée a l'objet.
@@ -255,7 +248,6 @@ AND `id_lang` = ' . intval($id_lang);
                 $this->{$key} = $defaultValues[$key];
             }
         }
-        // die( Tools::debug($params, true));
         //Ajoute la valeur au params si l'index exist en tant que champs de la table et qu'il n'est pas dans la table des langues
         foreach ($this as $key => $value)
             if (in_array($key, $columns) && !in_array($key, $this->fields_lang) && !array_key_exists($key, $defaultValues)) {
@@ -265,9 +257,9 @@ AND `id_lang` = ' . intval($id_lang);
         //Enregistre les link_rewrite si il existe
         if (array_key_exists('link_rewrite', $this)) {
             if (empty($this->link_rewrite)) {
-                $this->link_rewrite = Tools::link_rewrite($this->name);
+                $this->link_rewrite = Tools::linkRewrite($this->name);
             } else {
-                $this->link_rewrite = Tools::link_rewrite($this->link_rewrite);
+                $this->link_rewrite = Tools::linkRewrite($this->link_rewrite);
             }
         }
         //Récupère les champs de la langue.
@@ -341,7 +333,7 @@ AND `id_lang` = ' . intval($id_lang);
                 $params[$key] = $value;
             }
         if ($result = $DB->AutoExecute(_DB_PREFIX_ . $this->table, $params, 'INSERT')) {
-            $this->id = $DB->Insert_ID();
+            $this->id = $DB->insertID();
 
 
 //Construit le tableau des valeurs à insérer dans la base de données.
@@ -403,7 +395,6 @@ AND `id_lang` = ' . intval($id_lang);
                     return ['error' => (bool)true,
                         'error_detail' => 'Le champs "' . $field_required . '" n\'est pas renseigné'];
                 } else {
-//Tools::displayError ('Le champs "' . $field_required . '" n\'est pas renseigné' , $die);
                     return false;
                 }
             } elseif (empty($this->{$field_required})) {
@@ -416,7 +407,6 @@ AND `id_lang` = ' . intval($id_lang);
                     return ['error' => (bool)true,
                         'error_detail' => 'Le champs "' . $field_required . '" n\'est pas renseigné'];
                 } else if ($display_error === true) {
-//Tools::displayError ('Le champs "' . $field_required . '" n\'est pas renseigné' , $die);
                     return false;
                 }
             }
@@ -446,7 +436,7 @@ AND `id_lang` = ' . intval($id_lang);
         return true;
     }
 
-    public function copy_from_post()
+    public function copyFromPost()
     {
         $_POST = array_merge($_POST, $_GET);
         foreach ($_POST as $params => $value) {
@@ -463,17 +453,6 @@ AND `id_lang` = ' . intval($id_lang);
         }
     }
 
-//Compte les champs récupérés
-
-    public function copy_from_array($array, $excludes_keys = [])
-    {
-        if (is_array($array)) {
-            foreach ($array as $params => $value)
-                if (array_key_exists($params, $this) && !in_array($params, $excludes_keys)) {
-                    $this->{$params} = $value;
-                }
-        }
-    }
 
 //Affiche les filtres
 
@@ -487,9 +466,9 @@ AND `id_lang` = ' . intval($id_lang);
         } else {
             $sql = 'DELETE FROM `' . _DB_PREFIX_ . $this->table . '` WHERE `' . $this->identifier . '` = ' . $this->id;
 
-            $isDeleted = Db::getInstance()->Execute($sql);
+            $isDeleted = Db::getInstance()->executeS($sql);
             if ($this->fields_lang) {
-                $isDeleted = Db::getInstance()->Execute('DELETE FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . $this->id);
+                $isDeleted = Db::getInstance()->executeS('DELETE FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . $this->id);
             }
             return $isDeleted;
         }
@@ -566,7 +545,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
            foreach ($this->where as $row=>$value) {
 
 
-            //   $sql .= ' AND ' . $where;
+            //  $sql .= ' AND ' . $where;
            }
         }
 
@@ -582,7 +561,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         }
           echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         if ($count === false) {
-            $results = Db::getInstance()->ExecuteS($sql, $array = true);
+            $results = Db::getInstance()->executeS($sql, $array = true);
             echo "<pre>";
             print_r($results);
             echo "</pre>";
@@ -596,60 +575,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
     }
 
 
-// Ajoute des conditions SQL si le champs recherche est renseigné
 
-    function get_list_filters()
-    {
-        $sql = '';
-//Filtres
-        if ($this->get_list_limit_force == 0) {
-            $class_name = get_class($this);
-            if (Tools::isSubmit('filtrer_' . $class_name) && $filters = Tools::getValue('filter')) {
-// Tools::debug($filters, true);
-                if (is_array($filters) && array_key_exists($class_name, $filters)) {
-//Date de début et de fin
-                    $date_from = (array_key_exists('date_from',
-                        $filters[$class_name]) ? $filters[$class_name]['date_from'] : false);
-                    $date_to = (array_key_exists('date_to',
-                        $filters[$class_name]) ? $filters[$class_name]['date_to'] : false);
-                    if ($date_from && $date_to) { //Entre x et y
-                        $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.date_add BETWEEN \'' . $date_from . ' 00:00:01\' AND \'' . $date_to . ' 23:59:59\'';
-                    } elseif ($date_from && !$date_to) { //Depuis x
-                        $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.date_add BETWEEN \'' . $date_from . ' 00:00:01\' AND \'' . date('Y-m-d H:i:s') . '\'';
-                    } elseif (!$date_from && $date_to) { //Avant x
-                        $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.date_add < \'' . $date_to . ' 23:59:59\'';
-                    }
-
-//Limittes MYSQL
-                    if (isset($filters[$class_name]['limits'])) {
-                        $limits = explode('-', $filters[$class_name]['limits']);
-                        $this->get_list_limit_deb = $limits[0];
-                        $this->get_list_limit_end = $limits[1];
-                    }
-                }
-            } else {
-                $this->get_list_limit_deb = 0;
-                $this->get_list_limit_end = $this->get_list_max_result;
-            }
-        }
-        return $sql;
-    }
-
-
-//Récupère les infos parrallèles.
-
-    function get_list_search_filters()
-    {
-        $class_name = get_class($this);
-        $sql = '';
-//Filtre par mots clés
-        $search_filters = Tools::getValue('search_filter_' . $class_name);
-        $search_filters_column = Tools::getValue('search_filters_column_' . $class_name);
-        if (Tools::isSubmit('search_' . $class_name) && $search_filters && $search_filters_column) {
-            $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.' . $search_filters_column . ' LIKE \'%' . $search_filters . '%\'';
-        }
-        return $sql;
-    }
 
 
     public function active()

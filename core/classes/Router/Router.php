@@ -127,7 +127,6 @@ class Router
 
                 $routes->dispatch();
 
-                //   return $routes;
             return true;
             }
         }

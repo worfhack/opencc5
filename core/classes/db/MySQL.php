@@ -17,7 +17,7 @@ class MySQL extends Db
 
 
         if ( $this->_link = mysqli_connect ($this->_server , $this->_user , $this->_password) ) {
-            if ( !$this->set_db ($this->_database) ) {
+            if ( !$this->setDb ($this->_database) ) {
                 throw New CoreException('The database selection cannot be made.', 500);
             }
         }
@@ -37,7 +37,7 @@ class MySQL extends Db
     }
 
     /* do not remove, useful for some modules */
-    public function set_db ($db_name)
+    public function setDb ($db_name)
     {
         return mysqli_select_db ($this->_link , $db_name);
     }
@@ -100,7 +100,7 @@ class MySQL extends Db
 
     }
 
-    public function Execute ($query)
+    public function execute ($query)
     {
         self::sanitizeQuery ($query);
         $this->_result = false;
@@ -113,7 +113,7 @@ class MySQL extends Db
         return false;
     }
 
-    public function ExecuteS ($query , $array = true )
+    public function executeS ($query , $array = true )
     {
         self::sanitizeQuery ($query);
 
@@ -149,14 +149,9 @@ class MySQL extends Db
         return false;
     }
 
-    public function NumRows ()
-    {
-        if ( $this->_link && $this->_result ) {
-            return mysqli_num_rows ($this->_result);
-        }
-    }
 
-    public function Insert_ID ()
+
+    public function insertID ()
     {
         if ( $this->_link ) {
             return mysqli_insert_id ($this->_link);
@@ -164,13 +159,6 @@ class MySQL extends Db
         return false;
     }
 
-    public function Affected_Rows ()
-    {
-        if ( $this->_link ) {
-            return mysqli_affected_rows ($this->_link);
-        }
-        return false;
-    }
 
     protected function q ($query)
     {

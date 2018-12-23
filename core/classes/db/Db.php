@@ -70,7 +70,7 @@ abstract class Db
      */
     public function __construct()
     {
-     $gl_config = Tools::get_config();
+     $gl_config = Tools::getConfig();
 
 
         $this->_server = $gl_config['database_master']['params']['host'];
@@ -130,17 +130,17 @@ abstract class Db
     /**
      * Get the ID generated from the previous INSERT operation
      */
-    abstract public function Insert_ID();
+    abstract public function insertID();
 
     /**
      * Get number of affected rows in previous databse operation
      */
-    abstract public function Affected_Rows();
+    abstract public function affectedRows();
 
     /**
      * Gets the number of rows in a result
      */
-    abstract public function NumRows();
+    abstract public function numRows();
 
     /**
      * Delete
@@ -150,12 +150,12 @@ abstract class Db
     /**
      * Fetches a row from a result set
      */
-    abstract public function Execute($query);
+    abstract public function execute($query);
 
     /**
      * Fetches an array containing all of the rows from a result set
      */
-    abstract public function ExecuteS($query, $array = true);
+    abstract public function executeS($query, $array = true);
 
     /*
     * Get next row for a query which doesn't return an array
@@ -170,7 +170,7 @@ abstract class Db
      */
     static public function s($query)
     {
-        return Db::getInstance()->ExecuteS($query);
+        return Db::getInstance()->executeS($query);
     }
 
     static public function ps($query)
