@@ -45,7 +45,7 @@ class AdminAuthorController extends AdminController
     public function add()
     {
         $author = new Administrator();
-        $author->copy_from_post();
+        $author->copyFromPost();
         $author->add();
         Tools::redirectAdmin('/author');
 
@@ -62,7 +62,7 @@ class AdminAuthorController extends AdminController
 
 
         $author = new Administrator($id, _ID_LANG_);
-        $author->copy_from_post();
+        $author->copyFromPost();
         $author->update();
 
         Tools::redirectAdmin('/author');

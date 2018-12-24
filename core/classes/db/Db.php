@@ -132,15 +132,6 @@ abstract class Db
      */
     abstract public function insertID();
 
-    /**
-     * Get number of affected rows in previous databse operation
-     */
-    abstract public function affectedRows();
-
-    /**
-     * Gets the number of rows in a result
-     */
-    abstract public function numRows();
 
     /**
      * Delete

@@ -54,7 +54,7 @@ class AdminArticleController extends AdminController
     public function add()
     {
         $article = new Article();
-        $article->copy_from_post();
+        $article->copyFromPost();
         $article->add();
         Tools::redirectAdmin('/article');
 
@@ -71,7 +71,7 @@ class AdminArticleController extends AdminController
 
         $categories = Tools::getValue('categories');
         $article = new Article($id, _ID_LANG_);
-        $article->copy_from_post();
+        $article->copyFromPost();
         $article->setCategories($categories);
         $article->update();
 

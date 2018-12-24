@@ -70,7 +70,7 @@ if (!file_exists($target) ) {
     }
     // Calculate height automatically if not given
     if ($thumbHeight === null) {
-       // $thumbHeight = round($height * $thumbWidth / $width);
+       $thumbHeight = round($height * $thumbWidth / $width);
     }
 
     $imageEngine = new GdThumb($original);
@@ -78,7 +78,6 @@ if (!file_exists($target) ) {
     $imageEngine->save($target);
 }
 $data = getimagesize($original);
-//
 
 if (!$data) {
     throw new Exception("Cannot get mime type");

@@ -50,7 +50,7 @@ class AdminCategoryController extends AdminController
     public function add()
     {
         $category = new Category();
-        $category->copy_from_post();
+        $category->copyFromPost();
         $category->add();
 
         Tools::redirectAdmin('/category');
@@ -68,7 +68,7 @@ class AdminCategoryController extends AdminController
 
 
         $category = new Category($id, _ID_LANG_);
-        $category->copy_from_post();
+        $category->copyFromPost();
         $category->update();
 
         Tools::redirectAdmin('/category');

@@ -213,7 +213,7 @@ class UserController extends FrontController
     public function addUser()
     {
         $error = '';
-        $user = Users::CreateUserFromForm($error);
+        $user = Users::createUserFromForm($error);
         if (!$user) {
             $this->viewManager->initVariable(
 

@@ -46,7 +46,7 @@ class AdminConfigurationController extends AdminController
     public function add()
     {
         $configuration = new Configuration();
-        $configuration->copy_from_post();
+        $configuration->copyFromPost();
         $configuration->add();
         Tools::redirectAdmin('/configuration');
 
@@ -63,7 +63,7 @@ class AdminConfigurationController extends AdminController
 
 
         $configuration = new Configuration($id, _ID_LANG_);
-        $configuration->copy_from_post();
+        $configuration->copyFromPost();
         $configuration->update();
 
         Tools::redirectAdmin('/configuration');

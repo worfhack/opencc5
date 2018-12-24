@@ -16,4 +16,3 @@ define('MEDIA_CACHE_DIR', $g_base_dir.'public/media_cache/');
 define('IMAGE_DIR', $g_base_dir.'public/images');
 define('AVATAR_DIR', $g_base_dir.'public/images/avatars');
 define('PRODUCT_IMAGE_DIR', $g_base_dir.'public/images/product');
-//define();
