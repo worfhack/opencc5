@@ -51,7 +51,6 @@ if (!is_dir(MEDIA_CACHE_DIR . '/' . $key_file)) {
 // Make sure the file doesn't exist already
 if (!file_exists($target) ) {
     // Make sure we have enough memory
-    ini_set('memory_limit', 128 * 1024 * 1024);
     // Get the current size & file type
     list($width, $height, $type) = getimagesize($original);
     // Load the image
