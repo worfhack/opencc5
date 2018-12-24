@@ -14,9 +14,7 @@ class FrontController extends Controller
         $this->lastPosts ->getLastPublication(_ID_LANG_, $limit_home_page, 1);
         $this->lastPosts ->load();
     }
-    private function  loadTags(){
 
-    }
     function __construct()
     {
         $this->user =  Users::getUsers();

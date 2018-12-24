@@ -364,7 +364,7 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
                     $params_lang_s[$this->identifier] = $this->id;
 
 
-                    $result = $DB->AutoExecute(_DB_PREFIX_ . $this->table . '_lang', $params_lang_s, 'INSERT');
+                    $DB->AutoExecute(_DB_PREFIX_ . $this->table . '_lang', $params_lang_s, 'INSERT');
 
                 }
             }
@@ -479,12 +479,6 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
 
     public function getList($id_lang = false, $count = false)
     {
-        $field_forselect_name = 'name';
-        $title_forselect_name = false;
-        $separator = ' ';
-        $limits = true;
-        $sql_prepare = '';
-        $bind_params = array();
 
 //Si la lang n'est pas renseigné on affiche la lang par défaut chargé dans le init ( Configuration::loadConfig )
         if (!$id_lang) {
@@ -499,8 +493,7 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
         if ($count === false) {
 //Selectionne tous par défaut dans la table de la classe
             $sql = 'SELECT ' . _DB_PREFIX_ . $this->table . '.* ';
-            $sql_prepare = 'SELECT ?.*  ';
-            $bind_params[] =  array("s"=>_DB_PREFIX_ . $this->table);
+
             if ($fields_lang) {
 
                 $sql .= ', ' . _DB_PREFIX_ . $this->table . '_lang.' . implode(', ' . _DB_PREFIX_ . $this->table . '_lang.',
@@ -548,28 +541,28 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             //  $sql .= ' AND ' . $where;
            }
         }
-
-        if (array_key_exists('position', $this)) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
-        } elseif ($this->order_by) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->order_by . ' ' . $this->order_way;
-        } elseif (!$this->order_by && $this->order_way) {
-            $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
+        if ($count === false) {
+            if (array_key_exists('position', $this)) {
+                $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
+            } elseif ($this->order_by) {
+                $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->order_by . ' ' . $this->order_way;
+            } elseif (!$this->order_by && $this->order_way) {
+                $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
+            }
+            if ($this->get_list_limit_force) {
+                $sql .= ' LIMIT ' . Tools::pSQL(intval($this->get_list_limit_deb)) . ',' . Tools::pSQL(intval($this->get_list_limit_end));
+            }
         }
-        if ($this->get_list_limit_force) {
-            $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . intval($this->get_list_limit_end);
-        }
-          echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
+        //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         if ($count === false) {
             $results = Db::getInstance()->executeS($sql, $array = true);
-            echo "<pre>";
-            print_r($results);
-            echo "</pre>";
+
             if (!$results) {
                 return [];
             }
         }else{
-            return  Db::getInstance()->getValue($sql, $array = true);
+
+            return  Db::getInstance()->getValue($sql,  true);
         }
         return $results;
     }

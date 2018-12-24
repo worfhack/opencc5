@@ -91,7 +91,6 @@ class UserController extends FrontController
 
     public function renewPassword()
     {
-        $key = Tools::getValue("key");
         $context = Context::getContext();
         $is_form_step1 = Tools::isSubmit('sendemail');
         $is_form_step2 = Tools::isSubmit('sendemail2');
@@ -185,13 +184,8 @@ class UserController extends FrontController
 
     public function resetPassword()
     {
-        $link = Tools::getValue("link");
-        if ($link) {
-            $id_user = Users::getUserIdFromLink($link);
-            d($id_user);
-        } else {
+
             echo $this->viewManager->render("pages/renewpassword.html");
-        }
     }
 
     public function sigin()

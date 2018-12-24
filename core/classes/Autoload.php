@@ -49,7 +49,6 @@ class Autoload
     protected function getClassesFromDir($path)
     {
         $classes = [];
-        //        	$root_dir = $this->root_dir;
         $root_dir = ROOT_DIR;
 
         foreach (scandir($root_dir . $path) as $file) {

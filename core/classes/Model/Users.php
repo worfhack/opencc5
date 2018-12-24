@@ -129,8 +129,7 @@ class Users extends ObjectModel
 
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($email) . '\'',
-            $memcached = false);
+        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($email) . '\'');
     }
 
 
@@ -143,7 +142,7 @@ class Users extends ObjectModel
         $sql = '
             SELECT e.*
             FROM `' . _DB_PREFIX_ . 'administrator` e';
-        return Db::getInstance()->executeS($sql, $array = true, $memcached = false);
+        return Db::getInstance()->executeS($sql, true);
     }
 
 
@@ -157,9 +156,6 @@ class Users extends ObjectModel
             $error = 'Required field empty';
             return false;
         }
-
-
-
 
         $user = new Users();
         $user->email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
@@ -196,13 +192,13 @@ class Users extends ObjectModel
                 'link' => $link,
                 'validate' => 1,
                 'end_validate' => $max_link_date->format('Y-m-d H:i:s'),
-            ), 'INSERT', $where = false, $psql = true);
+            ), 'INSERT', false, true);
 
     }
     static public function resetLinkExist($link)
     {
-        return ObjectModel::getSingleInfo($table = 'user_password_reset', $where_row = 'link',
-            $where_value = $link, $row = 'id_user_password_reset', $memcached = false);
+        return ObjectModel::getSingleInfo($table = 'user_password_reset', 'link',
+            $link,'id_user_password_reset');
     }
     static public function getUserIdFromLink($link)
     {
