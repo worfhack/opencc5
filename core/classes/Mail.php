@@ -4,30 +4,30 @@
 class Mail
 {
 
-public static function send($to, $subject, $template, $params)
-{
-     $gl_config = Tools::getConfig();
+    public static function send($to, $subject, $template, $params)
+    {
+        $gl_config = Tools::getConfig();
 
-    $viewManager = new RenderEmail();
-    $mail = new PHPMailer\PHPMailer\PHPMailer();
-    $mail->isSMTP();
+        $viewManager = new RenderEmail();
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        $mail->isSMTP();
 
-    $mail->SMTPDebug =0;
-    $mail->Host = $gl_config['email']['host'];
-    $mail->Port = $gl_config['email']['port'];
-    $mail->SMTPSecure = $gl_config['email']['secure'];
-    $mail->SMTPAuth = true;
-    $mail->Username =$gl_config['email']['login'];
-    $mail->setFrom( $gl_config['email']['from'],  $gl_config['email']['from_name']);
-    $mail->addAddress($to);
+        $mail->SMTPDebug = 0;
+        $mail->Host = $gl_config['email']['host'];
+        $mail->Port = $gl_config['email']['port'];
+        $mail->SMTPSecure = $gl_config['email']['secure'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $gl_config['email']['login'];
+        $mail->setFrom($gl_config['email']['from'], $gl_config['email']['from_name']);
+        $mail->addAddress($to);
 
-    $mail->Subject = $subject;
+        $mail->Subject = $subject;
 
-    $viewManager->initVariable($params);
-   $html =  $viewManager->render('template/'.$template.".html", false);
-    $mail->msgHTML($html);
-    $mail->AltBody = 'This is a plain-text message body';
+        $viewManager->initVariable($params);
+        $html = $viewManager->render('template/' . $template . ".html", false);
+        $mail->msgHTML($html);
+        $mail->AltBody = 'This is a plain-text message body';
 
-   $mail->send();
-}
+        $mail->send();
+    }
 }

@@ -8,7 +8,6 @@ define('CONFIG_DIR', $g_base_dir . 'config/');;
 ini_set('display_errors', '1');
 
 // init des constantes
-require_once(CONFIG_DIR . 'functions.php');
 require_once(CONFIG_DIR . 'define.inc.php');
 require_once(VENDOR_DIR . 'autoload.php');
 require_once(CLASS_CORE_DIR . 'Autoload.php');

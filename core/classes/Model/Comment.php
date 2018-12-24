@@ -226,8 +226,4 @@ class Comment extends ObjectModel
     {
         $this->publish = $publish;
     }
-
-
-
-
 }

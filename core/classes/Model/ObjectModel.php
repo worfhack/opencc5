@@ -553,7 +553,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $sql .= ' LIMIT ' . Tools::pSQL(intval($this->get_list_limit_deb)) . ',' . Tools::pSQL(intval($this->get_list_limit_end));
             }
         }
-        //  echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
+        echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         if ($count === false) {
             $results = Db::getInstance()->executeS($sql, $array = true);
 
@@ -585,5 +585,3 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
 
 
 }
-
-?>

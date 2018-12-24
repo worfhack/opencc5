@@ -57,7 +57,6 @@ class Autoload
                 if (is_dir($root_dir . $path . $file)) {
                     $classes = array_merge($classes, $this->getClassesFromDir($path . $file . '/'));
                 } elseif (substr($file, -4) == '.php') {
-                    // d($root_dir . $path . $file);
                     $info = pathinfo($file);
                     $fileName = $info['filename'];
                     $classes[$fileName] = $path . $file;
