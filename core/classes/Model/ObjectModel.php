@@ -332,7 +332,7 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
             ) {
                 $params[$key] = $value;
             }
-        if ($result = $DB->AutoExecute(_DB_PREFIX_ . $this->table, $params, 'INSERT')) {
+        if ($DB->AutoExecute(_DB_PREFIX_ . $this->table, $params, 'INSERT')) {
             $this->id = $DB->insertID();
 
 
@@ -538,7 +538,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
            foreach ($this->where as $row=>$value) {
 
 
-            //  $sql .= ' AND ' . $where;
+              $sql .= ' AND ' . Tools::pSQL($row) . " = " . $value;
            }
         }
         if ($count === false) {
@@ -553,18 +553,18 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $sql .= ' LIMIT ' . Tools::pSQL(intval($this->get_list_limit_deb)) . ',' . Tools::pSQL(intval($this->get_list_limit_end));
             }
         }
-        echo get_class($this).'->get_list() (Via ObjectModel) <br/>--------------------------<br/>'.$sql.'<br/>--------------------------<br/>';
         if ($count === false) {
             $results = Db::getInstance()->executeS($sql, $array = true);
 
             if (!$results) {
                 return [];
             }
+            return $results;
         }else{
 
             return  Db::getInstance()->getValue($sql,  true);
         }
-        return $results;
+
     }
 
 

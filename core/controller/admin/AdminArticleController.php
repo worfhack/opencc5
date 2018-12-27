@@ -40,7 +40,7 @@ class AdminArticleController extends AdminController
         $this->viewManager->initVariable(
             [
                 'article'=>$article,
-                'article_cat'=>$article->getCategories(),
+                'article_cat'=>($article ? $article->getCategories(): []),
                 'categories'=>$categories,
                 'authors'=>$authors,
             ]);

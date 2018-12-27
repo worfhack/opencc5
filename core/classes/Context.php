@@ -30,7 +30,11 @@ class Context
 
         $this->gl_config = $gl_config;
         $this->requestUri = $_SERVER['REQUEST_URI'];
-        $this->setLanguage()->setCurrentUrl()->setBaseUrl()->setBaseUrlLang()->setConfig();
+        $this->setLanguage();
+        $this->setCurrentUrl();
+        $this->setBaseUrl();
+        $this->setBaseUrlLang();
+        $this->setConfig();
         $this->translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
         $this->translator->addResource('yaml', ROOT_DIR .'translate/'.$this->getCurrentLanguage()->iso.'.yaml', $this->getCurrentLanguage()->iso);
 

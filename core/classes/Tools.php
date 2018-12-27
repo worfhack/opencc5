@@ -148,7 +148,7 @@ class Tools
     {
         return Config::getInstance();
     }
-    static function pSQL($string, $htmlOK = false, $strip = true)
+    static function pSQL($string)
     {
         if (is_array($string)) {
             return $string;

@@ -197,7 +197,7 @@ class Users extends ObjectModel
     }
     static public function resetLinkExist($link)
     {
-        return ObjectModel::getSingleInfo($table = 'user_password_reset', 'link',
+        return ObjectModel::getSingleInfo('user_password_reset', 'link',
             $link,'id_user_password_reset');
     }
     static public function getUserIdFromLink($link)
