@@ -15,7 +15,7 @@ class FrontController extends Controller
         $this->lastPosts ->load();
     }
 
-    function __construct()
+    public function __construct()
     {
         $this->user =  Users::getUsers();
 

@@ -15,7 +15,7 @@ class Language extends ObjectModel
     public $name;
     public $title;
     public $iso;
-    static $_language;
+    public static $_language;
     public $local;
     public $id_lang;
     static public function getLanguages($only_actif = false)

@@ -10,7 +10,7 @@ use Symfony\Component\Translation\Translator;
 
 class Context
 {
-    static $_context;
+    private static $_context;
     private $requestUri;
     private $currentLanguage;
     private $gl_config;

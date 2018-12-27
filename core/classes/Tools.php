@@ -33,7 +33,7 @@ class Tools
 
 
 
-    static function substr ($str , $start , $length = false , $encoding = 'utf-8')
+    static public  function substr ($str , $start , $length = false , $encoding = 'utf-8')
     {
         if ( is_array ($str) )
         {
@@ -148,7 +148,7 @@ class Tools
     {
         return Config::getInstance();
     }
-    static function pSQL($string)
+    static public  function pSQL($string)
     {
         if (is_array($string)) {
             return $string;

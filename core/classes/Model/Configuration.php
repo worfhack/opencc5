@@ -35,7 +35,7 @@ class Configuration extends ObjectModel
         return $config;
     }
 
-    function getValue()
+public function getValue()
     {
         if (is_array($this->value_lang)) {
             $value_lang = $this->value_lang[_ID_LANG_];

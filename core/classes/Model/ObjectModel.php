@@ -554,7 +554,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             }
         }
         if ($count === false) {
-            $results = Db::getInstance()->executeS($sql, $array = true);
+            $results = Db::getInstance()->executeS($sql, true);
 
             if (!$results) {
                 return [];

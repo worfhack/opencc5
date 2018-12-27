@@ -127,7 +127,7 @@ public function update()
         $sql ='
             SELECT e.*
             FROM `'._DB_PREFIX_.'administrator` e';
-        return Db::getInstance()->executeS($sql, $array = true);
+        return Db::getInstance()->executeS($sql, true);
     }
 
 
