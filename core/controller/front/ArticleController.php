@@ -7,9 +7,9 @@ class ArticleController extends FrontController
     {
            $article = new Article($id, $this->id_lang);
 
-
             if (!$article->id)
             {
+
                 throw new NotFoundException();
             }
 
