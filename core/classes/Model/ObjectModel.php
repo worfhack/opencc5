@@ -95,6 +95,10 @@ abstract class ObjectModel
             if ($this->fields_join) {
                 foreach ($this->fields_join as $j) {
                     $key_name = $j['key'];
+                    if (isset($j['left']) && $j['left'] === true)
+                    {
+                        $sql .= ' LEFT ';
+                    }
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                         ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
                     if (isset($j['lang']) && $j['lang'] === true) {
@@ -522,6 +526,10 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         if ($this->fields_join) {
             foreach ($this->fields_join as $j) {
                 $key_name = $j['key'];
+                if (isset($j['left']) && $j['left'] === true)
+                {
+                    $sql .= ' LEFT ';
+                }
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
                     ' ON ' . _DB_PREFIX_ . $this->table . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
                 if (isset($j['andwhere']) && !empty($j['andwhere'])) {

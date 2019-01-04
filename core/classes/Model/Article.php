@@ -37,6 +37,7 @@ class Article extends ObjectModel
             'table'=>'media',
             'key'=>'thumbnail',
             'onleft'=>'id_thumbnail',
+            'left'=>true,
             'onright'=>'id_media',
             'fields'=>['name'],
 
