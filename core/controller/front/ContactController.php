@@ -48,7 +48,6 @@ class ContactController extends FrontController
             }
 
         }
-die();
         echo $this->viewManager->render("pages/contact.html");
     }
 }
