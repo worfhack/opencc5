@@ -12,13 +12,13 @@ class Mail
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         $mail->SMTPDebug = 0;
 
-        if ($gl_config['email']['smtp'] == true)
+        if ($gl_config['email']['smtp'] === true)
         {
             $mail->isSMTP();
             $mail->Host = $gl_config['email']['host'];
             $mail->Port = $gl_config['email']['port'];
             $mail->SMTPSecure = $gl_config['email']['secure'];
-            if ($gl_config['email']['smtpsecure'] == true) {
+            if ($gl_config['email']['smtpsecure'] === true) {
                 $mail->SMTPAuth = true;
             }
             $mail->Password =  $gl_config['email']['password'];
