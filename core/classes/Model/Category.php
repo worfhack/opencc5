@@ -190,8 +190,10 @@ class Category extends ObjectModel
         
         c.id_category = cl.id_category and cl.id_lang =  ' . _ID_LANG_ .' ORDER BY c.id_parent';
         $res = DB::getInstance()->executeS($query);
-        return self::buildTree($res);
-
+        if ($res) {
+            return self::buildTree($res);
+        }
+        return [];
 
     }
 

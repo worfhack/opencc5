@@ -26,6 +26,7 @@ class Configuration extends ObjectModel
         $sql = 'SELECT c.key,c.value,  cl.value_lang from ' . _DB_PREFIX_ . 'config c JOIN ' . _DB_PREFIX_ . 'config_lang cl
     ON c.id_config = cl.id_config and cl.id_lang = ' . _ID_LANG_ . '
     ';
+
         $result =  Db::getInstance()->executeS($sql, true);
         foreach ($result as $r)
         {

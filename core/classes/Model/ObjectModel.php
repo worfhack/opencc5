@@ -110,6 +110,7 @@ abstract class ObjectModel
                     }
                 }
             }
+
             $sql .= ' WHERE a.`' . Tools::pSQL($this->identifier) . '` = ' . Tools::pSQL(intval($id));
             $result = Db::getInstance()->getRow($sql);
             if (!$result) {
@@ -123,6 +124,7 @@ abstract class ObjectModel
                     $this->{$key} = stripslashes($value);
                 }
             }
+
             /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
             if (!$id_lang) {
                 $sql = 'SELECT * FROM `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
