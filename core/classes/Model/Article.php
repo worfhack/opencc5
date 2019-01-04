@@ -100,12 +100,13 @@ class Article extends ObjectModel
     {
         $sql = "DELETE from " . _DB_PREFIX_ .'category_article where id_article =' .$this->id_article;
         Db::getInstance()->execute($sql);
-            foreach ($categories as $id_category)
-            {
+        if ($categories) {
+            foreach ($categories as $id_category) {
                 Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'category_article', array('id_article' => intval($this->id_article),
-                   'id_category' => intval($id_category)), 'insert');
+                    'id_category' => intval($id_category)), 'insert');
 
             }
+        }
     }
     /**
      * @param mixed $resume

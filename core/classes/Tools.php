@@ -28,78 +28,80 @@ class Tools
     }
 
 
-
-
-
-
-
-    static public  function substr ($str , $start , $length = false , $encoding = 'utf-8')
+    static public function substr($str, $start, $length = false, $encoding = 'utf-8')
     {
-        if ( is_array ($str) )
-        {
+        if (is_array($str)) {
             return false;
         }
-        if ( function_exists ('mb_substr') )
-        {
-            return mb_substr ($str , intval ($start) , ($length === false ? Tools::strlen ($str) : intval ($length)) , $encoding);
+        if (function_exists('mb_substr')) {
+            return mb_substr($str, intval($start), ($length === false ? Tools::strlen($str) : intval($length)), $encoding);
         }
-        return substr ($str , $start , $length);
+        return substr($str, $start, $length);
     }
 
-    static public function linkRewrite ($str , $utf8_decode = false)
+    static function toAscii($str, $replace = array(), $delimiter = '-')
+    {
+        if (!empty($replace)) {
+            $str = str_replace((array)$replace, ' ', $str);
+        }
+
+        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+        $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+        $clean = strtolower(trim($clean, '-'));
+        $clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+
+        return $clean;
+    }
+
+    static public function linkRewrite($str, $utf8_decode = false)
     {
         $purified = '';
-        $length = self::strlen ($str);
-        if ( $utf8_decode )
-        {
-            $str = utf8_decode ($str);
+        $length = self::strlen($str);
+        if ($utf8_decode) {
+            $str = utf8_decode($str);
         }
-        for ($i = 0; $i < $length; $i++)
-        {
-            $char = self::substr ($str , $i , 1);
-            if ( self::strlen (htmlentities ($char)) > 1 )
-            {
-                $entity = htmlentities ($char , ENT_COMPAT , 'UTF-8');
+        for ($i = 0; $i < $length; $i++) {
+            $char = self::substr($str, $i, 1);
+            if (self::strlen(htmlentities($char)) > 1) {
+                $entity = htmlentities($char, ENT_COMPAT, 'UTF-8');
                 $purified .= $entity{1};
-            }
-            elseif ( preg_match ('|[[:alpha:]]{1}|u' , $char) )
-            {
+            } elseif (preg_match('|[[:alpha:]]{1}|u', $char)) {
                 $purified .= $char;
-            }
-            elseif ( preg_match ('<[[:digit:]]|-{1}>' , $char) )
-            {
+            } elseif (preg_match('<[[:digit:]]|-{1}>', $char)) {
                 $purified .= $char;
-            }
-            elseif ( $char == ' ' )
-            {
+            } elseif ($char == ' ') {
                 $purified .= '-';
             }
         }
-        return trim (self::strtolower ($purified));
+        return self::toAscii(trim(self::strtolower($purified)));
     }
-    static public function isSubmit ($submit)
+
+    static public function isSubmit($submit)
     {
         return (isset($_POST[$submit]) || isset($_POST[$submit . '_x']) || isset($_POST[$submit . '_y']) || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y']));
     }
-    static public function redirectAdmin ($url)
+
+    static public function redirectAdmin($url)
     {
 
         $context = Context::getContext();
-        header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso. '/'. $url);
+        header('Location: ' . _BASE_URL_ . '/' . _ADMIN_URI_ . '/' . $context->getCurrentLanguage()->iso . '/' . $url);
 
         exit;
     }
+
     static public function translate($string)
     {
         $context = Context::getContext();
         $translated = $context->getTranslator()->trans($string);
         return $translated;
     }
-    static public function redirect ($url)
+
+    static public function redirect($url)
     {
 
 
-            header ('Location: ' .  $url);
+        header('Location: ' . $url);
 
         exit;
     }
@@ -109,9 +111,8 @@ class Tools
         $options = [
             'cost' => 11,
         ];
-        return password_hash( $password, PASSWORD_BCRYPT, $options);
+        return password_hash($password, PASSWORD_BCRYPT, $options);
     }
-
 
 
     public static function getValue($key, $default_value = false)
@@ -148,7 +149,8 @@ class Tools
     {
         return Config::getInstance();
     }
-    static public  function pSQL($string)
+
+    static public function pSQL($string)
     {
         if (is_array($string)) {
             return $string;
