@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+
+
+{% block textemail %}
+{{trans("Your have new mail from website  from")}}  {{name}}<br>
+{{trans("Email:")}}  {{email}}<br>
+{{trans("Phone:")}}  {{phone}}<br>
+{{trans("message:")}}  {{message}}<br>
+
+{% endblock %}
