@@ -17,7 +17,7 @@ class Mail
         $mail->Port = $gl_config['email']['port'];
         $mail->SMTPSecure = $gl_config['email']['secure'];
         $mail->SMTPAuth = true;
-        $mail->Password = "todayisagooddaytodie66";
+        $mail->Password =  $gl_config['email']['password'];
         $mail->Username = $gl_config['email']['login'];
         $mail->setFrom($gl_config['email']['from'], $gl_config['email']['from_name']);
         $mail->Password = $gl_config['email']['password'];
