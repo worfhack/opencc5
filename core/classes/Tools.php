@@ -39,7 +39,7 @@ class Tools
         return substr($str, $start, $length);
     }
 
-    static function toAscii($str, $replace = array(), $delimiter = '-')
+    public static function toAscii($str, $replace = array(), $delimiter = '-')
     {
         if (!empty($replace)) {
             $str = str_replace((array)$replace, ' ', $str);
