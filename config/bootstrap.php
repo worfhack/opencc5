@@ -149,6 +149,20 @@ $collection->attachRoute(new Route('/' . _ADMIN_URI_, [
     '_controller' => 'AdminDashBoardController::index',
     'methods' => 'GET'
 ]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/resetpassword', [
+
+    'params' => [],
+    '_controller' => 'AdminLoginController::resetpassword',
+    'methods' => 'POST'
+]));
+
+$collection->attachRoute(new Route('/' . _ADMIN_URI_.'/resetpassword', [
+
+    'params' => [],
+    '_controller' => 'AdminLoginController::resetpassword',
+    'methods' => 'GET'
+]));
 $collection->attachRoute(new Route('/' . _ADMIN_URI_.'/login', [
 
     'params' => [],

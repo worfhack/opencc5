@@ -10,9 +10,6 @@ class Administrator extends ObjectModel
 {
     public $table = 'administrator';
     public $identifier = 'id_administrator';
-
-
-
     public $mail;
 
     public $password;
@@ -25,6 +22,55 @@ class Administrator extends ObjectModel
 
 
     public $active = 1;
+
+    /**
+     * @return mixed
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param mixed $firstname
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    /**
+     * @param mixed $lastname
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+    }
+
+
+    static public function getAdministratorIdFromLink($link)
+    {
+        // TimeZone
+        $TZ = date('P');
+
+        $sql = "select id_administrator  FROM  `" . _DB_PREFIX_ . "administrator_password_reset` " .
+            " WHERE link = '$link'  AND validate= 1 AND  end_validate >=  CONVERT_TZ(NOW(), @@session.time_zone, '$TZ')";
+        $row = Db::getInstance()->getRow($sql, true, false);
+        if (isset($row['id_administrator'])) {
+            return $row['id_administrator'];
+        }
+        return false;
+
+    }
+
 
 public function update()
 {
@@ -108,20 +154,41 @@ public function update()
         return Db::getInstance()->executeS($sql);
     }
 
-    /**
-     * @return boolean
-     * @deprecated
-     */
+    public function saveLinkResetPassword($link)
+    {
+
+        $max_link_date_sec = 3600;
+        $max_link_date = new DateTime();
+        $max_link_date->modify('+ ' . $max_link_date_sec . ' second');
+
+        Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'administrator_password_reset',
+            array('id_administrator' => intval($this->id),
+                'link' => $link,
+                'validate' => 1,
+                'end_validate' => $max_link_date->format('Y-m-d H:i:s'),
+            ), 'INSERT', false, true);
+
+    }
     static public function emailExist($email)
     {
         return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'');
     }
 
+    static public function resetLinkExist($link)
+    {
+        return ObjectModel::getSingleInfo('administrator_password_reset', 'link',
+            $link,'id_administrator_password_reset');
+    }
+    public function genereateResetPasswordLink()
+    {
+        do {
+            $link = bin2hex(random_bytes(30));
+        } while (Administrator::resetLinkExist($link));
 
-    /**
-     * @return mixed
-     * @deprecated
-     */
+        $this->saveLinkResetPassword($link);
+        return $link;
+    }
+
     static public function getEmployees($id_employee_group = false)
     {
         $sql ='

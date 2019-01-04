@@ -1,13 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="portlet">
+    <div class="portlet-body flip-scroll">
     <!-- BEGIN LOGIN FORM -->
         <form class="login-form form form-vertical" method="post">
             <h3 class="form-title font-green">Sign In</h3>
-            <div class="alert alert-danger display-hide">
-                <button class="close" data-close="alert"></button>
-                <span> Enter any email and password. </span>
-            </div>
+
             <div class="form-group">
                 <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
                 <label class="control-label visible-ie8 visible-ie9">Email</label>
@@ -18,19 +17,15 @@
             <div class="form-actions">
                 <button type="submit" class="btn green uppercase">{{ trans('Login') }}</button>
 
-                <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
+                <a href="{{base_admin_url_lang()}}/resetpassword/" id="forget-password" class="forget-password">Forgot Password?</a>
             </div>
         </form>
 
 
 
 
+    </div>
 
-
-
-{% endblock %}
-
-{% block footer %}
+</div>
 
 {% endblock %}
-
