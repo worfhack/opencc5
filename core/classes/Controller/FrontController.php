@@ -14,14 +14,12 @@ class FrontController extends Controller
         $this->lastPosts ->getLastPublication(_ID_LANG_, $limit_home_page, 1);
         $this->lastPosts ->load();
     }
-    private function  loadTags(){
 
-    }
-    function __construct()
+    public function __construct()
     {
         $this->user =  Users::getUsers();
 
-        if ($this->user == false && $this->need_to_be_log == true) {
+        if ($this->user === false && $this->need_to_be_log === true) {
             Tools::redirect(_BASE_URL_. '/login');
         }
 

@@ -1,4 +1,7 @@
 {
+    "name": "worf/openccblog",
+    "description": "Projet openclassroom blog",
+    "license": "MIT",
     "require": {
 	"twig/twig":"~2.0",
         "bluem/tree": "^2.0",

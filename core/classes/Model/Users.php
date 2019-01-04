@@ -43,8 +43,6 @@ class Users extends ObjectModel
     {
         if (isset($_SESSION['id_user'])) {
             $admin = new Users($_SESSION['id_user']);
-            $admin->picture_min = $admin->getPicture(true);
-            $admin->picture_full = $admin->getPicture();
 
             return $admin;
         } else {
@@ -62,7 +60,6 @@ class Users extends ObjectModel
         if ($this->newpassword) {
             $this->password = Tools::encrypt($this->newpassword);
         }
-        //Purge de memcached
 
         return parent::add();
     }
@@ -75,7 +72,7 @@ class Users extends ObjectModel
      */
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_user as id_user, e.password as password FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . pSQL($mail) . '\' ';
+        $sql = 'SELECT e.id_user as id_user, e.password as password FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($mail) . '\' ';
 
         $user = Db::getInstance()->getRow($sql);
         if (!$user) {
@@ -127,13 +124,12 @@ class Users extends ObjectModel
     static public function getName($id_user)
     {
         $sql = "SELECT firstname, lastname FROM " . _DB_PREFIX_ . "users WHERE id_user=" . $id_user;
-        return Db::getInstance()->ExecuteS($sql);
+        return Db::getInstance()->executeS($sql);
     }
 
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . pSQL($email) . '\'',
-            $memcached = false);
+        return Db::getInstance()->getValue('SELECT e.id_user FROM `' . _DB_PREFIX_ . 'users` e WHERE e.email = \'' . Tools::pSQL($email) . '\'');
     }
 
 
@@ -146,27 +142,11 @@ class Users extends ObjectModel
         $sql = '
             SELECT e.*
             FROM `' . _DB_PREFIX_ . 'administrator` e';
-        return Db::getInstance()->ExecuteS($sql, $array = true, $memcached = false);
+        return Db::getInstance()->executeS($sql, true);
     }
 
-    public function getPicture($thumb = false)
-    {
-        return '';
-//        if ($thumb == true) {
-//
-//            $file = AVATAR_DIR . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//            $url = _AVATAR_BASE_URL_ . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//        } else {
-//            $file = AVATAR_DIR . '/HD/' . $this->id . ".jpg";
-//            $url = _AVATAR_BASE_URL_ . '/HD/' . $this->id . ".jpg";
-//        }
-//
-//        if (file_exists($file)) {
-//            return $url;
-//        }
-    }
 
-    static public function CreateUserFromForm(&$error)
+    static public function createUserFromForm(&$error)
     {
         if (empty($_POST['email']) || empty($_POST['firstname']) || empty($_POST['lastname'])
             || empty($_POST['password'])
@@ -177,14 +157,10 @@ class Users extends ObjectModel
             return false;
         }
 
-
-
-
         $user = new Users();
         $user->email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $user->firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $user->lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         $user->password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
         $password2 = filter_input(INPUT_POST, 'password2', FILTER_DEFAULT);
         if ($password2 != $user->password)
@@ -216,13 +192,13 @@ class Users extends ObjectModel
                 'link' => $link,
                 'validate' => 1,
                 'end_validate' => $max_link_date->format('Y-m-d H:i:s'),
-            ), 'INSERT', $where = false, $limit = false, $psql = true, $debug = false);
+            ), 'INSERT', false, true);
 
     }
     static public function resetLinkExist($link)
     {
-        return ObjectModel::getSingleInfo($table = 'user_password_reset', $where_row = 'link',
-            $where_value = $link, $row = 'id_user_password_reset', $memcached = false);
+        return ObjectModel::getSingleInfo('user_password_reset', 'link',
+            $link,'id_user_password_reset');
     }
     static public function getUserIdFromLink($link)
     {

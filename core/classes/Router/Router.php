@@ -117,7 +117,6 @@ class Router
                 foreach ($matches as $key => $name) {
 
                     if (isset($params[$key])) {
-                        //    d('m');
                         $paramsR[$params[$key]] = $name;
                     }
                 }
@@ -127,7 +126,6 @@ class Router
 
                 $routes->dispatch();
 
-                //   return $routes;
             return true;
             }
         }

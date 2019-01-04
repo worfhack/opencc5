@@ -189,7 +189,7 @@ class Category extends ObjectModel
         $query = 'SELECT c.*, cl.*, c.id_category as id, c.id_parent as parent from ' . _DB_PREFIX_ . 'category c JOIN ' . _DB_PREFIX_ . 'category_lang cl ON 
         
         c.id_category = cl.id_category and cl.id_lang =  ' . _ID_LANG_ .' ORDER BY c.id_parent';
-        $res = DB::getInstance()->ExecuteS($query);
+        $res = DB::getInstance()->executeS($query);
         return self::buildTree($res);
 
 
@@ -198,11 +198,11 @@ class Category extends ObjectModel
     public function add()
     {
         if (!is_array($this->url_rewrite)) {
-            $this->url_rewrite = Tools::link_rewrite($this->title);
+            $this->url_rewrite = Tools::linkRewrite($this->title);
         } else {
             $this->url_rewrite = [];
             foreach ($this->title as $title) {
-                $this->url_rewrite[] = Tools::link_rewrite($title);
+                $this->url_rewrite[] = Tools::linkRewrite($title);
             }
         }
         return parent::add();
@@ -211,11 +211,11 @@ class Category extends ObjectModel
     public function update()
     {
         if (!is_array($this->url_rewrite)) {
-            $this->url_rewrite = Tools::link_rewrite($this->title);
+            $this->url_rewrite = Tools::linkRewrite($this->title);
         } else {
             $this->url_rewrite = [];
             foreach ($this->title as $title) {
-                $this->url_rewrite[] = Tools::link_rewrite($title);
+                $this->url_rewrite[] = Tools::linkRewrite($title);
             }
         }
         return parent::update();

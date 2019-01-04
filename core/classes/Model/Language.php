@@ -15,14 +15,14 @@ class Language extends ObjectModel
     public $name;
     public $title;
     public $iso;
-    static $_language;
+    public static $_language;
     public $local;
     public $id_lang;
     static public function getLanguages($only_actif = false)
     {
         if (self::$_language == NULL) {
             $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'lang`';
-            self::$_language = Db::getInstance()->ExecuteS($sql);
+            self::$_language = Db::getInstance()->executeS($sql);
         }
         return self::$_language;
     }

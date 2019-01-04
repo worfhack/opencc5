@@ -1,13 +1,11 @@
-.idea
+
 
 /config/settings.inc.php
 /config/config.inc.php
-/public/js/front/templates
 /.htaccess
+/public/.htaccess
 /composer.lock
 /composer.phar
-/fastmutu.conf
-/public/css
 /cache
 /bin/composer
 /composer-setup.php
@@ -15,8 +13,7 @@
 .sass-cache
 node_modules
 bower_components
-/public/js/build
 
-public/images/product
-public/images/avatars
+public/media/
+public/media_cache/
 

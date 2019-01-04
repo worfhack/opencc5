@@ -67,7 +67,6 @@
 
                                                                     </select>
                                                                   </div>
-                                                                <input type="hidden" name="id_thumbnail" id="id_thumbnail" value="{{article.id_thumbnail}}">
                                                                 <label class="control-label">Categories</label>
                                                                 <select multiple name="categories[]">
                                                                     {% for category in categories %}
@@ -89,6 +88,7 @@
                                             <button type="button" class="media-selector btn btn-sm btn-danger" data-toggle="modal" data-image-target="image_thumbnail_show"data-id-target="id_thumbnail" data-target="#media-modal">
                                                 Thumbnail Image
                                             </button>
+                                            <input style=""required type="text" name="id_thumbnail" id="id_thumbnail" value="{{article.id_thumbnail}}">
 
                                             <div id="image_thumbnail_show">  <img src="{{article.getThumbnailNameFormat()}}"/></div>
                                         </div>

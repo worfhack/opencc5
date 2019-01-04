@@ -33,7 +33,7 @@ class Tools
 
 
 
-    static function substr ($str , $start , $length = false , $encoding = 'utf-8')
+    static public  function substr ($str , $start , $length = false , $encoding = 'utf-8')
     {
         if ( is_array ($str) )
         {
@@ -46,7 +46,7 @@ class Tools
         return substr ($str , $start , $length);
     }
 
-    static public function link_rewrite ($str , $utf8_decode = false)
+    static public function linkRewrite ($str , $utf8_decode = false)
     {
         $purified = '';
         $length = self::strlen ($str);
@@ -79,7 +79,7 @@ class Tools
     }
     static public function isSubmit ($submit)
     {
-        return (isset($_POST[$submit]) OR isset($_POST[$submit . '_x']) OR isset($_POST[$submit . '_y']) OR isset($_GET[$submit]) OR isset($_GET[$submit . '_x']) OR isset($_GET[$submit . '_y']));
+        return (isset($_POST[$submit]) || isset($_POST[$submit . '_x']) || isset($_POST[$submit . '_y']) || isset($_GET[$submit]) || isset($_GET[$submit . '_x']) || isset($_GET[$submit . '_y']));
     }
     static public function redirectAdmin ($url)
     {
@@ -144,12 +144,23 @@ class Tools
         return ($field === '' || $field === null);
     }
 
-    static public function get_config()
+    static public function getConfig()
     {
-        global $gl_config;
-        return $gl_config;
+        return Config::getInstance();
     }
-
+    static public  function pSQL($string)
+    {
+        if (is_array($string)) {
+            return $string;
+        }
+        if (!is_numeric($string)) {
+            if (get_magic_quotes_gpc()) {
+                $string = stripslashes($string);
+            }
+            $string = mysqli_real_escape_string(Db::getInstance()->getLink(), $string);
+        }
+        return $string;
+    }
 
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
@@ -158,7 +169,6 @@ class Tools
         } else if ('Fatal error' !== $string) {
             return $string;
         }
-        //return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
 

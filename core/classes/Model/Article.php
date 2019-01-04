@@ -92,7 +92,7 @@ class Article extends ObjectModel
     public function getCategories()
     {
         $sql = 'select ca.id_category from '._DB_PREFIX_.'category_article ca    where id_article = '.$this->id_article;
-        return array_column(Db::getInstance()->ExecuteS($sql), 'id_category');
+        return array_column(Db::getInstance()->executeS($sql), 'id_category');
 
     }
     public function setCategories($categories)
@@ -147,13 +147,13 @@ class Article extends ObjectModel
 public function add()
 {
     if (!is_array($this->name)) {
-        $this->name = Tools::link_rewrite($this->title);
+        $this->name = Tools::linkRewrite($this->title);
     }else
     {
         $this->name = [];
         foreach ($this->title as $title)
         {
-            $this->name[] =  Tools::link_rewrite($title);
+            $this->name[] =  Tools::linkRewrite($title);
         }
     }
     return parent::add();
@@ -162,13 +162,13 @@ public function add()
     public function update()
     {
         if (!is_array($this->name)) {
-            $this->name = Tools::link_rewrite($this->title);
+            $this->name = Tools::linkRewrite($this->title);
         }else
         {
             $this->name = [];
             foreach ($this->title as $title)
             {
-                $this->name[] =  Tools::link_rewrite($title);
+                $this->name[] =  Tools::linkRewrite($title);
             }
         }
         return parent::update();

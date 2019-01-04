@@ -51,9 +51,6 @@ public function update()
         if (isset($_SESSION['id_administrator']))
         {
             $admin = new Administrator($_SESSION['id_administrator']);
-            $admin->picture_min = $admin->getPicture(true);
-            $admin->picture_full = $admin->getPicture();
-
             return $admin;
         }else
         {
@@ -73,7 +70,6 @@ public function update()
         {
             $this->password = Tools::encrypt($this->newpassword);
         }
-        //Purge de memcached
 
         return parent::add();
     }
@@ -87,13 +83,12 @@ public function update()
     //Check si un customer existe déjà. (Avant la création de son compte et donc le lancement de la method add)
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.pSQL($mail).'\' ' ;
+        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.Tools::pSQL($mail).'\' ' ;
         $admin =  Db::getInstance()->getRow($sql);
         if (!$admin)
         {
             return false;
         }
-
 
 
 
@@ -110,7 +105,7 @@ public function update()
     static public function getName($idEmployee)
     {
         $sql = "SELECT firstname, lastname FROM "._DB_PREFIX_."administrator WHERE id_administrator=".$idEmployee;
-        return Db::getInstance()->ExecuteS($sql);
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
@@ -119,8 +114,7 @@ public function update()
      */
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . pSQL($email) . '\'',
-            $memcached = false);
+        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'');
     }
 
 
@@ -133,25 +127,9 @@ public function update()
         $sql ='
             SELECT e.*
             FROM `'._DB_PREFIX_.'administrator` e';
-        return Db::getInstance()->ExecuteS($sql, $array = true, $memcached = false);
+        return Db::getInstance()->executeS($sql, true);
     }
 
-    public function getPicture($thumb = false)
-    {
-        return '';
-//        if ($thumb == true) {
-//
-//            $file = AVATAR_DIR . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//            $url = _AVATAR_BASE_URL_ . '/' . $this->id . '/' . $this->id . "-min.jpg";
-//        } else {
-//            $file = AVATAR_DIR . '/HD/' . $this->id . ".jpg";
-//            $url = _AVATAR_BASE_URL_ . '/HD/' . $this->id . ".jpg";
-//        }
-//
-//        if (file_exists($file)) {
-//            return $url;
-//        }
-    }
 
     static public function getCleanAdmin($adminEdit = false)
     {
@@ -174,7 +152,6 @@ public function update()
         $admin->mail = filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_EMAIL);
         $admin->firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $admin->lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         if(!$adminEdit) {
             $admin->password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
         } else {

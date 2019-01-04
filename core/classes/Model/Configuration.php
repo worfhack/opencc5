@@ -26,7 +26,7 @@ class Configuration extends ObjectModel
         $sql = 'SELECT c.key,c.value,  cl.value_lang from ' . _DB_PREFIX_ . 'config c JOIN ' . _DB_PREFIX_ . 'config_lang cl
     ON c.id_config = cl.id_config and cl.id_lang = ' . _ID_LANG_ . '
     ';
-        $result =  Db::getInstance()->ExecuteS($sql, $array = true, $memcached = true);
+        $result =  Db::getInstance()->executeS($sql, true);
         foreach ($result as $r)
         {
             $config[$r['key']] = ($r['value_lang']!= ''?$r['value_lang']:$r['value']);
@@ -35,7 +35,7 @@ class Configuration extends ObjectModel
         return $config;
     }
 
-    function getValue()
+public function getValue()
     {
         if (is_array($this->value_lang)) {
             $value_lang = $this->value_lang[_ID_LANG_];
@@ -63,7 +63,6 @@ class Configuration extends ObjectModel
         $config->name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $config->value = filter_input(INPUT_POST, 'value', FILTER_SANITIZE_STRING);
         $config->value_lang = filter_input(INPUT_POST, 'value_lang', FILTER_SANITIZE_STRING);
-        // $employee->phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
         $config->description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
 
 

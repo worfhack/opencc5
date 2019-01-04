@@ -10,7 +10,7 @@ use Symfony\Component\Translation\Translator;
 
 class Context
 {
-    static $_context;
+    private static $_context;
     private $requestUri;
     private $currentLanguage;
     private $gl_config;
@@ -24,18 +24,20 @@ class Context
 
     private function __construct()
     {
-        global $gl_config;
+         $gl_config =Tools::getConfig();
         $this->translator = new Translator('fr_FR');
 
 
         $this->gl_config = $gl_config;
         $this->requestUri = $_SERVER['REQUEST_URI'];
-        $this->setLanguage()->setCurrentUrl()->setBaseUrl()->setBaseUrlLang()->setConfig();
+        $this->setLanguage();
+        $this->setCurrentUrl();
+        $this->setBaseUrl();
+        $this->setBaseUrlLang();
+        $this->setConfig();
         $this->translator->addLoader('yaml', new \Symfony\Component\Translation\Loader\YamlFileLoader());
         $this->translator->addResource('yaml', ROOT_DIR .'translate/'.$this->getCurrentLanguage()->iso.'.yaml', $this->getCurrentLanguage()->iso);
-//        $this->moment = new \Moment\Moment();
-//        \Moment\Moment::setLocale($this->getCurrentLanguage()->local);
-     //   echo  $this->moment->format(); // e.g. 2012-10-03T10:00:00+0000
+
 
     }
     public function getTranslator()

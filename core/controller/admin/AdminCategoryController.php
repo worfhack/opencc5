@@ -25,7 +25,7 @@ class AdminCategoryController extends AdminController
     public function form($id_article = false)
     {
 
-        if ($id_article != false)
+        if ($id_article !== false)
         {
             $category = new Category($id_article, _ID_LANG_ );
         }else
@@ -50,7 +50,7 @@ class AdminCategoryController extends AdminController
     public function add()
     {
         $category = new Category();
-        $category->copy_from_post();
+        $category->copyFromPost();
         $category->add();
 
         Tools::redirectAdmin('/category');
@@ -68,7 +68,7 @@ class AdminCategoryController extends AdminController
 
 
         $category = new Category($id, _ID_LANG_);
-        $category->copy_from_post();
+        $category->copyFromPost();
         $category->update();
 
         Tools::redirectAdmin('/category');

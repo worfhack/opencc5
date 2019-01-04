@@ -26,7 +26,7 @@ class AdminArticleController extends AdminController
     public function form($id_article = false)
     {
 
-        if ($id_article != false)
+        if ($id_article !== false)
         {
             $article = new Article($id_article, _ID_LANG_ );
         }else
@@ -40,7 +40,7 @@ class AdminArticleController extends AdminController
         $this->viewManager->initVariable(
             [
                 'article'=>$article,
-                'article_cat'=>$article->getCategories(),
+                'article_cat'=>($article ? $article->getCategories(): []),
                 'categories'=>$categories,
                 'authors'=>$authors,
             ]);
@@ -54,7 +54,7 @@ class AdminArticleController extends AdminController
     public function add()
     {
         $article = new Article();
-        $article->copy_from_post();
+        $article->copyFromPost();
         $article->add();
         Tools::redirectAdmin('/article');
 
@@ -71,7 +71,7 @@ class AdminArticleController extends AdminController
 
         $categories = Tools::getValue('categories');
         $article = new Article($id, _ID_LANG_);
-        $article->copy_from_post();
+        $article->copyFromPost();
         $article->setCategories($categories);
         $article->update();
 

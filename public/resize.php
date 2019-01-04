@@ -14,14 +14,14 @@ $original = MEDIA_DIR . "/$file";
 
 
 // Check the size is valid
-if (!empty($size) and empty($width) and empty(!$height)) {
+if (!empty($size) &&  empty($width) && empty(!$height)) {
     switch ($size) {
         case 'thumbnail':
             $thumbWidth = 398;
             $thumbHeight = 510;
             break;
         default:
-            die('Invalid image size');
+            throw new Exception('Invalid image size');
     }
     $key_file =$size;
 } else {
@@ -38,20 +38,19 @@ if (isset($retina)) {
 }
 // Check the original file exists
 if (!is_file($original)) {
-    die('File doesn\'t exist');
+    throw new Exception('File doesn\'t exist');
 }
 // Make sure the directory exists
 if (!is_dir(MEDIA_CACHE_DIR . '/' . $key_file)) {
     mkdir(MEDIA_CACHE_DIR . '/' . $key_file);
     if (!is_dir(MEDIA_CACHE_DIR . '/' . $key_file)) {
-        die('Cannot create directory');
+        throw new Exception('Cannot create directory');
     }
     chmod(MEDIA_CACHE_DIR . '/' . $key_file, 0775);
 }
 // Make sure the file doesn't exist already
 if (!file_exists($target) ) {
     // Make sure we have enough memory
-    ini_set('memory_limit', 128 * 1024 * 1024);
     // Get the current size & file type
     list($width, $height, $type) = getimagesize($original);
     // Load the image
@@ -66,11 +65,11 @@ if (!file_exists($target) ) {
             $image = imagecreatefrompng($original);
             break;
         default:
-            die("Invalid image type (#{$type} = " . image_type_to_extension($type) . ")");
+            throw new Exception("Invalid image type (#{$type} = " . image_type_to_extension($type) . ")");
     }
     // Calculate height automatically if not given
     if ($thumbHeight === null) {
-       // $thumbHeight = round($height * $thumbWidth / $width);
+       $thumbHeight = round($height * $thumbWidth / $width);
     }
 
     $imageEngine = new GdThumb($original);
@@ -78,10 +77,9 @@ if (!file_exists($target) ) {
     $imageEngine->save($target);
 }
 $data = getimagesize($original);
-//
 
 if (!$data) {
-    die("Cannot get mime type");
+    throw new Exception("Cannot get mime type");
 } else {
     header('Content-Type: ' . $data['mime']);
 }

@@ -11,6 +11,8 @@
  */
 class Config implements Countable, Iterator, ArrayAccess
 {
+
+    static private $config_instance;
     /**
      * Whether modifications to configuration data are allowed.
      *
@@ -328,6 +330,14 @@ class Config implements Countable, Iterator, ArrayAccess
                 $value->setReadOnly();
             }
         }
+    }
+    static public function setInstance($instance)
+    {
+        self::$config_instance = $instance;
+    }
+    static public function getInstance()
+    {
+        return self::$config_instance;
     }
     /**
      * Returns whether this Config object is read only or not.
