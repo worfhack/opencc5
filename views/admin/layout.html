@@ -60,20 +60,9 @@
     </script>
     <script src="../../public/js/bootstrap.min.js"></script>
 </head>
-<body class="page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo {%if page_name == 'admin_login' %}login{% endif %}">
+<body class="page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo">
 
-<!-- header -->
-<div class="page-header navbar navbar-fixed-top">
-    <!-- BEGIN HEADER INNER -->
-    <div class="page-header-inner ">
 
-        <!-- BEGIN LOGO -->
-
-        <!-- END LOGO -->
-    </div>
-    <!-- /container -->
-</div>
-<!-- /Header -->
 <div class="clearfix"> </div>
 
 
@@ -81,9 +70,9 @@
     {%if page_name != "admin_login"%}
             {% include('pages/blocks/sidebar.html') %}
     {% endif %}
-    <div class="{%if page_name == 'admin_login' %}content{% else %}page-content-wrapper{% endif %}">
+    <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
-        <div class="{%if page_name != "admin_login"%}page-content{% endif %}">
+        <div class="page-content">
             <div class="">
                 {% block content %}{% endblock %}
             </div>
