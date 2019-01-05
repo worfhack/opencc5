@@ -20,7 +20,6 @@ class Administrator extends ObjectModel
     public $id_administrator;
 
 
-
     public $active = 1;
 
     /**
@@ -72,14 +71,13 @@ class Administrator extends ObjectModel
     }
 
 
-public function update()
-{
-    if ($this->newpassword)
+    public function update()
     {
-        $this->password = Tools::encrypt($this->newpassword);
+        if ($this->newpassword) {
+            $this->password = Tools::encrypt($this->newpassword);
+        }
+        return parent::update();
     }
-    return parent::update();
-}
 
 
     public static function isLogged()
@@ -94,26 +92,22 @@ public function update()
 
     public static function getAdministrator()
     {
-        if (isset($_SESSION['id_administrator']))
-        {
+        if (isset($_SESSION['id_administrator'])) {
             $admin = new Administrator($_SESSION['id_administrator']);
             return $admin;
-        }else
-        {
+        } else {
             return false;
         }
 
     }
 
 
-
     public function add($edit = false)
     {
-        if(!$edit) {
+        if (!$edit) {
             $this->password = Tools::encrypt($this->password);
         }
-        if ($this->newpassword)
-        {
+        if ($this->newpassword) {
             $this->password = Tools::encrypt($this->newpassword);
         }
 
@@ -129,28 +123,25 @@ public function update()
     //Check si un customer existe déjà. (Avant la création de son compte et donc le lancement de la method add)
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `'._DB_PREFIX_.'administrator` e WHERE e.mail = \''.Tools::pSQL($mail).'\' ' ;
-        $admin =  Db::getInstance()->getRow($sql);
-        if (!$admin)
-        {
+        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($mail) . '\' ';
+        $admin = Db::getInstance()->getRow($sql);
+        if (!$admin) {
             return false;
         }
 
 
-
-        $hash =  $admin['password'];
+        $hash = $admin['password'];
         $test = password_verify($password, $hash);
-        if (!$test)
-        {
+        if (!$test) {
             return false;
         }
-        return  $admin['id_administrator'];
+        return $admin['id_administrator'];
 
     }
 
     static public function getName($idEmployee)
     {
-        $sql = "SELECT firstname, lastname FROM "._DB_PREFIX_."administrator WHERE id_administrator=".$idEmployee;
+        $sql = "SELECT firstname, lastname FROM " . _DB_PREFIX_ . "administrator WHERE id_administrator=" . $idEmployee;
         return Db::getInstance()->executeS($sql);
     }
 
@@ -169,6 +160,7 @@ public function update()
             ), 'INSERT', false, true);
 
     }
+
     static public function emailExist($email)
     {
         return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'');
@@ -177,8 +169,9 @@ public function update()
     static public function resetLinkExist($link)
     {
         return ObjectModel::getSingleInfo('administrator_password_reset', 'link',
-            $link,'id_administrator_password_reset');
+            $link, 'id_administrator_password_reset');
     }
+
     public function genereateResetPasswordLink()
     {
         do {
@@ -191,9 +184,9 @@ public function update()
 
     static public function getEmployees($id_employee_group = false)
     {
-        $sql ='
+        $sql = '
             SELECT e.*
-            FROM `'._DB_PREFIX_.'administrator` e';
+            FROM `' . _DB_PREFIX_ . 'administrator` e';
         return Db::getInstance()->executeS($sql, true);
     }
 
@@ -204,14 +197,13 @@ public function update()
             return false;
         }
 
-        if(empty($_POST['password']) && !$adminEdit) {
+        if (empty($_POST['password']) && !$adminEdit) {
             return false;
         }
 
-        if(!isset($_POST['active']) || empty($_POST['active'])) {
+        if (!isset($_POST['active']) || empty($_POST['active'])) {
             $_POST['active'] = false;
-        }
-        else {
+        } else {
             $_POST['active'] = true;
         }
 
@@ -219,7 +211,7 @@ public function update()
         $admin->mail = filter_input(INPUT_POST, 'mail', FILTER_SANITIZE_EMAIL);
         $admin->firstname = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_STRING);
         $admin->lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
-        if(!$adminEdit) {
+        if (!$adminEdit) {
             $admin->password = filter_input(INPUT_POST, 'password', FILTER_DEFAULT);
         } else {
             $admin->password = $adminEdit->password;
@@ -229,13 +221,11 @@ public function update()
         return $admin;
     }
 
-    public function changePassword($newPass) {
+    public function changePassword($newPass)
+    {
         $this->newpassword = $newPass;
         $this->add();
     }
-
-
-
 
 
 }

@@ -66,6 +66,22 @@ INSERT INTO  `" . $database_prefix . "lang` (`id_lang`, `name`, `iso`, `date_add
         }
     } while (mysqli_next_result($connexion));
 
+    $htaccess = '
+    Options +FollowSymLinks
+RewriteEngine On
+
+
+
+RewriteRule ^picture/([0-9]+)/([0-9]+)/(.+) resize.php?width=$1&file=$3&height=$2
+RewriteRule ^picture/([a-z]+)/(.+) resize.php?size=$1&file=$2
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php [NC,L]
+    
+    ';
+    file_put_contents($root_directory . "/public/.htaccess", $htaccess);
 
 ## Create Confif file
     $settings = '<?php
@@ -146,6 +162,12 @@ $configArray = array(
     $configuration->value = 3;
     $configuration->description = "Nombre de post widget derniers article";
     $configuration->save();
+    $password =  bin2hex(random_bytes(8));
+    $admin =new Administrator();
+    $admin->mail = "root";
+    $admin->password = $password;
+    $admin->save();
 
+    echo "A admin has been created with login root and password $password\n We need delete this admin for production\n";
     echo("Blog is install\n");
 }
