@@ -38,3 +38,5 @@ change config.inc.php file , change email section
         'secure'=>'tls', // for set tls or ssl connexion
         'from'=>'xxxxx', // set sender address
         'from_name'=>'xxxx',  // set sender name
+``` 
+        
