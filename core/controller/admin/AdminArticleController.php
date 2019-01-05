@@ -53,9 +53,15 @@ class AdminArticleController extends AdminController
 
     public function add()
     {
+        $categories = Tools::getValue('categories');
+          if (!is_array($categories))
+        {
+            $categories = [$categories);
+        }
         $article = new Article();
         $article->copyFromPost();
         $article->add();
+          $article->setCategories($categories);
         Tools::redirectAdmin('/article');
 
     }
@@ -70,6 +76,10 @@ class AdminArticleController extends AdminController
     {
 
         $categories = Tools::getValue('categories');
+          if (!is_array($categories))
+        {
+            $categories = [$categories);
+        }
         $article = new Article($id, _ID_LANG_);
         $article->copyFromPost();
         $article->setCategories($categories);
