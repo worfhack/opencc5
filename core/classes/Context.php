@@ -109,6 +109,7 @@ class Context
     {
 
         $result = [];
+
         if (preg_match('~^/[a-z]{2}(?:/|$)~', $this->requestUri, $result)) {
             $iso = $result[0];
 
@@ -134,7 +135,8 @@ class Context
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
             }
         } else {
-            if (isset($_SESSION['current_id_lang'])) {
+
+           if (isset($_SESSION['current_id_lang'])) {
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
             }
             if (!$this->currentLanguage) {
