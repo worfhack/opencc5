@@ -96,15 +96,23 @@ class Article extends ObjectModel
         return array_column(Db::getInstance()->executeS($sql), 'id_category');
 
     }
-    public function setCategories($categories)
+public function setCategories($categories)
     {
         $sql = "DELETE from " . _DB_PREFIX_ .'category_article where id_article =' .$this->id_article;
+        $id_article = $this->id_article;
+        if (!$id_article)
+        {
+             $id_article = $this->id;
+        }
         Db::getInstance()->execute($sql);
+        if ($categories){
             foreach ($categories as $id_category)
             {
-                Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'category_article', array('id_article' => intval($this->id_article),
+                Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'category_article', array('id_article' => intval($id_article),
                    'id_category' => intval($id_category)), 'insert');
 
+
+            }
             }
     }
     /**
