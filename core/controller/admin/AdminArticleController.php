@@ -56,7 +56,7 @@ class AdminArticleController extends AdminController
         $categories = Tools::getValue('categories');
           if (!is_array($categories))
         {
-            $categories = [$categories);
+            $categories = [$categories];
         }
         $article = new Article();
         $article->copyFromPost();
@@ -78,7 +78,7 @@ class AdminArticleController extends AdminController
         $categories = Tools::getValue('categories');
           if (!is_array($categories))
         {
-            $categories = [$categories);
+            $categories = [$categories];
         }
         $article = new Article($id, _ID_LANG_);
         $article->copyFromPost();
