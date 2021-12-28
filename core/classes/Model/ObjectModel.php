@@ -120,22 +120,26 @@ abstract class ObjectModel
             foreach ($result as $key => $value) {
 
 
-                if (key_exists($key, $this)) {
+                if (property_exists($this, $key)) {
                     $this->{$key} = stripslashes($value);
                 }
             }
 
             /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
             if (!$id_lang) {
-                $sql = 'SELECT * FROM `' . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
+                $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
 
+                try {
+                    $result = Db::getInstance()->executeS($sql);
+                    if ($result) {
+                        foreach ($result as $row) foreach ($row as $key => $value)
+                            if (key_exists($key, $this) && $key != $this->identifier) {
+                                $this->{$key}[$row['id_lang']] = stripslashes($value);
+                            }
+                    }
+                }catch (Exception $e)
+                {
 
-                $result = Db::getInstance()->executeS($sql);
-                if ($result) {
-                    foreach ($result as $row) foreach ($row as $key => $value)
-                        if (key_exists($key, $this) && $key != $this->identifier) {
-                            $this->{$key}[$row['id_lang']] = stripslashes($value);
-                        }
                 }
             }
         }
@@ -248,7 +252,7 @@ abstract class ObjectModel
 
         //Enregistre les defaultValue
         foreach ($defaultValues as $key => $default_value) {
-            if (array_key_exists($key, $this)) {
+            if (property_exists($this, $key)) {
                 $params[$key] = $defaultValues[$key];
                 $this->{$key} = $defaultValues[$key];
             }
@@ -260,7 +264,7 @@ abstract class ObjectModel
             }
 
         //Enregistre les link_rewrite si il existe
-        if (array_key_exists('link_rewrite', $this)) {
+        if (property_exists($this, 'link_rewrite')) {
             if (empty($this->link_rewrite)) {
                 $this->link_rewrite = Tools::linkRewrite($this->name);
             } else {
@@ -463,8 +467,7 @@ abstract class ObjectModel
 
     public function delete()
     {
-        if (array_key_exists('deleted',
-            $this)) // Si l'objet à la propriété delete, on fait juste un update. (Pour les clients par exemple ou les commandes)
+        if (property_exists($this, 'deleted')) // Si l'objet à la propriété delete, on fait juste un update. (Pour les clients par exemple ou les commandes)
         {
             $this->deleted = 1;
             return ($this->update());
@@ -491,7 +494,7 @@ abstract class ObjectModel
 
         }
         $fields_lang = false;
-        if (array_key_exists('fields_lang', $this)) {
+        if (property_exists($this, 'fields_lang')) {
             $fields_lang = count($this->fields_lang);
         }
         if ($count === false) {
@@ -538,10 +541,9 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         }
         $sql .= ' WHERE 1 = 1 ';
 
-        if (array_key_exists('deleted', $this)) {
+        if (property_exists($this, 'deleted')) {
             $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.deleted = 0';
         }
-//        var_dump($this->where);
         if ($this->where && is_array($this->where)) {
 
             foreach ($this->where as $row) {
@@ -555,7 +557,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
 
 
         if ($count === false) {
-            if (array_key_exists('position', $this)) {
+            if (property_exists($this, 'position')) {
                 $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
             } elseif ($this->order_by) {
                 $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->order_by . ' ' . $this->order_way;
@@ -567,7 +569,8 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             }
         }
         if ($count === false) {
-            $results = Db::getInstance()->executeS($sql, true);
+
+            $results = Db::getInstance()->executeS($sql, true, $params);
 
             if (!$results) {
                 return [];
@@ -575,7 +578,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             return $results;
         } else {
 
-            return Db::getInstance()->getValue($sql);
+            return Db::getInstance()->getValue($sql, $params);
         }
 
     }

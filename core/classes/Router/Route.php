@@ -194,7 +194,6 @@ private  $params;
         if (!is_null($this->action)) {
 
             $instance = new $action[0];
-
             call_user_func_array(array($instance, $this->action), $this->parameters);
         } else {
 

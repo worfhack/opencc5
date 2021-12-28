@@ -3,9 +3,9 @@
 class ArticleController extends FrontController
 {
     
-    public function index($id)
+    public function index($id_article)
     {
-           $article = new Article($id, $this->id_lang);
+           $article = new Article($id_article, $this->id_lang);
 
             if (!$article->id)
             {

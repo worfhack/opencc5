@@ -68,8 +68,12 @@ class PDOAb extends Db
         if ( $this->_link) {
             // if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) && is_array ($tmpArray = mysqli_fetch_assoc ($this->_result)) ) {
             $recipesStatement = $this->_link->prepare($query);
+//echo "<br><br>fffff";
+//            var_dump($query);
+//            var_dump($params);
             $recipesStatement->execute($params);
             $this->_result = $recipesStatement->fetch(PDO::FETCH_ASSOC);
+
             if ($this->_result)
             $this->_result = array_shift(  $this->_result );
             return $this->_result;
@@ -115,7 +119,7 @@ class PDOAb extends Db
                 //}
 
                 $recipesStatement = $this->_link->prepare($query);
-                $recipesStatement->execute();
+                $recipesStatement->execute($params);
                 $this->_result = $recipesStatement->fetchAll();
 
                 $this->displayMySQLError ($query);

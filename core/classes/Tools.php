@@ -60,7 +60,7 @@ class Tools
             if ( self::strlen (htmlentities ($char)) > 1 )
             {
                 $entity = htmlentities ($char , ENT_COMPAT , 'UTF-8');
-                $purified .= $entity{1};
+                $purified .= $entity[1];
             }
             elseif ( preg_match ('|[[:alpha:]]{1}|u' , $char) )
             {

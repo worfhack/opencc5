@@ -14,7 +14,7 @@ require_once(CLASS_CORE_DIR . 'Autoload.php');
 
 setlocale(LC_TIME, 'fr_FR.UTF8', 'fr.UTF8', 'fr_FR.UTF-8', 'fr.UTF-8');
 
-spl_autoload_register('__autoload');
+spl_autoload_register('autoload');
 
 
 
@@ -23,7 +23,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
 
-function __autoload($className)
+function autoload($className)
 {
 
 
