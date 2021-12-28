@@ -37,6 +37,7 @@ class ContactController extends FrontController
                 array('message' => 'message envoyée',
 
                 ));
+            
             if ($gl_config['contactMail']){
                 Mail::send($gl_config['contactMail'], Tools::translate("New Contact Email"), "contact",
                     [
