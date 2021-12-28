@@ -154,8 +154,9 @@ abstract class ObjectModel
 
     static public function getSingleInfo($table, $where_row, $where_value, $row)
     {
-        $sql = 'SELECT `' . Tools::pSQL($row) . '` FROM `' . _DB_PREFIX_ . Tools::pSQL($table) . '` WHERE `' . Tools::pSQL($where_row) . '` = \'' . Tools::pSQL($where_value) . '\'';
-        return Db::getInstance()->getValue($sql);
+        $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . $table. '` 
+        WHERE `' . $where_row . '` = :where_row';
+        return Db::getInstance()->getValue($sql, ['where_row'=>$where_row]);
     }
 
     static public function toObject($array)
