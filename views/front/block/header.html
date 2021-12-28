@@ -44,12 +44,7 @@
                         <div class="classynav">
                             <ul>
                                 <li><a href="{{base_url_lang()}}">{{trans('Home')}}</a></li>
-
-
-
                                 {{ m.tree(menuCat,  '') }}
-
-
                                 <li><a href="{{base_url_lang()}}/contact">Contact</a></li>
                                 <li><a href="{{cvPath}}">CV</a></li>
                                 {% if user %}
@@ -61,7 +56,21 @@
                                 {% endif %}
                             </ul>
 
+                            <select id="countrySelect" name="ipicked__bahasa" class="selectpicker" data-show-content="true" onChange="go__bahasa()">
 
+                                {% for lang in get_all_language() %}
+
+                                <option value="{{base_url()}}{{lang.url }}" {% if lang.active%} selected {%endif%} data-content='<span class="flag-icon"></span>'>{{lang.name}}</option>
+
+
+                                {% endfor %}
+                            </select>
+                            <script>
+                                function go__bahasa() {
+                                    location = document.getElementById("countrySelect").value
+                                }
+
+                            </script>
                         </div>
                         <!-- Nav End -->
                     </div>

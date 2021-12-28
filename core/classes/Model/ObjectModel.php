@@ -71,7 +71,7 @@ abstract class ObjectModel
         if (!Validate::isTableOrIdentifier($this->identifier) || !Validate::isTableOrIdentifier($this->table)) {
             throw new Exception(Tools::displayError());
         }
-        $this->identifier = Tools::pSQL($this->identifier);
+        $this->identifier = $this->identifier;
 
         if ($id_lang) {
             $this->current_id_lang = $id_lang;
@@ -89,14 +89,13 @@ abstract class ObjectModel
                 }
             }
 
-            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '');
+            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '');
 
 
             if ($this->fields_join) {
                 foreach ($this->fields_join as $j) {
                     $key_name = $j['key'];
-                    if (isset($j['left']) && $j['left'] === true)
-                    {
+                    if (isset($j['left']) && $j['left'] === true) {
                         $sql .= ' LEFT ';
                     }
                     $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
@@ -111,13 +110,14 @@ abstract class ObjectModel
                 }
             }
 
-            $sql .= ' WHERE a.`' . Tools::pSQL($this->identifier) . '` = ' . Tools::pSQL(intval($id));
+            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (intval($id));
             $result = Db::getInstance()->getRow($sql);
+
             if (!$result) {
                 return false;
             }
             $this->id = intval($id);
-            foreach ($result AS $key => $value) {
+            foreach ($result as $key => $value) {
 
 
                 if (key_exists($key, $this)) {
@@ -127,12 +127,12 @@ abstract class ObjectModel
 
             /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
             if (!$id_lang) {
-                $sql = 'SELECT * FROM `' . Tools::pSQL(_DB_PREFIX_ . $this->table) . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
+                $sql = 'SELECT * FROM `' . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
 
 
                 $result = Db::getInstance()->executeS($sql);
                 if ($result) {
-                    foreach ($result as $row) foreach ($row AS $key => $value)
+                    foreach ($result as $row) foreach ($row as $key => $value)
                         if (key_exists($key, $this) && $key != $this->identifier) {
                             $this->{$key}[$row['id_lang']] = stripslashes($value);
                         }
@@ -154,7 +154,7 @@ abstract class ObjectModel
 
     static public function getSingleInfo($table, $where_row, $where_value, $row)
     {
-        $sql = 'SELECT `' . Tools::pSQL($row) . '` FROM `' . _DB_PREFIX_ . Tools::pSQL($table) . '` WHERE `' . Tools::pSQL($where_row ). '` = \'' . Tools::pSQL($where_value) . '\'';
+        $sql = 'SELECT `' . Tools::pSQL($row) . '` FROM `' . _DB_PREFIX_ . Tools::pSQL($table) . '` WHERE `' . Tools::pSQL($where_row) . '` = \'' . Tools::pSQL($where_value) . '\'';
         return Db::getInstance()->getValue($sql);
     }
 
@@ -180,11 +180,10 @@ abstract class ObjectModel
             $id_lang = Configuration::get('_ID_LANG_DEFAULT_');
         }
 
-        $sql = 'SELECT `' . Tools::pSQL($row ). '`
-FROM `' . _DB_PREFIX_ . Tools::pSQL($table ). '`
-WHERE `' . Tools::pSQL($where_row) . '` = \'' . Tools::pSQL($where_value ). '\'
-AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
-        return Db::getInstance()->getValue($sql);
+                    $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . ($table) . '`
+            WHERE `' . $where_row . '` = :'.$where_row.'
+            AND `id_lang` = ' . (intval($id_lang));
+                    return Db::getInstance()->getValue($sql, [$where_row=>$where_value]);
     }
 
 //Mise à jour d'un objet
@@ -198,7 +197,6 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
     {
         return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $where_row . '` = \'' . $where_value . '\'');
     }
-
 
 
     /*
@@ -471,7 +469,6 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
             return ($this->update());
         } else {
             $sql = 'DELETE FROM `' . _DB_PREFIX_ . $this->table . '` WHERE `' . $this->identifier . '` = ' . $this->id;
-
             $isDeleted = Db::getInstance()->executeS($sql);
             if ($this->fields_lang) {
                 $isDeleted = Db::getInstance()->executeS('DELETE FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . $this->id);
@@ -485,7 +482,7 @@ AND `id_lang` = ' . Tools::pSQL(intval($id_lang));
 
     public function getList($id_lang = false, $count = false)
     {
-
+        $params = [];
 //Si la lang n'est pas renseigné on affiche la lang par défaut chargé dans le init ( Configuration::loadConfig )
         if (!$id_lang) {
             $context = Context::getContext();
@@ -528,8 +525,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         if ($this->fields_join) {
             foreach ($this->fields_join as $j) {
                 $key_name = $j['key'];
-                if (isset($j['left']) && $j['left'] === true)
-                {
+                if (isset($j['left']) && $j['left'] === true) {
                     $sql .= ' LEFT ';
                 }
                 $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
@@ -544,13 +540,19 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         if (array_key_exists('deleted', $this)) {
             $sql .= ' AND ' . _DB_PREFIX_ . $this->table . '.deleted = 0';
         }
+//        var_dump($this->where);
         if ($this->where && is_array($this->where)) {
-           foreach ($this->where as $row=>$value) {
 
+            foreach ($this->where as $row) {
+                if (is_array($row)) {
+                    $sql .= ' AND ' . ($row[0]) . " = " . ":" . $row[0];
+                    $params[":" . $row[0]] = $row[1];
+                }
 
-              $sql .= ' AND ' . Tools::pSQL($row) . " = " . $value;
-           }
+            }
         }
+
+
         if ($count === false) {
             if (array_key_exists('position', $this)) {
                 $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.position ' . $this->order_way;
@@ -560,7 +562,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
             }
             if ($this->get_list_limit_force) {
-                $sql .= ' LIMIT ' . Tools::pSQL(intval($this->get_list_limit_deb)) . ',' . Tools::pSQL(intval($this->get_list_limit_end));
+                $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . (intval($this->get_list_limit_end));
             }
         }
         if ($count === false) {
@@ -570,15 +572,12 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 return [];
             }
             return $results;
-        }else{
+        } else {
 
-            return  Db::getInstance()->getValue($sql,  true);
+            return Db::getInstance()->getValue($sql);
         }
 
     }
-
-
-
 
 
     public function active()

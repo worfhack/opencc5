@@ -33,6 +33,7 @@ class AdminArticleController extends AdminController
         {
             $article =  NULL;
         }
+
         $categories = new CategoryCollection($this->id_lang);
         $categories->load();
         $authors = new AdministratorCollection($this->id_lang);

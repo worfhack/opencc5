@@ -49,6 +49,7 @@ class Render
         $this->params['siteTitle'] = $context->getConfig('_SITE_TITLE_');
         $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
         $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
+        //die($context->getCurrentLanguage()->local);
 
         $this->twig_functions[] = new Twig_SimpleFunction('displayDate', function ($dateTime, $format) {
                 $context = Context::getContext();
@@ -77,7 +78,19 @@ class Render
             $url = _BASE_ADMIN_URL_LANG_;
             return $url ;
         });
+        $this->twig_functions[] = new Twig_SimpleFunction('get_all_language', function () {
+            $languages = Language::getLanguages();
 
+            $render = [];
+           foreach ($languages as $l){
+               $render[$l["iso"]] = [
+                    "name"=>$l['name'],
+                   "active"=>Context::getContext()->getCurrentLanguage()->iso == $l['iso'],
+                   "url"=>str_replace("/" .   Context::getContext()->getCurrentLanguage()->iso . "/" , "/".$l['iso'] . "/" , Context::getContext()->getCurrentUrlRenderLang()),
+               ];
+            }
+            return $render ;
+        });
         $this->twig_functions[] = new Twig_SimpleFunction('base_url_lang', function () {
             $url = _BASE_URL_LANG_;
             return $url ;

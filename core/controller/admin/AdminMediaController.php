@@ -1,4 +1,5 @@
 <?php
+use Cocur\Slugify\Slugify;
 
 /**
  * Created by PhpStorm.
@@ -32,13 +33,8 @@ class AdminMediaController extends AdminController
                 case "json":
                 default:
                  die(json_encode( $collectionManager->toArrayJSON()));
-
-
-
             }
-         
-        
-            //CODE HERE
+
         }else
         {
            
@@ -70,15 +66,13 @@ class AdminMediaController extends AdminController
     public function add()
     {
 
-
+        $slugify = new Slugify();
 // Check if image file is a actual image or fake image
         if (isset($_FILES["file"])) {
             $target_dir = MEDIA_DIR;
-            $target_file = $target_dir . basename($_FILES["file"]["name"]);
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            $check = getimagesize($_FILES["file"]["tmp_name"]);
+            $target_file = $target_dir . $slugify->slugify(basename($_FILES["file"]["name"]));
+            $imageFileType = strtolower(pathinfo(basename($_FILES["file"]["name"]), PATHINFO_EXTENSION));
 
-            if ($check !== false) {
 
                 if (!file_exists($target_file)) {
 
@@ -86,12 +80,13 @@ class AdminMediaController extends AdminController
                     if (!($_FILES["file"]["size"] > 5000000)) {
 
                         if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg"
-                            || $imageFileType == "gif"
+                            || $imageFileType == "gif"   || $imageFileType == "pdf"
                         ) {
 
                             if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
                                 $media = new Media();
-                                $media->name = basename($_FILES["file"]["name"]);
+                                $slugify = new Slugify();
+                                $media->name = $slugify->slugify(basename($_FILES["file"]["name"]));
                                 $media->add();
                                 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
                                 {
@@ -117,7 +112,6 @@ class AdminMediaController extends AdminController
                         }
                     }
                 }
-            }
 
         }
 
@@ -136,7 +130,7 @@ class AdminMediaController extends AdminController
 
     public function remove($id)
     {
-        $media = new Configuration($id);
+        $media = new Media($id);
         $media->delete();
         Tools::redirectAdmin('/media');
     }

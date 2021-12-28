@@ -146,8 +146,6 @@ class AdminLoginController extends  AdminController
     }
     public function index()
     {
-
-
             echo $this->viewManager->render("pages/login.html");
 
 

@@ -18,7 +18,7 @@ class CategoryCollection extends Collection
 
 
         $this->model->order_by = 'date_add';
-        $this->model->where = ['id_parent='.$id_root];
+        $this->model->where = [['id_parent', $id_root]];
         $this->model->active_filters = false;
     }
 

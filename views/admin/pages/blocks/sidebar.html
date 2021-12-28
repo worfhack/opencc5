@@ -1,9 +1,26 @@
-
 <div class="page-sidebar-wrapper">
     <!-- BEGIN SIDEBAR -->
     <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
     <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
     <div class="page-sidebar navbar-collapse  margin-top-10">
+
+
+            <select id="countrySelect" name="ipicked__bahasa" class="selectpicker" data-show-content="true" onChange="go__bahasa()">
+
+        {% for lang in get_all_language() %}
+
+            <option value="{{base_url()}}{{lang.url }}" {% if lang.active%} selected {%endif%} data-content='<span class="flag-icon"></span> ENG'>{{lang.name}}</option>
+
+
+                {% endfor %}
+            </select>
+
+<script>
+    function go__bahasa() {
+        location = document.getElementById("countrySelect").value
+    }
+
+</script>
         <ul class="page-sidebar-menu   " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
             <li class="heading">
                 <h3 class="uppercase">Navigation</h3>
@@ -15,27 +32,27 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{base_admin_url_lang() }}/article" class="nav-link">
+                <a href="{{base_admin_url_lang() }}article" class="nav-link">
                     <i class="icon-book-open"></i>
                     <span class="title">Article</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{base_admin_url_lang() }}/category" class="nav-link">
+                <a href="{{base_admin_url_lang() }}category" class="nav-link">
                     <i class="icon-book-open"></i>
                     <span class="title">Category</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{base_admin_url_lang() }}/configuration" class="nav-link ">
+                <a href="{{base_admin_url_lang() }}configuration" class="nav-link ">
                     <i class="icon-settings"></i>
                     <span class="title">Configuration</span>
                 </a>
 
             </li>
             <li class="nav-item">
-                <a href="{{base_admin_url_lang() }}/media" class="nav-link ">
+                <a href="{{base_admin_url_lang() }}media" class="nav-link ">
                     <i class="icon-settings"></i>
                     <span class="title">media</span>
                 </a>
@@ -50,11 +67,12 @@
 
             </li>
             <li class="nav-item">
-                <a href="{{base_admin_url_lang() }}/logout" class="nav-link">
+                <a href="{{base_admin_url_lang() }}logout" class="nav-link">
                     <i class="icon-logout"></i>
                     <span class="title">Log out</span>
                 </a>
             </li>
-        </ul>
+
+
     </div>
 </div>

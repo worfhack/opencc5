@@ -49,7 +49,7 @@ if ($argc !=9 )
 ### Create Lang ####
 
     $sql = "INSERT INTO `" . $database_prefix . "lang` (`id_lang`, `name`, `iso`, `date_add`, `local`) VALUES (NULL, 'français', 'fr', '0000-00-00 00:00:00', 'fr_FR');
-INSERT INTO  `" . $database_prefix . "lang` (`id_lang`, `name`, `iso`, `date_add`, `local`) VALUES (NULL, 'anglais', 'en', NULL, 'en_US ');
+INSERT INTO  `" . $database_prefix . "lang` (`id_lang`, `name`, `iso`, `date_add`, `local`) VALUES (NULL, 'anglais', 'en', NULL, 'en_US');
 ";
 
     mysqli_multi_query($connexion, $sql);

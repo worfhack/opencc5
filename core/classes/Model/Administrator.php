@@ -123,8 +123,8 @@ class Administrator extends ObjectModel
     //Check si un customer existe déjà. (Avant la création de son compte et donc le lancement de la method add)
     static public function login($mail, $password)
     {
-        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($mail) . '\' ';
-        $admin = Db::getInstance()->getRow($sql);
+        $sql = 'SELECT e.id_administrator as id_administrator, e.password as password FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = :email ';
+        $admin = Db::getInstance()->getRow($sql, array(":email"=>$mail));
         if (!$admin) {
             return false;
         }

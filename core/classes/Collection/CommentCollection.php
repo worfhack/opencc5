@@ -15,7 +15,7 @@ class CommentCollection extends Collection
     {
 
         $this->model->order_by = 'date_add';
-        $this->model->where = ['publish'=>1,'id_article'=>$id_article];
+        $this->model->where = [['publish',1],['id_article',$id_article]];
         $this->model->active_filters = false;
     }
     public function getNotPublish($with_article=false)
@@ -37,7 +37,7 @@ class CommentCollection extends Collection
 
 
         $this->model->order_by = 'date_add';
-        $this->model->where = ['publish=0'];
+        $this->model->where = [['publish', 0]];
         $this->model->active_filters = false;
     }
 }

@@ -148,19 +148,6 @@ class Tools
     {
         return Config::getInstance();
     }
-    static public  function pSQL($string)
-    {
-        if (is_array($string)) {
-            return $string;
-        }
-        if (!is_numeric($string)) {
-            if (get_magic_quotes_gpc()) {
-                $string = stripslashes($string);
-            }
-            $string = mysqli_real_escape_string(Db::getInstance()->getLink(), $string);
-        }
-        return $string;
-    }
 
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {

@@ -56,7 +56,7 @@ abstract class Db
     {
 
         if (!isset(self::$_instance))
-            self::$_instance = new MySQL();
+            self::$_instance = new PDOAb();
         return self::$_instance;
     }
 
@@ -94,25 +94,31 @@ abstract class Db
     public function autoExecute($table, $values, $type, $where = false, $psql = true)
     {
 
-
+        $params = [];
         if (strtoupper($type) == 'INSERT') {
             $query = 'INSERT INTO `' . $table . '` (';
-            foreach ($values AS $key => $value)
+            foreach ($values AS $key => $value) {
                 $query .= '`' . $key . '`,';
+            }
             $query = rtrim($query, ',') . ') VALUES (';
-            foreach ($values AS $key => $value)
-                $query .= '\'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
+            foreach ($values AS $key => $value) {
+                $query .= " :" . $key . ",";
+                $params[":" . $key ] = $value;
+            }
             $query = rtrim($query, ',') . ')';
-
-            return $this->q($query);
+            return $this->q($query, $params);
         } elseif (strtoupper($type) == 'UPDATE') {
-            $query = 'UPDATE `' . Tools::pSQL($table) . '` SET ';
-            foreach ($values AS $key => $value)
-                $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
+            $query = 'UPDATE `' . ($table) . '` SET ';
+            foreach ($values AS $key => $value) {
+                $query .= '`' . $key . "`=". ":" . $key . ",";
+                $params[":" . $key ] = $value;
+                //   $query .= '`' . $key . '` = \'' . ($psql ? Tools::pSQL($value) : $value) . '\',';
+            }
             $query = rtrim($query, ',');
-            if ($where)
-                $query .= ' WHERE ' .Tools::pSQL($where);
-           return $this->q($query);
+            if ($where) {
+                $query .= ' WHERE ' . $where;
+            }
+           return $this->q($query, $params);
         }
         return false;
     }
