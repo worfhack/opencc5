@@ -190,17 +190,7 @@ class PDOAb extends Db
 
     }
 
-    static public function tryToConnect ($server , $user , $pwd , $db)
-    {
-        if ( !$link = mysqli_connect ($server , $user , $pwd) ) {
-            return 1;
-        }
-        if ( !mysqli_select_db ($link , $db) ) {
-            return 2;
-        }
-        mysqli_close  ($link);
-        return 0;
-    }
+  
 
     static public function tryUTF8 ($server , $user , $pwd)
     {
