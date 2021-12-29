@@ -6,7 +6,7 @@ A PHP blog system
 ### Requirements
 
 
-* `php >= 7.0.0`
+* `php >= 8.1.0`
 * `php-mysqli`
 * `mysql >= 5.6 or mariadb >= 10.1.0`
 * `composer`
