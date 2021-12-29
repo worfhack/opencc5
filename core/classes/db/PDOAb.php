@@ -190,7 +190,7 @@ class PDOAb extends Db
 
     }
 
-  
+
 
     static public function tryUTF8 ($server , $user , $pwd)
     {

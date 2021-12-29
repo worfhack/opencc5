@@ -188,7 +188,7 @@ class Users extends ObjectModel
         $max_link_date->modify('+ ' . $max_link_date_sec . ' second');
 
         Db::getInstance()->AutoExecute(_DB_PREFIX_ . 'user_password_reset',
-            array('id_user' => intval($this->id),
+            array('id_user' => (int)($this->id),
                 'link' => $link,
                 'validate' => 1,
                 'end_validate' => $max_link_date->format('Y-m-d H:i:s'),
