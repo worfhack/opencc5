@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="portlet light bordered">
-    <a href="{{base_admin_url_lang() }}media/add" class="btn btn-success pull-right">Add an Media</a>
+    <a href="{{base_admin_url_lang() }}media/add/" class="btn btn-success pull-right">Add an Media</a>
     <div class="portlet-title tabbable-line">
         <div class="caption caption-md">
             <i class="icon-globe theme-font hide"></i>
@@ -32,7 +32,7 @@
                         <th>{{base_url()}}/media/{{ media.name }}</th>
                         <th><img height="100px" src="{{base_url()}}/media/{{ media.name }}"/></th>
                         <th>
-                            <a href="{{ base_admin_url_lang() }}media/remove/{{ media.id_media }}" class="btn btn-danger btn-xs">Delete</a>
+                            <a href="{{ base_admin_url_lang() }}media/remove/{{ media.id_media }}/" class="btn btn-danger btn-xs">Delete</a>
                         </th>
                     </tr>
                 {% endfor %}

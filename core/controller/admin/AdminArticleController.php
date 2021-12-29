@@ -72,7 +72,7 @@ class AdminArticleController extends AdminController
     {
         $article = new Article($id);
         $article->delete();
-        Tools::redirectAdmin('article');
+        Tools::redirectAdmin('/article');
     }
     public function edit($id)
     {

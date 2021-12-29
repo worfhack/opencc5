@@ -14,10 +14,10 @@
 <div class="clearfix">
 
   {% if next != false %}
-  <a class="btn btn-primary float-right" href="{{base_url()}}/category/{{ link_rewrite}}/?page={{next}}">Older Posts</a>
+  <a class="btn btn-primary float-right" href="{{base_url_lang()}}category/{{ link_rewrite}}/?page={{next}}">{{trans("Older Posts")}} </a>
   {% endif %}
   {% if prev != false %}
-  <a class="btn btn-primary float-right" href="{{base_url()}}/category/{{ link_rewrite}}/?page={{prev}}">Prev Posts</a>
+  <a class="btn btn-primary float-right" href="{{base_url_lang()}}category/{{ link_rewrite}}/?page={{prev}}">{{trans("Prev Posts")}}</a>
   {% endif %}
 </div>
 

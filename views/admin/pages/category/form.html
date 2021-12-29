@@ -14,7 +14,7 @@
         {% set edit = false %}
     {% endif %}
 
-    {#<a href="{{base_url_lang() }}/category" class="btn btn-default">Retour à la liste</a>#}
+    {#<a href="{{base_url_lang() }}/category/" class="btn btn-default">Retour à la liste</a>#}
 
     {% if error is defined %}
         <div style="background-color: rgba(231, 76, 60,0.5); padding: 12px; margin: 15px 0; border-radius: 5px; text-align: center">
@@ -23,7 +23,7 @@
     {% endif %}
                     <div class="row">
                         <div class="col-md-12">
-                            <form role="form" enctype='multipart/form-data' method="post" action="{{base_admin_url_lang() }}category/{% if edit %}edit/{{ category.id_category }}{% else %}add{% endif %}">
+                            <form role="form" enctype='multipart/form-data' method="post" action="{{base_admin_url_lang() }}category/{% if edit %}edit/{{ category.id_category }}{% else %}add{% endif %}/">
 
                                 <!-- BEGIN PROFILE CONTENT -->
                                 <div class="profile-content">

@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="portlet light bordered">
-    <a href="{{base_admin_url_lang() }}article/add" class="btn btn-success pull-right">Add an article</a>
+    <a href="{{base_admin_url_lang() }}article/add/" class="btn btn-success pull-right">Add an article</a>
     <div class="portlet-title tabbable-line">
         <div class="caption caption-md">
             <i class="icon-globe theme-font hide"></i>
@@ -32,8 +32,8 @@
                         <th>{{ article.Name }}</th>
 
                         <th>
-                            <a href="{{base_admin_url_lang() }}article/edit/{{ article.id_article }}" class="btn btn-default btn-xs">Edit</a>
-                            <a href="{{ base_admin_url_lang() }}article/remove/{{ article.id_article }}" class="btn btn-danger btn-xs">Delete</a>
+                            <a href="{{base_admin_url_lang() }}article/edit/{{ article.id_article }}/" class="btn btn-default btn-xs">Edit</a>
+                            <a href="{{ base_admin_url_lang() }}article/remove/{{ article.id_article }}/" class="btn btn-danger btn-xs">Delete</a>
                         </th>
                     </tr>
                 {% endfor %}

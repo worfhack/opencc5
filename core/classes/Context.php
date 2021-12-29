@@ -138,8 +138,6 @@ class Context
             $this->currentLanguage = Language::loadLanguageByIso($iso);
             if (!$this->currentLanguage) {
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
-
-                //die();
             }
 
         } else if (preg_match('~^/' . _ADMIN_URI_ . '/([a-z]{2})(?:/|$)~', $this->requestUri, $result)) {
@@ -162,8 +160,7 @@ class Context
 
 
         } else {
-
-            $explodes_url =  explode("/", $this->requestUri);
+            $explodes_url = explode("/", $this->requestUri);
 
             if (isset($_SESSION['current_id_lang'])) {
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
@@ -171,11 +168,16 @@ class Context
             if (!$this->currentLanguage) {
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
             }
-            $explodes_url[1] .= "/" . $this->currentLanguage->iso;
+            $this->setBaseUrl();
+            if ($this->requestUri != "/admin/login/" && $this->requestUri != "/admin/"  && !strstr($this->requestUri, "/picture/")) {
+                // header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso.  $url);
+               header("Location: " . $this->server_request_scheme . '://' . $_SERVER['HTTP_HOST'] . '/' . $this->currentLanguage->iso . '/');
+                die();
 
-//            $explodes_url[1]
-           $this->requestUriMatrice = implode("/", $explodes_url);
-
+            }else if ( $this->requestUri == "/admin/" ){
+                header("Location: " . $this->server_request_scheme . '://' . $_SERVER['HTTP_HOST'] . '/' . $this->currentLanguage->iso . '/admin');
+                die();
+            }
         }
         $_SESSION['current_id_lang'] = $this->currentLanguage->id_lang;
         define('_ID_LANG_', $this->currentLanguage->id_lang);

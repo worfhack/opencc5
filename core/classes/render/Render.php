@@ -60,7 +60,7 @@ class Render
         $this->twig_functions[] = new Twig_SimpleFunction('cleanUrl', function ($string) {
             $pattern = '!([^:])(//)!';
 
-            $url = _BASE_URL_.'/' . $string;
+            $url = _BASE_URL_LANG_. $string;
             return preg_replace($pattern,  "$1/", $url);
         });
         $this->twig_functions[] = new Twig_SimpleFunction('add_js_var', function ($string) {
