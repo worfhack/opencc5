@@ -24,6 +24,9 @@ class PDOAb extends Db
 
         /* Disable some MySQL limitations */
        // mysqli_query ($this->_link, 'SET GLOBAL SQL_MODE=\'\'' );
+
+        $recipesStatement = $this->_link->prepare('SET GLOBAL SQL_MODE=\'\'');
+        $recipesStatement->execute();
         return $this->_link;
     }
 
@@ -40,11 +43,7 @@ class PDOAb extends Db
 
         $this->_result = false;
         $query = $query . ' LIMIT 1';
-
-
-
             if ( $this->_link){
-
                 $recipesStatement = $this->_link->prepare($query);
                 $recipesStatement->execute($params);
                 $this->_result = $recipesStatement->fetch(PDO::FETCH_ASSOC);
@@ -68,9 +67,7 @@ class PDOAb extends Db
         if ( $this->_link) {
             // if ( $this->_link && ($this->_result = mysqli_query ($this->_link, $query )) && is_array ($tmpArray = mysqli_fetch_assoc ($this->_result)) ) {
             $recipesStatement = $this->_link->prepare($query);
-//echo "<br><br>fffff";
-//            var_dump($query);
-//            var_dump($params);
+
             $recipesStatement->execute($params);
             $this->_result = $recipesStatement->fetch(PDO::FETCH_ASSOC);
 

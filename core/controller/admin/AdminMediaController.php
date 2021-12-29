@@ -67,7 +67,7 @@ class AdminMediaController extends AdminController
     {
 
         $slugify = new Slugify();
-// Check if image file is a actual image or fake image
+
         if (isset($_FILES["file"])) {
             $target_dir = MEDIA_DIR;
             $target_file = $target_dir . $slugify->slugify(basename($_FILES["file"]["name"]));
@@ -76,14 +76,14 @@ class AdminMediaController extends AdminController
 
                 if (!file_exists($target_file)) {
 
-
                     if (!($_FILES["file"]["size"] > 5000000)) {
 
                         if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg"
                             || $imageFileType == "gif"   || $imageFileType == "pdf"
                         ) {
-
                             if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+
+
                                 $media = new Media();
                                 $slugify = new Slugify();
                                 $media->name = $slugify->slugify(basename($_FILES["file"]["name"]));

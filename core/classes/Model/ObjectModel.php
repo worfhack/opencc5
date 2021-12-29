@@ -133,7 +133,7 @@ abstract class ObjectModel
                     $result = Db::getInstance()->executeS($sql);
                     if ($result) {
                         foreach ($result as $row) foreach ($row as $key => $value)
-                            if (key_exists($key, $this) && $key != $this->identifier) {
+                            if (property_exists($this, $key) && $key != $this->identifier) {
                                 $this->{$key}[$row['id_lang']] = stripslashes($value);
                             }
                     }
@@ -326,7 +326,7 @@ abstract class ObjectModel
 
 //Enregistre les defaultValue
         foreach ($defaultValues as $key => $default_value) {
-            if (array_key_exists($key, $this)) {
+            if (property_exists($this, $key)) {
                 $params[$key] = $defaultValues[$key];
                 $this->{$key} = $defaultValues[$key];
             }
@@ -347,10 +347,8 @@ abstract class ObjectModel
 
 //Construit le tableau des valeurs à insérer dans la base de données.
             foreach ($this->fields_lang as $field_lang) {
-
                 $params_lang[$field_lang] = ($this->{$field_lang});
-
-            }
+                }
 
 //Si le tableau fields_lang existe
             if (sizeof($this->fields_lang) && sizeof($params_lang)) {
@@ -453,7 +451,7 @@ abstract class ObjectModel
                 continue;
             }
 
-            if (array_key_exists($params, $this)) {
+            if (property_exists($this, $params  )) {
                 $this->{$params} = trim($value);
             }
             if ($this->identifier == $params) {

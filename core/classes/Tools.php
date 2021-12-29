@@ -27,12 +27,6 @@ class Tools
         return strtolower($str);
     }
 
-
-
-
-
-
-
     static public  function substr ($str , $start , $length = false , $encoding = 'utf-8')
     {
         if ( is_array ($str) )
@@ -85,7 +79,7 @@ class Tools
     {
 
         $context = Context::getContext();
-        header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso. '/'. $url);
+        header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso.  $url);
 
         exit;
     }

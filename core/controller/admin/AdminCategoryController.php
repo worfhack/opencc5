@@ -22,6 +22,9 @@ class AdminCategoryController extends AdminController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function form($id_article = false)
     {
 
@@ -63,6 +66,10 @@ class AdminCategoryController extends AdminController
         $category->delete();
         Tools::redirectAdmin('/category');
     }
+
+    /**
+     * @throws Exception
+     */
     public function edit($id)
     {
 

@@ -23,12 +23,12 @@ class AdminArticleController extends AdminController
         ]);
     }
 
-    public function form($id_article = false)
+    public function form($id = false)
     {
 
-        if ($id_article !== false)
+        if ($id !== false)
         {
-            $article = new Article($id_article, _ID_LANG_ );
+            $article = new Article($id, _ID_LANG_ );
         }else
         {
             $article =  NULL;
@@ -62,6 +62,7 @@ class AdminArticleController extends AdminController
         $article = new Article();
         $article->copyFromPost();
         $article->add();
+
           $article->setCategories($categories);
         Tools::redirectAdmin('/article');
 
@@ -71,11 +72,10 @@ class AdminArticleController extends AdminController
     {
         $article = new Article($id);
         $article->delete();
-        Tools::redirectAdmin('/article');
+        Tools::redirectAdmin('article');
     }
     public function edit($id)
     {
-
         $categories = Tools::getValue('categories');
           if (!is_array($categories))
         {
