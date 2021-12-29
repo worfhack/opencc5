@@ -25,8 +25,7 @@ class PDOAb extends Db
         /* Disable some MySQL limitations */
        // mysqli_query ($this->_link, 'SET GLOBAL SQL_MODE=\'\'' );
 
-        $recipesStatement = $this->_link->prepare('SET GLOBAL SQL_MODE=\'\'');
-        $recipesStatement->execute();
+     
         return $this->_link;
     }
 

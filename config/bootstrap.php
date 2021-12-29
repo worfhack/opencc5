@@ -5,7 +5,7 @@ if (file_exists('../config/settings.inc.php')) {
     require_once '../config/settings.inc.php';
 }
 define('CONFIG_DIR', $g_base_dir . 'config/');;
-ini_set('display_errors', '1');
+ini_set('display_errors', '0');
 
 // init des constantes
 require_once CONFIG_DIR . 'define.inc.php';
