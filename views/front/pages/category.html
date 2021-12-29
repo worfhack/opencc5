@@ -12,11 +12,12 @@
 {% endfor %}
 
 <div class="clearfix">
-  {% if prev != false %}
-  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{prev}}">Prev Posts &rarr;</a>
-  {% endif %}
+
   {% if next != false %}
-  <a class="btn btn-primary float-right" href="{{base_url()}}/?page={{next}}">Older Posts &rarr;</a>
+  <a class="btn btn-primary float-right" href="{{base_url()}}/category/{{ link_rewrite}}/?page={{next}}">Older Posts</a>
+  {% endif %}
+  {% if prev != false %}
+  <a class="btn btn-primary float-right" href="{{base_url()}}/category/{{ link_rewrite}}/?page={{prev}}">Prev Posts</a>
   {% endif %}
 </div>
 

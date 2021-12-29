@@ -567,7 +567,6 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
             }
         }
         if ($count === false) {
-
             $results = Db::getInstance()->executeS($sql, true, $params);
 
             if (!$results) {

@@ -19,6 +19,7 @@ class AdminDashBoardController extends AdminController
 
             array('comments' => $collectionManager)
         );
+
         echo $this->viewManager->render("pages/dash.html");
     }
     public function publish()

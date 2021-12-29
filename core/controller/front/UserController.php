@@ -100,14 +100,17 @@ class UserController extends FrontController
             if ($id_user) {
                 $user = new Users($id_user);
                 $link = $user->genereateResetPasswordLink();
+
                 Mail::send($user->email, Tools::translate('Your password reset link'), 'resetpassword', ['firstname' => $user->getFirstname(), 'lastname' => $user->getLastname(),
                     'link' => $context->getBaseurlLang() . 'user/lostpassword?link=' . $link
                 ]);
+
                 $this->viewManager->initVariable(
 
                     array('succes' => Tools::translate("reset link send by email"),
 
                     ));
+
             } else {
                 $this->viewManager->initVariable(
 

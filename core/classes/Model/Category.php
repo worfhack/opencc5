@@ -19,7 +19,8 @@ class Category extends ObjectModel
     public $resume;
     public $articles ;
     public $id_parent;
-    public $fields_lang = ['title', 'url_rewrite', 'resume'];
+    public $meta_description;
+    public $fields_lang = ['title', 'url_rewrite', 'resume', 'meta_description'];
 
     /**
      * @return mixed
@@ -43,6 +44,18 @@ class Category extends ObjectModel
     public function getTitle()
     {
         return $this->title;
+    }
+    public function getMetaDescription()
+    {
+        return $this->meta_description;
+    }
+
+    /**
+     * @param mixed $meta_description
+     */
+    public function setMetaDescription($meta_description)
+    {
+        $this->meta_description = $meta_description;
     }
 
     /**

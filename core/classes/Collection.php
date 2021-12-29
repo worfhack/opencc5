@@ -30,6 +30,8 @@ class Collection implements IteratorAggregate
         $this->collection = [];
         $this->count_all =  $this->model->getList($this->id_lang, true);
         $results = $this->model->getList($this->id_lang, false);
+
+
         foreach ($results as $r)
         {
             $this->collection[] = call_user_func(array($this->modelName, 'toObject'), $r);

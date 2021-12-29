@@ -37,7 +37,7 @@ class CommentCollection extends Collection
 
 
         $this->model->order_by = 'date_add';
-        $this->model->where = [['publish', 0]];
+        $this->model->where = [['publish', 0],['id_lang', _ID_LANG_] ];
         $this->model->active_filters = false;
     }
 }

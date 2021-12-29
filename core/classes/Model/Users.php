@@ -205,7 +205,7 @@ class Users extends ObjectModel
 
         $sql = "select id_user  FROM  `" . _DB_PREFIX_ . "user_password_reset` " .
             " WHERE link = '$link'  AND validate= 1 AND  end_validate >=  CONVERT_TZ(NOW(), @@session.time_zone, '$TZ')";
-        $row = Db::getInstance()->getRow($sql, true, false);
+        $row = Db::getInstance()->getRow($sql);
         if (isset($row['id_user'])) {
             return $row['id_user'];
         }

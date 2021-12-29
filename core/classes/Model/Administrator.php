@@ -62,7 +62,7 @@ class Administrator extends ObjectModel
 
         $sql = "select id_administrator  FROM  `" . _DB_PREFIX_ . "administrator_password_reset` " .
             " WHERE link = '$link'  AND validate= 1 AND  end_validate >=  CONVERT_TZ(NOW(), @@session.time_zone, '$TZ')";
-        $row = Db::getInstance()->getRow($sql, true, false);
+        $row = Db::getInstance()->getRow($sql);
         if (isset($row['id_administrator'])) {
             return $row['id_administrator'];
         }

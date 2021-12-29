@@ -21,6 +21,7 @@ class Article extends ObjectModel
     public $resume;
     public $id_thumbnail;
 
+    public $meta_description;
     public $author_lastname;
     public $author_firstname;
     public $thumbnail_name;
@@ -60,6 +61,22 @@ class Article extends ObjectModel
     public function setIdAuthor($id_author)
     {
         $this->id_author = $id_author;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetaDescription()
+    {
+        return $this->meta_description;
+    }
+
+    /**
+     * @param mixed $meta_description
+     */
+    public function setMetaDescription($meta_description)
+    {
+        $this->meta_description = $meta_description;
     }
 
     /**
@@ -128,7 +145,7 @@ class Article extends ObjectModel
         $this->resume = $resume;
     }
 
-    public $fields_lang = ['title', 'name', 'content', 'resume'];
+    public $fields_lang = ['title', 'name', 'content', 'resume', 'meta_description'];
 
     /**
      * @return mixed

@@ -48,9 +48,9 @@ class Render
         $this->params['siteBaseLine'] = $context->getConfig('_SITE_BASE_LINE_');
         $this->params['siteTitle'] = $context->getConfig('_SITE_TITLE_');
         $this->params['cvPath'] = $context->getConfig('_CV_PATH_');
-        $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
-        //die($context->getCurrentLanguage()->local);
+        $this->params['pageDescription'] = $context->getConfig('_DEFAULT_DESCRIPTION_');
 
+        $this->loader = new Twig_Loader_Filesystem(VIEW_DIR . $this->baseTpl);
         $this->twig_functions[] = new Twig_SimpleFunction('displayDate', function ($dateTime, $format) {
                 $context = Context::getContext();
             $moment = new \Moment\Moment($dateTime, _LOCAL_ZONE_);
@@ -95,23 +95,21 @@ class Render
             $url = _BASE_URL_LANG_;
             return $url ;
         });
-
         $this->twig_functions[] = new Twig_SimpleFunction('base_url', function () {
             $url = _BASE_URL_;
             return $url ;
         });
-
-
         $this->twig = new Twig_Environment(  $this->loader, array(
 
             'debug' => true,
         ));
-
         $this->twig->addExtension(new Twig_Extension_Debug());
-        foreach ($this->twig_filters as $filter)
+        foreach ($this->twig_filters as $filter) {
             $this->twig->addFilter($filter);
-        foreach ($this->twig_functions as $func)
+        }
+        foreach ($this->twig_functions as $func) {
             $this->twig->addFunction($func);
+        }
 
 
     }

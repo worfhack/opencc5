@@ -26,6 +26,7 @@ class FrontController extends Controller
         $menuCat = Category::getTree();
         $this->viewManager = new RenderFront(['page_name' => $this->pageName]);
         parent::__construct();
+
         $this->loadlastPosts();
         $this->viewManager->initVariable(
 
@@ -34,6 +35,5 @@ class FrontController extends Controller
                     'with_sidebar'=>$this->with_sidebar,
                     "sidebarData"=>array('lastPosts'=>$this->lastPosts),
             ));
-
     }
 }

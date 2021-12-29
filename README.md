@@ -7,7 +7,7 @@ A PHP blog system
 
 
 * `php >= 8.1.0`
-* `php-mysqli`
+* `php-pdo`
 * `mysql >= 5.6 or mariadb >= 10.1.0`
 * `composer`
 * `a valid smtp server`
