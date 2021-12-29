@@ -182,7 +182,6 @@ class Users extends ObjectModel
     }
     public function saveLinkResetPassword($link)
     {
-
         $max_link_date_sec = 3600;
         $max_link_date = new DateTime();
         $max_link_date->modify('+ ' . $max_link_date_sec . ' second');
