@@ -89,7 +89,7 @@ abstract class ObjectModel
                 }
             }
 
-            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . intval($id_lang) . ')' : '');
+            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . (int)($id_lang) . ')' : '');
 
 
             if ($this->fields_join) {
@@ -110,13 +110,13 @@ abstract class ObjectModel
                 }
             }
 
-            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (intval($id));
+            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (int)($id);
             $result = Db::getInstance()->getRow($sql);
 
             if (!$result) {
                 return false;
             }
-            $this->id = intval($id);
+            $this->id = (int)($id);
             foreach ($result as $key => $value) {
 
 
@@ -127,7 +127,7 @@ abstract class ObjectModel
 
             /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
             if (!$id_lang) {
-                $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . intval($id);
+                $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . (int)($id);
 
                 try {
                     $result = Db::getInstance()->executeS($sql);
@@ -187,7 +187,7 @@ abstract class ObjectModel
 
                     $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . ($table) . '`
             WHERE `' . $where_row . '` = :'.$where_row.'
-            AND `id_lang` = ' . (intval($id_lang));
+            AND `id_lang` = ' . (int)($id_lang);
                     return Db::getInstance()->getValue($sql, [$where_row=>$where_value]);
     }
 
@@ -455,7 +455,7 @@ abstract class ObjectModel
                 $this->{$params} = trim($value);
             }
             if ($this->identifier == $params) {
-                $this->id = intval($value);
+                $this->id = (int)($value);
             }
         }
     }
@@ -563,7 +563,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
                 $sql .= ' ORDER BY `' . _DB_PREFIX_ . $this->table . '`.' . $this->identifier . ' ' . $this->order_way;
             }
             if ($this->get_list_limit_force) {
-                $sql .= ' LIMIT ' . intval($this->get_list_limit_deb) . ',' . (intval($this->get_list_limit_end));
+                $sql .= ' LIMIT ' . (int)($this->get_list_limit_deb) . ',' . ((int)($this->get_list_limit_end));
             }
         }
         if ($count === false) {
