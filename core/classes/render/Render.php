@@ -76,6 +76,8 @@ class Render
         });
         $this->twig_functions[] = new Twig_SimpleFunction('base_admin_url_lang', function () {
             $url = _BASE_ADMIN_URL_LANG_;
+
+
             return $url ;
         });
         $this->twig_functions[] = new Twig_SimpleFunction('get_all_language', function () {
