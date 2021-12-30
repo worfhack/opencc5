@@ -95,8 +95,8 @@ abstract class ObjectModel
         return $sql;
     }
 
-    private function loadMultiLanguage(){
-        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . (int)($id);
+    private function loadAllMultiLanguage($idObject){
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . (int)($idObject);
 
         try {
             $result = Db::getInstance()->executeS($sql);
@@ -111,27 +111,27 @@ abstract class ObjectModel
 
         }
     }
-    private function loadObject($id, $id_lang){
-        $sql = 'SELECT a.* ' . ($id_lang && $this->fields_lang ? ',b.*' : '');
+    private function loadObject($idObject, $idLang){
+        $sql = 'SELECT a.* ' . ($idLang && $this->fields_lang ? ',b.*' : '');
 
         $sql .= $this->getQueryWithAttributeObject();
 
-        $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . (int)($id_lang) . ')' : '');
+        $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($idLang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . (int)($idLang) . ')' : '');
         $sql .= $this->getQueryRelationShip();
-        $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (int)($id);
+        $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (int)($idObject);
         $result = Db::getInstance()->getRow($sql);
         if (!$result) {
             return false;
         }
-        $this->id = (int)($id);
+        $this->id = (int)($idObject);
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = stripslashes($value);
             }
         }
         /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
-        if (!$id_lang) {
-            $this->loadMultiLanguage();
+        if (!$idLang) {
+            $this->loadAllMultiLanguage($idObject);
         }
     }
     /**
