@@ -58,6 +58,82 @@ abstract class ObjectModel
     public $current_id_lang = false;
     public $id;
 
+
+
+    private function getQueryWithAttributeObject(){
+        $sql = "";
+        foreach ($this->fields_join as $j) {
+            $key_name = $j['key'];
+            foreach ($j['fields'] as $jfield) {
+                $sql .= ',' . $key_name . '.' . $jfield . ' as ' . $key_name . '_' . $jfield;
+
+            }
+        }
+        return $sql;
+    }
+
+
+    private function getQueryRelationShip(){
+        $sql = "";
+        if ($this->fields_join) {
+            foreach ($this->fields_join as $j) {
+                $key_name = $j['key'];
+                if (isset($j['left']) && $j['left'] === true) {
+                    $sql .= ' LEFT ';
+                }
+                $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
+                    ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
+                if (isset($j['lang']) && $j['lang'] === true) {
+                    $sql .= ' AND ' . $j['onleft'] . '.id_lang=' . _ID_LANG_;
+
+                }
+                if (isset($j['andwhere']) && !empty($j['andwhere'])) {
+                    $sql .= ' AND (' . $j['andwhere'] . ' ) ';
+                }
+            }
+        }
+        return $sql;
+    }
+
+    private function loadAllMultiLanguage($idObject){
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . (int)($idObject);
+
+        try {
+            $result = Db::getInstance()->executeS($sql);
+            if ($result) {
+                foreach ($result as $row) foreach ($row as $key => $value)
+                    if (property_exists($this, $key) && $key != $this->identifier) {
+                        $this->{$key}[$row['id_lang']] = stripslashes($value);
+                    }
+            }
+        }catch (Exception $e)
+        {
+
+        }
+    }
+    private function loadObject($idObject, $idLang){
+        $sql = 'SELECT a.* ' . ($idLang && $this->fields_lang ? ',b.*' : '');
+
+        $sql .= $this->getQueryWithAttributeObject();
+
+        $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($idLang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . (int)($idLang) . ')' : '');
+        $sql .= $this->getQueryRelationShip();
+        $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (int)($idObject);
+        $result = Db::getInstance()->getRow($sql);
+        if (!$result) {
+            return false;
+        }
+        $this->id = (int)($idObject);
+        foreach ($result as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = stripslashes($value);
+            }
+        }
+        /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
+        if (!$idLang) {
+            $this->loadAllMultiLanguage($idObject);
+        }
+    }
     /**
      * Construit autommatiqurment l'objet
      *
@@ -79,71 +155,8 @@ abstract class ObjectModel
 
         /* Charge les informations depuis la base de données */
         if ($id) {
-
-            $sql = 'SELECT a.* ' . ($id_lang && $this->fields_lang ? ',b.*' : '');
-            foreach ($this->fields_join as $j) {
-                $key_name = $j['key'];
-                foreach ($j['fields'] as $jfield) {
-                    $sql .= ',' . $key_name . '.' . $jfield . ' as ' . $key_name . '_' . $jfield;
-
-                }
-            }
-
-            $sql .= ' FROM `' . _DB_PREFIX_ . $this->table . '` a ' . ($id_lang && $this->fields_lang ? (' JOIN `' . _DB_PREFIX_ . $this->table . '_lang` b ON (a.`' . $this->identifier . '` = b.`' . $this->identifier) . '` AND `id_lang` = ' . (int)($id_lang) . ')' : '');
-
-
-            if ($this->fields_join) {
-                foreach ($this->fields_join as $j) {
-                    $key_name = $j['key'];
-                    if (isset($j['left']) && $j['left'] === true) {
-                        $sql .= ' LEFT ';
-                    }
-                    $sql .= '  JOIN ' . _DB_PREFIX_ . $j['table'] . ' ' . $key_name .
-                        ' ON ' . 'a' . '.' . $j['onleft'] . ' = ' . $key_name . '.' . $j['onright'];
-                    if (isset($j['lang']) && $j['lang'] === true) {
-                        $sql .= ' AND ' . $j['onleft'] . '.id_lang=' . _ID_LANG_;
-
-                    }
-                    if (isset($j['andwhere']) && !empty($j['andwhere'])) {
-                        $sql .= ' AND (' . $j['andwhere'] . ' ) ';
-                    }
-                }
-            }
-
-            $sql .= ' WHERE a.`' . $this->identifier . '` = ' . (int)($id);
-            $result = Db::getInstance()->getRow($sql);
-
-            if (!$result) {
-                return false;
-            }
-            $this->id = (int)($id);
-            foreach ($result as $key => $value) {
-
-
-                if (property_exists($this, $key)) {
-                    $this->{$key} = stripslashes($value);
-                }
-            }
-
-            /* Si l'id de la langue n'est pas renseigné, on charger les information dans des tableau avec toute les langues. */
-            if (!$id_lang) {
-                $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $this->table . '_lang` WHERE `' . $this->identifier . '` = ' . (int)($id);
-
-                try {
-                    $result = Db::getInstance()->executeS($sql);
-                    if ($result) {
-                        foreach ($result as $row) foreach ($row as $key => $value)
-                            if (property_exists($this, $key) && $key != $this->identifier) {
-                                $this->{$key}[$row['id_lang']] = stripslashes($value);
-                            }
-                    }
-                }catch (Exception $e)
-                {
-
-                }
-            }
+                $this->loadObject($id, $id_lang);
         }
-
     }
 
     static public function deleteRow($table, $identifier, $value)
