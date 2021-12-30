@@ -217,19 +217,7 @@ abstract class ObjectModel
     }
 
 
-    /*
-    Supprime un objet instancié. Dans cette fonction global, on supprimer uniquement la ligne dans la table associée a l'objet.
-    Si on veut effectuer d'autres action lors de la suppression d'un objet,
-    utiliser la fonction delete dans ka classe choisie.
-    exemple :
-    public function delete()
-    {
-    //Supprime les images par exemple
-    //Supprimer ensuite d'autres champs dans la table
-    // et enfin supprime l'objet en lui même
-    parent::delete();
-    }
-    //*/
+
 
     public function save()
     {
@@ -241,40 +229,15 @@ abstract class ObjectModel
         }
     }
 
-//Supprime un champs dans une table.
-    public function update()
-    {
-        if (!defined('_ID_LANG_')) {
-            define('_ID_LANG_', Configuration::get('_ID_LANG_DEFAULT_'));
-        }
-        //Si l'objet n'a pas d'identifiant, on l'ajoute au lieu de le mettre à jour
-        if (!$this->id) {
-            return $this->add();
-        }
 
-        //Valeurs par défaut
+    private function prepareObjectToSave(&$params=[], &$params_lang=[]){
         $defaultValues = ['date_upd' => date('Y-m-d H:i:s'), 'is_new' => 0];
 
-        if (!$this->validateObject()) {
-            return false;
-        }
-
-        $params = []; //Tableau pour enregistrer les parametres.
 
         $columns = Db::getInstance()->getMysqlColumns(_DB_PREFIX_ . $this->table); //Recupère le nom de champs de la table
 
         //Enregistre les defaultValue
-        foreach ($defaultValues as $key => $default_value) {
-            if (property_exists($this, $key)) {
-                $params[$key] = $defaultValues[$key];
-                $this->{$key} = $defaultValues[$key];
-            }
-        }
-        //Ajoute la valeur au params si l'index exist en tant que champs de la table et qu'il n'est pas dans la table des langues
-        foreach ($this as $key => $value)
-            if (in_array($key, $columns) && !in_array($key, $this->fields_lang) && !array_key_exists($key, $defaultValues)) {
-                $params[$key] = $value;
-            }
+        $params = $this->getParams($defaultValues, $params, $columns);
 
         //Enregistre les link_rewrite si il existe
         if (property_exists($this, 'link_rewrite')) {
@@ -285,14 +248,30 @@ abstract class ObjectModel
             }
         }
         //Récupère les champs de la langue.
-        foreach ($this->fields_lang as $field_lang) $params_lang[$field_lang] = trim($this->{$field_lang});
+        foreach ($this->fields_lang as $field_lang) {
+            $params_lang[$field_lang] = trim($this->{$field_lang});
+        }
+    }
 
+    public function update()
+    {
+        if (!defined('_ID_LANG_')) {
+            define('_ID_LANG_', Configuration::get('_ID_LANG_DEFAULT_'));
+        }
+        if (!$this->id) {
+            return $this->add();
+        }
+        if (!$this->validateObject()) {
+            return false;
+        }
+        $params = [];
+        $params_lang = [];
+        $this->prepareObjectToSave($params, $params_lang);
         $result_lang = true;
         if (sizeof($this->fields_lang) && sizeof($params_lang)) {
             $result_lang = Db::getInstance()->AutoExecute(_DB_PREFIX_ . $this->table . '_lang', $params_lang, 'UPDATE', '`' . $this->identifier . '`=' . $this->id . ' AND id_lang = ' . ($this->current_id_lang ? $this->current_id_lang : _ID_LANG_));
         }
         $result = Db::getInstance()->AutoExecute(_DB_PREFIX_ . $this->table, $params, 'UPDATE', '`' . $this->identifier . '`=' . $this->id);
-
         if ($result && $result_lang) {
             return true;
         } else {
@@ -338,22 +317,7 @@ abstract class ObjectModel
 
 
 //Enregistre les defaultValue
-        foreach ($defaultValues as $key => $default_value) {
-            if (property_exists($this, $key)) {
-                $params[$key] = $defaultValues[$key];
-                $this->{$key} = $defaultValues[$key];
-            }
-        }
-
-
-//Ajoute la valeur au params si l'index exist en tant que champs de la table.
-        foreach ($this as $key => $value)
-
-            if (in_array($key, $columns) && !in_array($key, $this->fields_lang) && !array_key_exists($key,
-                    $defaultValues)
-            ) {
-                $params[$key] = $value;
-            }
+        $params = $this->getParams($defaultValues, $params, $columns);
         if ($DB->AutoExecute(_DB_PREFIX_ . $this->table, $params, 'INSERT')) {
             $this->id = $DB->insertID();
 
@@ -604,6 +568,28 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
         $clone = clone $this;
         $clone->id = false;
         return $clone;
+    }
+
+    /**
+     * @param array $defaultValues
+     * @param $params
+     * @param array $columns
+     * @return mixed
+     */
+    private function getParams(array $defaultValues, $params, array $columns)
+    {
+        foreach ($defaultValues as $key => $default_value) {
+            if (property_exists($this, $key)) {
+                $params[$key] = $defaultValues[$key];
+                $this->{$key} = $defaultValues[$key];
+            }
+        }
+        //Ajoute la valeur au params si l'index exist en tant que champs de la table et qu'il n'est pas dans la table des langues
+        foreach ($this as $key => $value)
+            if (in_array($key, $columns) && !in_array($key, $this->fields_lang) && !array_key_exists($key, $defaultValues)) {
+                $params[$key] = $value;
+            }
+        return $params;
     }
 
 
