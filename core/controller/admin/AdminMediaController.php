@@ -74,7 +74,7 @@ class AdminMediaController extends AdminController
             $imageFileType = strtolower(pathinfo(basename($_FILES["file"]["name"]), PATHINFO_EXTENSION));
 
 
-                if (!file_exists($target_file)) {
+                if ( 1) {
 
                     if (!($_FILES["file"]["size"] > 5000000)) {
 

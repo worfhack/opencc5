@@ -114,12 +114,12 @@
         image_calback = button.data('image-target'); // Extract info from data-* attributes
 
 
-        $.getJSON( gl_page_info.baseUrlAdmin+"/media", function( data ) {
+        $.getJSON( gl_page_info.baseUrlAdminLang+"/media/", function( data ) {
             var links = '';
             $.each( data, function( key, val ) {
 
              links = links +  "<a href='#' data-image-id='"+val.id_media+"'>"+
-                    "<img src='"+ gl_page_info.baseUrl+"media/"+val.name+"' alt=''>"+
+                    "<img src='"+ gl_page_info.baseUrl+"/picture/media/"+val.name+"' alt=''>"+
                     ""+
                     "</a>";
 
@@ -137,13 +137,13 @@
     $(function () {
         'use strict';
         // Change this to the location of your server-side upload handler:
-        var url = gl_page_info.baseUrlAdmin+"/media/add";
+        var url = gl_page_info.baseUrlAdminLang+"/media/add/";
         $('#fileupload').fileupload({
             url: url,
             dataType: 'json',
             done: function (e, data) {
 
-                $.getJSON( gl_page_info.baseUrlAdmin+"/media", function( data ) {
+                $.getJSON( gl_page_info.baseUrlAdminLang+"/media/", function( data ) {
                     var links = '';
                     $.each(data, function (key, val) {
 

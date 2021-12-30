@@ -169,7 +169,8 @@ class Context
                 $this->currentLanguage = new Language($this->gl_config['id_lang']);
             }
             $this->setBaseUrl();
-            if ($this->requestUri != "/admin/login/" && $this->requestUri != "/admin/"  && !strstr($this->requestUri, "/picture/")) {
+            if ($this->requestUri != "/admin/login/" && $this->requestUri != "/admin/"
+                && !strstr($this->requestUri, "/picture/")) {
                 // header ('Location: ' . _BASE_URL_.'/'._ADMIN_URI_ . '/'. $context->getCurrentLanguage()->iso.  $url);
                header("Location: " . $this->server_request_scheme . '://' . $_SERVER['HTTP_HOST'] . '/' . $this->currentLanguage->iso . '/');
                 die();
