@@ -32,7 +32,7 @@ class AdminLoginController extends  AdminController
                     $link = $admin->genereateResetPasswordLink();
                     Mail::send($admin->mail, 'Your password reset link', 'resetpassword_admin', ['firstname' => $admin->getFirstname(),
                         'lastname' => $admin->getLastname(),
-                        'link' => $context->getBaseurl() . _ADMIN_URI_ . '/resetpassword?link=' . $link
+                        'link' => $context->getBaseurlLang() . _ADMIN_URI_ . '/resetpassword?link=' . $link
                     ]);
                     $this->viewManager->initVariable(
 

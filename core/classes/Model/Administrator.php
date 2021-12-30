@@ -163,7 +163,8 @@ class Administrator extends ObjectModel
 
     static public function emailExist($email)
     {
-        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = \'' . Tools::pSQL($email) . '\'');
+        return Db::getInstance()->getValue('SELECT e.id_administrator FROM `' . _DB_PREFIX_ . 'administrator` e WHERE e.mail = :email ',
+            array(":email"=>$email));
     }
 
     static public function resetLinkExist($link)
