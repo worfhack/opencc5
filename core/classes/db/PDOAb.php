@@ -25,7 +25,7 @@ class PDOAb extends Db
         /* Disable some MySQL limitations */
        // mysqli_query ($this->_link, 'SET GLOBAL SQL_MODE=\'\'' );
 
-     
+
         return $this->_link;
     }
 
