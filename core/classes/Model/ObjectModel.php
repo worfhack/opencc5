@@ -6,25 +6,12 @@ abstract class ObjectModel
     public $add = true;
     public $view = false;
     public $edit = true;
-    public $live_edit = false;
     public $delete = true;
-    public $exportable = true;
-    public $active_filters = true;
-
-    public $link_add = 'add';
-    public $link_add_params = '';
-
-    public $link_view = 'view';
-    public $link_view_params = '';
-
-    public $link_edit = 'edit';
-    public $link_edit_params = '';
 
     public $fields_lang = []; //Tableau des index qui sont soumis à des traductions
     public $fields_required = []; //Tableau des index qui sont obligatoires
     public $fields_validate = []; //Tableau des indes qui doivent être véfifiés
     public $fields_join = [];
-    public $admin_tab = [];
 
     public $json_fields = [];
     public $where = false;
@@ -159,23 +146,12 @@ abstract class ObjectModel
         }
     }
 
-    static public function deleteRow($table, $identifier, $value)
-    {
-        if (!$table || !$identifier || !$value) {
-            return;
-        }
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . $table . '` WHERE `' . $identifier . '` = ' . $value;
-        return Db::getInstance()->execute($sql);
-    }
-
-
     static public function getSingleInfo($table, $where_row, $where_value, $row)
     {
         $sql = 'SELECT `' . $row . '` FROM `' . _DB_PREFIX_ . $table. '` 
         WHERE `' . $where_row . '` = :where_row';
         return Db::getInstance()->getValue($sql, ['where_row'=>$where_row]);
     }
-
     static public function toObject($array)
     {
         $name = get_called_class();
@@ -186,7 +162,6 @@ abstract class ObjectModel
 
         return $objet;
     }
-
     /*
     $table = varchar qui définit la table dans laquelle insérer l'objet
     $fields = array avec en key le nom des champs de la table + value
@@ -204,12 +179,7 @@ abstract class ObjectModel
                     return Db::getInstance()->getValue($sql, [$where_row=>$where_value]);
     }
 
-//Mise à jour d'un objet
 
-    static public function staticGetUrl($id_object)
-    {
-
-    }
 
     static public function deleteInfos($table, $where_row, $where_value)
     {
@@ -221,7 +191,6 @@ abstract class ObjectModel
 
     public function save()
     {
-//Si l'objet à déjà un identifiant, on met à jour au lieu d'ajouter
         if ($this->id) {
             return $this->update();
         } else {
@@ -279,15 +248,6 @@ abstract class ObjectModel
         }
     }
 
-
-    public function setFromArray($tab)
-    {
-
-        foreach ($tab as $key => $value) {
-            $this->$key = $value;
-        }
-
-    }
 
     public function add()
     {
@@ -438,8 +398,6 @@ abstract class ObjectModel
     }
 
 
-//Affiche les filtres
-
     public function delete()
     {
         if (property_exists($this, 'deleted')) // Si l'objet à la propriété delete, on fait juste un update. (Pour les clients par exemple ou les commandes)
@@ -563,7 +521,7 @@ ON ' . _DB_PREFIX_ . $this->table . '.' . $this->identifier . ' = ' . _DB_PREFIX
 
     }
 
-    public function duplicate()
+    public function duplicate(): ObjectModel
     {
         $clone = clone $this;
         $clone->id = false;
